@@ -1,0 +1,2371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>St. Andrew Hospital - Patient Portal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='user-portal.css') }}">
+    
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <h2>St. Andrew Hospital</h2>
+                <p>Patient Portal</p>
+            </div>
+            <nav class="nav-menu">
+                <div class="nav-item active" onclick="showSection('home', event)">
+                    <svg fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+                    </svg>
+                    <span>Home</span>
+                </div>
+                <div class="nav-item" onclick="showSection('appointments', event)">
+
+                    <svg fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+                    </svg>
+                    <span>Appointments</span>
+                </div>
+                <div class="nav-item" onclick="showSection('announcements', event)">
+                    <svg fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"/>
+                    </svg>
+                    <span>Announcements</span>
+                </div>
+                <div class="nav-item" onclick="showSection('messages', event)">
+                    <svg fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
+                        <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+                    </svg>
+                    <span>Messages</span>
+                </div>
+               
+                <div class="nav-item" onclick="showSection('transactions', event)">
+                    <svg fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"/>
+                        <path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd"/>
+                    </svg>
+                    <span>Transactions</span>
+                </div>
+                <div class="nav-item" onclick="showSection('medical-records', event)">
+                    <svg fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"/>
+                    </svg>
+                    <span>Medical Records</span>
+                </div>
+                
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <div class="header-left">
+                    <h1>Welcome Back, John!</h1>
+                    <p>Tuesday, November 25, 2025</p>
+                </div>
+                <div class="user-profile">
+                    <div class="user-info" style="text-align: right;">
+                        <h3>John Doe</h3>
+                        <p>Patient ID: #STH2024-001</p>
+                    </div>
+                    <div class="user-avatar" onclick="toggleProfileDropdown()">JD</div>
+                </div>
+            </div>
+
+            <!-- Profile Dropdown -->
+            <div class="profile-dropdown" id="profileDropdown">
+                <div class="dropdown-header">
+                    <h4>John Doe</h4>
+                    <p>Patient ID: #STH2024-001</p>
+                </div>
+                <div class="dropdown-menu">
+                    <div class="dropdown-item" onclick="viewProfile(); closeDropdown();">
+                        <svg fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/>
+                        </svg>
+                        <span>My Profile</span>
+                    </div>
+                    <div class="dropdown-item" onclick="goToSettings(); closeDropdown();">
+                        <svg fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>Settings</span>
+                    </div>
+                    <div class="dropdown-item" onclick="goToHelp(); closeDropdown();">
+                        <svg fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>Help & Support</span>
+                    </div>
+                    <div class="dropdown-item logout" onclick="logout()">
+                        <svg fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clip-rule="evenodd"/>
+                        </svg>
+                        <span onclick="logout()" style="cursor:pointer;">Log Out</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="content">
+                <!-- HOME SECTION -->
+                <div id="home-section" class="page-section">
+                    <!-- Quick Stats Cards -->
+                    <div class="cards-grid">
+                        <div class="card">
+                            <div class="card-icon blue">
+                                <svg fill="currentColor" viewBox="0 0 20 20" width="24" height="24">
+                                    <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                            <h3>Upcoming Appointments</h3>
+                            <div class="value">3</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-icon green">
+                                <svg fill="currentColor" viewBox="0 0 20 20" width="24" height="24">
+                                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                                    <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm9.707 5.707a1 1 0 00-1.414-1.414L9 12.586l-1.293-1.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                            <h3>Prescriptions Active</h3>
+                            <div class="value">5</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-icon orange">
+                                <svg fill="currentColor" viewBox="0 0 20 20" width="24" height="24">
+                                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
+                                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+                                </svg>
+                            </div>
+                            <h3>Unread Messages</h3>
+                            <div class="value">7</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-icon purple">
+                                <svg fill="currentColor" viewBox="0 0 20 20" width="24" height="24">
+                                    <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"/>
+                                    <path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                            <h3>Pending Payments</h3>
+                            <div class="value">₱2,450</div>
+                        </div>
+                    </div>
+
+                    <!-- Upcoming Appointments -->
+                    <div class="section">
+                        <div class="section-header">
+                            <h2>Upcoming Appointments</h2>
+                            <button class="btn-view-all" onclick="showSection('appointments')">View All</button>
+                        </div>
+                        <div class="appointment-item">
+                            <div class="appointment-info">
+                                <h4>Dr. Maria Santos - Cardiology</h4>
+                                <p>📅 November 28, 2025 at 10:00 AM</p>
+                            </div>
+                            <span class="appointment-status status-upcoming">Upcoming</span>
+                        </div>
+                        <div class="appointment-item">
+                            <div class="appointment-info">
+                                <h4>Dr. Roberto Cruz - General Checkup</h4>
+                                <p>📅 December 5, 2025 at 2:30 PM</p>
+                            </div>
+                            <span class="appointment-status status-upcoming">Upcoming</span>
+                        </div>
+                    </div>
+
+                    <!-- Recent Announcements -->
+                    <div class="section">
+                        <div class="section-header">
+                            <h2>Hospital Announcements</h2>
+                            <button class="btn-view-all" onclick="showSection('announcements')">View All</button>
+                        </div>
+                        <div class="announcement-item">
+                            <h4>🎄 Holiday Schedule Update</h4>
+                            <p>Please note our adjusted operating hours during the Christmas season. Emergency services remain available 24/7.</p>
+                            <div class="announcement-date">Posted on November 20, 2025</div>
+                        </div>
+                        <div class="announcement-item">
+                            <h4>💉 Free Flu Vaccination Program</h4>
+                            <p>We're offering free flu vaccinations for all patients aged 60 and above. Schedule your appointment today!</p>
+                            <div class="announcement-date">Posted on November 15, 2025</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MY PROFILE SECTION -->
+                <div id="profile-section" class="page-section" style="display:none;">
+                    <div class="section">
+                        <div class="section-header">
+                            <h2>My Profile</h2>
+                            <button class="btn-view-all" onclick="enableEditProfile()">✏️ Edit Profile</button>
+                        </div>
+
+                        <!-- Profile Header -->
+                        <div class="profile-header-card">
+                            <div class="profile-avatar-large">JD</div>
+                            <div class="profile-main-info">
+                                <h2>John Doe</h2>
+                                <p>Patient ID: #STH2024-001</p>
+                                <p>Member since: January 15, 2024</p>
+                            </div>
+                        </div>
+
+                        <!-- Profile Form -->
+                        <form id="profileForm">
+                            <div class="profile-section-card">
+                                <h3>Personal Information</h3>
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label>First Name *</label>
+                                        <input type="text" id="firstName" value="John" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Last Name *</label>
+                                        <input type="text" id="lastName" value="Doe" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Date of Birth *</label>
+                                        <input type="date" id="birthdate" value="1990-05-15" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Gender *</label>
+                                        <select id="gender" disabled>
+                                            <option value="male" selected>Male</option>
+                                            <option value="female">Female</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Blood Type</label>
+                                        <select id="bloodType" disabled>
+                                            <option value="O+" selected>O+</option>
+                                            <option value="O-">O-</option>
+                                            <option value="A+">A+</option>
+                                            <option value="A-">A-</option>
+                                            <option value="B+">B+</option>
+                                            <option value="B-">B-</option>
+                                            <option value="AB+">AB+</option>
+                                            <option value="AB-">AB-</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Civil Status</label>
+                                        <select id="civilStatus" disabled>
+                                            <option value="single" selected>Single</option>
+                                            <option value="married">Married</option>
+                                            <option value="widowed">Widowed</option>
+                                            <option value="divorced">Divorced</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="profile-section-card">
+                                <h3>Contact Information</h3>
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label>Email Address *</label>
+                                        <input type="email" id="email" value="john.doe@email.com" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Phone Number *</label>
+                                        <input type="tel" id="phone" value="+63 912 345 6789" disabled>
+                                    </div>
+                                    <div class="form-group" style="grid-column: 1 / -1;">
+                                        <label>Home Address *</label>
+                                        <textarea id="address" rows="2" disabled>123 Main Street, Barangay San Antonio, Tagaytay City, Cavite 4120</textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="profile-section-card">
+                                <h3>Emergency Contact</h3>
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label>Contact Name *</label>
+                                        <input type="text" id="emergencyName" value="Jane Doe" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Relationship *</label>
+                                        <input type="text" id="emergencyRelation" value="Spouse" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Contact Number *</label>
+                                        <input type="tel" id="emergencyPhone" value="+63 917 123 4567" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Emergency Email</label>
+                                        <input type="email" id="emergencyEmail" value="jane.doe@email.com" disabled>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="profile-section-card">
+                                <h3>Medical Information</h3>
+                                <div class="form-grid">
+                                    <div class="form-group" style="grid-column: 1 / -1;">
+                                        <label>Known Allergies</label>
+                                        <textarea id="allergies" rows="2" disabled>Penicillin, Peanuts</textarea>
+                                    </div>
+                                    <div class="form-group" style="grid-column: 1 / -1;">
+                                        <label>Chronic Conditions</label>
+                                        <textarea id="conditions" rows="2" disabled>Hypertension (controlled with medication)</textarea>
+                                    </div>
+                                    <div class="form-group" style="grid-column: 1 / -1;">
+                                        <label>Current Medications</label>
+                                        <textarea id="medications" rows="2" disabled>Amlodipine 5mg (once daily), Sertraline 50mg (once daily)</textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="profile-section-card">
+                                <h3>Insurance Information</h3>
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label>Insurance Provider</label>
+                                        <input type="text" id="insuranceProvider" value="PhilHealth" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Policy Number</label>
+                                        <input type="text" id="policyNumber" value="12-345678901-2" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>HMO Provider</label>
+                                        <input type="text" id="hmoProvider" value="Maxicare" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>HMO Card Number</label>
+                                        <input type="text" id="hmoCard" value="MAX-2024-123456" disabled>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons (hidden by default) -->
+                            <div class="form-actions" id="profileActions" style="display:none;">
+                                <button type="button" class="btn-secondary" onclick="cancelEditProfile()">Cancel</button>
+                                <button type="button" class="btn-primary" onclick="saveProfile()">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- HELP & SUPPORT SECTION -->
+                <div id="help-section" class="page-section" style="display:none;">
+                    <div class="section">
+                        <div class="section-header">
+                            <h2>Help & Support</h2>
+                        </div>
+
+                        <!-- Quick Support Options -->
+                        <div class="support-cards">
+                            <div class="support-card" onclick="showComposeModal()">
+                                <div class="support-icon">📧</div>
+                                <h3>Send Message</h3>
+                                <p>Contact our support team directly</p>
+                            </div>
+                            <div class="support-card" onclick="callSupport()">
+                                <div class="support-icon">📞</div>
+                                <h3>Call Us</h3>
+                                <p>(046) 483-0000</p>
+                            </div>
+                            <div class="support-card" onclick="emailSupport()">
+                                <div class="support-icon">✉️</div>
+                                <h3>Email Support</h3>
+                                <p>support@standrews.com</p>
+                            </div>
+                            <div class="support-card" onclick="visitHospital()">
+                                <div class="support-icon">🏥</div>
+                                <h3>Visit Us</h3>
+                                <p>Tagaytay City, Cavite</p>
+                            </div>
+                        </div>
+
+                        <!-- FAQ Section -->
+                        <div class="faq-section">
+                            <h3>Frequently Asked Questions</h3>
+                            
+                            <div class="faq-category">
+                                <h4>📅 Appointments</h4>
+                                <div class="faq-item">
+                                    <div class="faq-question" onclick="toggleFaq(this)">
+                                        <span>How do I book an appointment?</span>
+                                        <span class="faq-toggle">+</span>
+                                    </div>
+                                    <div class="faq-answer">
+                                        Click on "Appointments" in the sidebar, then click "Book New Appointment". Select your preferred service, doctor, date, and time. You can choose to pay online or at the hospital.
+                                    </div>
+                                </div>
+                                <div class="faq-item">
+                                    <div class="faq-question" onclick="toggleFaq(this)">
+                                        <span>Can I cancel or reschedule my appointment?</span>
+                                        <span class="faq-toggle">+</span>
+                                    </div>
+                                    <div class="faq-answer">
+                                        Yes, you can cancel appointments up to 24 hours before the scheduled time. Go to "Appointments" and click the "Cancel" button. For rescheduling, please contact us at (046) 483-0000 or send a message through the portal.
+                                    </div>
+                                </div>
+                                <div class="faq-item">
+                                    <div class="faq-question" onclick="toggleFaq(this)">
+                                        <span>What happens if I miss my appointment?</span>
+                                        <span class="faq-toggle">+</span>
+                                    </div>
+                                    <div class="faq-answer">
+                                        Please inform us as soon as possible if you cannot make it. Repeated no-shows may result in a fee or difficulty booking future appointments.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="faq-category">
+                                <h4>💳 Billing & Payments</h4>
+                                <div class="faq-item">
+                                    <div class="faq-question" onclick="toggleFaq(this)">
+                                        <span>What payment methods do you accept?</span>
+                                        <span class="faq-toggle">+</span>
+                                    </div>
+                                    <div class="faq-answer">
+                                        We accept Credit/Debit Cards, GCash, PayMaya, Bank Transfer, Cash, and major insurance providers (PhilHealth, HMOs).
+                                    </div>
+                                </div>
+                                <div class="faq-item">
+                                    <div class="faq-question" onclick="toggleFaq(this)">
+                                        <span>How can I get a copy of my receipt?</span>
+                                        <span class="faq-toggle">+</span>
+                                    </div>
+                                    <div class="faq-answer">
+                                        Go to "Transactions" section and find your payment. Click the "Receipt" button to download a PDF copy of your receipt.
+                                    </div>
+                                </div>
+                                <div class="faq-item">
+                                    <div class="faq-question" onclick="toggleFaq(this)">
+                                        <span>Do you accept insurance?</span>
+                                        <span class="faq-toggle">+</span>
+                                    </div>
+                                    <div class="faq-answer">
+                                        Yes, we accept PhilHealth and major HMO providers including Maxicare, Medicard, and Intellicare. Please bring your insurance card during your visit.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="faq-category">
+                                <h4>📄 Medical Records</h4>
+                                <div class="faq-item">
+                                    <div class="faq-question" onclick="toggleFaq(this)">
+                                        <span>How do I access my medical records?</span>
+                                        <span class="faq-toggle">+</span>
+                                    </div>
+                                    <div class="faq-answer">
+                                        Click on "Medical Records" in the sidebar. You can view your visit history, prescriptions, lab results, imaging reports, and download documents.
+                                    </div>
+                                </div>
+                                <div class="faq-item">
+                                    <div class="faq-question" onclick="toggleFaq(this)">
+                                        <span>Can I request a medical certificate?</span>
+                                        <span class="faq-toggle">+</span>
+                                    </div>
+                                    <div class="faq-answer">
+                                        Yes, click "Request Records" in the Medical Records section and specify that you need a medical certificate. Processing time is 24-48 hours.
+                                    </div>
+                                </div>
+                                <div class="faq-item">
+                                    <div class="faq-question" onclick="toggleFaq(this)">
+                                        <span>How long are medical records kept?</span>
+                                        <span class="faq-toggle">+</span>
+                                    </div>
+                                    <div class="faq-answer">
+                                        We maintain medical records for at least 10 years as per Philippine healthcare regulations. You can access your records anytime through the portal.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="faq-category">
+                                <h4>👤 Account & Security</h4>
+                                <div class="faq-item">
+                                    <div class="faq-question" onclick="toggleFaq(this)">
+                                        <span>How do I update my personal information?</span>
+                                        <span class="faq-toggle">+</span>
+                                    </div>
+                                    <div class="faq-answer">
+                                        Click on your profile icon (top right), select "My Profile", then click "Edit Profile". Make your changes and click "Save Changes".
+                                    </div>
+                                </div>
+                                <div class="faq-item">
+                                    <div class="faq-question" onclick="toggleFaq(this)">
+                                        <span>How do I change my password?</span>
+                                        <span class="faq-toggle">+</span>
+                                    </div>
+                                    <div class="faq-answer">
+                                        Go to "Settings" from the sidebar or profile menu, then select "Change Password". You'll need to enter your current password and new password.
+                                    </div>
+                                </div>
+                                <div class="faq-item">
+                                    <div class="faq-question" onclick="toggleFaq(this)">
+                                        <span>Is my information secure?</span>
+                                        <span class="faq-toggle">+</span>
+                                    </div>
+                                    <div class="faq-answer">
+                                        Yes, we use industry-standard encryption and security measures to protect your personal and medical information. Your data is stored securely and accessed only by authorized healthcare professionals.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Contact Form -->
+                        <div class="profile-section-card" style="margin-top: 30px;">
+                            <h3>Still Need Help?</h3>
+                            <p style="color: #666; margin-bottom: 20px;">Can't find what you're looking for? Send us a message and we'll get back to you as soon as possible.</p>
+                            <button class="btn-primary" onclick="showComposeModal()" style="width: 100%;">Contact Support Team</button>
+                        </div>
+
+                        <!-- Hospital Information -->
+                        <div class="profile-section-card" style="margin-top: 20px;">
+                            <h3>🏥 Hospital Information</h3>
+                            <div class="info-grid" style="margin-top: 15px;">
+                                <div class="info-item" style="color: #333;">
+                                    <span class="info-label" style="color: #666;">Address:</span>
+                                    <span class="info-value" style="color: #333; font-weight: 400;">St. Andrew Hospital<br>Tagaytay City, Cavite 4120</span>
+                                </div>
+                                <div class="info-item" style="color: #333;">
+                                    <span class="info-label" style="color: #666;">Phone:</span>
+                                    <span class="info-value" style="color: #333; font-weight: 400;">(046) 483-0000</span>
+                                </div>
+                                <div class="info-item" style="color: #333;">
+                                    <span class="info-label" style="color: #666;">Email:</span>
+                                    <span class="info-value" style="color: #333; font-weight: 400;">info@standrews.com</span>
+                                </div>
+                                <div class="info-item" style="color: #333;">
+                                    <span class="info-label" style="color: #666;">Emergency Hotline:</span>
+                                    <span class="info-value" style="color: #dc3545; font-weight: 600;">911 or (046) 483-0911</span>
+                                </div>
+                                <div class="info-item" style="color: #333;">
+                                    <span class="info-label" style="color: #666;">Operating Hours:</span>
+                                    <span class="info-value" style="color: #333; font-weight: 400;">24/7 Emergency Services<br>Outpatient: 8AM - 5PM</span>
+                                </div>
+                                <div class="info-item" style="color: #333;">
+                                    <span class="info-label" style="color: #666;">Visiting Hours:</span>
+                                    <span class="info-value" style="color: #333; font-weight: 400;">10AM - 12PM, 2PM - 8PM</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- APPOINTMENTS SECTION -->
+                <div id="appointments-section" class="page-section" style="display:none;">
+                    <div class="section">
+                        <div class="section-header">
+                            <h2>My Appointments</h2>
+                            <button class="btn-view-all" onclick="showBookingModal()">+ Book New Appointment</button>
+                        </div>
+                        
+                        <!-- Upcoming Appointments -->
+                        <h3 style="color: #2c5aa0; margin-bottom: 15px; font-size: 18px;">Upcoming Appointments</h3>
+                        <div id="upcomingAppointmentsContainer">
+                            <!-- Dynamic upcoming appointments will be loaded here -->
+                            <div class="loading-message" style="text-align: center; padding: 40px; color: #666;">
+                                <p>📅 Loading your upcoming appointments...</p>
+                            </div>
+                        </div>
+                
+                        <!-- Past Appointments -->
+                        <h3 style="color: #2c5aa0; margin: 30px 0 15px 0; font-size: 18px;">Past Appointments</h3>
+                        <div id="pastAppointmentsContainer">
+                            <!-- Dynamic past appointments will be loaded here -->
+                            <div class="loading-message" style="text-align: center; padding: 40px; color: #666;">
+                                <p>📋 Loading your past appointments...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Booking Modal -->
+                <div id="bookingModal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>Book New Appointment</h2>
+                            <span class="close-modal" onclick="closeBookingModal()">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <form id="bookingForm" onsubmit="submitBooking(event)">
+                                <!-- Service Type -->
+                                <div class="form-group">
+                                    <label>Service Type *</label>
+                                    <select id="serviceType" required onchange="updateDoctorList()">
+                                        <option value="">Select Service</option>
+                                        <option value="checkup">General Check-up</option>
+                                        <option value="consultation">Specialist Consultation</option>
+                                        <option value="counselling">Counselling</option>
+                                        <option value="room">Room Booking for Patient</option>
+                                        <option value="emergency">Emergency</option>
+                                        <option value="laboratory">Laboratory Tests</option>
+                                        <option value="xray">X-Ray / Imaging</option>
+                                    </select>
+                                </div>
+
+                                <!-- Department -->
+                                <div class="form-group" id="departmentGroup">
+                                    <label>Department *</label>
+                                    <select id="department" required onchange="updateDoctorList()">
+                                        <option value="">Select Department</option>
+                                        <option value="cardiology">Cardiology</option>
+                                        <option value="pediatrics">Pediatrics</option>
+                                        <option value="orthopedics">Orthopedics</option>
+                                        <option value="neurology">Neurology</option>
+                                        <option value="general">General Medicine</option>
+                                        <option value="psychology">Psychology</option>
+                                        <option value="emergency">Emergency</option>
+                                    </select>
+                                </div>
+
+                                <!-- Doctor Selection -->
+                                <div class="form-group">
+                                    <label>Select Doctor *</label>
+                                    <select id="doctor" required>
+                                        <option value="">Choose a doctor</option>
+                                    </select>
+                                </div>
+
+                                <!-- Date -->
+                                <div class="form-group">
+                                    <label>Preferred Date *</label>
+                                    <input type="date" id="appointmentDate" required>
+                                </div>
+
+                                <!-- Time -->
+                                <div class="form-group">
+                                    <label>Preferred Time *</label>
+                                    <select id="appointmentTime" required>
+                                        <option value="">Select Time</option>
+                                        <option value="08:00">08:00 AM</option>
+                                        <option value="09:00">09:00 AM</option>
+                                        <option value="10:00">10:00 AM</option>
+                                        <option value="11:00">11:00 AM</option>
+                                        <option value="13:00">01:00 PM</option>
+                                        <option value="14:00">02:00 PM</option>
+                                        <option value="15:00">03:00 PM</option>
+                                        <option value="16:00">04:00 PM</option>
+                                    </select>
+                                </div>
+
+                                <!-- Room Type (only for room booking) -->
+                                <div class="form-group" id="roomTypeGroup" style="display:none;">
+                                    <label>Room Type *</label>
+                                    <select id="roomType">
+                                        <option value="">Select Room Type</option>
+                                        <option value="private">Private Room - ₱5,000/day</option>
+                                        <option value="semi-private">Semi-Private Room - ₱3,000/day</option>
+                                        <option value="ward">Ward - ₱1,500/day</option>
+                                        <option value="icu">ICU - ₱10,000/day</option>
+                                    </select>
+                                </div>
+
+                                <!-- Duration (for room booking) -->
+                                <div class="form-group" id="durationGroup" style="display:none;">
+                                    <label>Estimated Duration (days) *</label>
+                                    <input type="number" id="duration" min="1" value="1">
+                                </div>
+
+                                <!-- Reason -->
+                                <div class="form-group">
+                                    <label>Reason for Visit *</label>
+                                    <textarea id="reason" rows="3" required placeholder="Please describe your symptoms or reason for visit"></textarea>
+                                </div>
+
+                                <!-- Payment Method -->
+                                <div class="form-group">
+                                    <label>Payment Method *</label>
+                                    <div class="payment-options">
+                                        <label class="radio-option">
+                                            <input type="radio" name="payment" value="online" required>
+                                            <span>💳 Pay Online Now</span>
+                                        </label>
+                                        <label class="radio-option">
+                                            <input type="radio" name="payment" value="hospital" required>
+                                            <span>🏥 Pay at Hospital</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Estimated Cost -->
+                                <div class="cost-summary">
+                                    <h3>Estimated Cost</h3>
+                                    <p id="costDisplay">Please select service type to see estimated cost</p>
+                                </div>
+
+                                <!-- Submit Buttons -->
+                                <div class="form-actions">
+                                    <button type="button" class="btn-secondary" onclick="closeBookingModal()">Cancel</button>
+                                    <button type="submit" class="btn-primary">Book Appointment</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ANNOUNCEMENTS SECTION -->
+                <div id="announcements-section" class="page-section" style="display:none;">
+                    <div class="section">
+                        <div class="section-header">
+                            <h2>All Announcements</h2>
+                        </div>
+                        <p style="color: #666; margin-bottom: 20px;">View all hospital announcements and updates here. You can add your announcements content in this section.</p>
+                    </div>
+                </div>
+
+              
+                <!-- MESSAGES SECTION -->
+                <div id="messages-section" class="page-section" style="display:none;">
+                    <div class="section">
+                        <div class="section-header">
+                            <h2>Messages</h2>
+                            <button class="btn-view-all" onclick="showComposeModal()">+ Compose Message</button>
+                        </div>
+
+                        <!-- Message Tabs - ADD INBOX TAB -->
+                        <div class="message-tabs">
+                            <button class="tab-btn active" onclick="showMessageTab('inbox')">Inbox (0)</button>
+                            <button class="tab-btn" onclick="showMessageTab('sent')">Sent Messages</button>
+                        </div>
+
+                        <!-- Inbox Tab - ADD THIS -->
+                        <div id="inbox-tab" class="message-tab-content">
+                            <div id="inboxMessagesContainer">
+                                <div class="loading-message" style="text-align: center; padding: 40px; color: #666;">
+                                    <p>📬 Loading your inbox...</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sent Messages Tab - KEEP THIS -->
+                        <div id="sent-tab" class="message-tab-content" style="display:none;">
+                            <div id="sentMessagesContainer">
+                                <div class="loading-message" style="text-align: center; padding: 40px; color: #666;">
+                                    <p>📧 Loading your messages...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Compose Message Modal -->
+                <div id="composeModal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>Compose Message</h2>
+                            <span class="close-modal" onclick="closeComposeModal()">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <form id="composeForm" onsubmit="sendMessage(event)">
+                                <!-- Recipient -->
+                                <div class="form-group">
+                                    <label>To: *</label>
+                                    <select id="recipient" required>
+                                        <option value="">Select Recipient</option>
+                                        <optgroup label="Doctors">
+                                            <option value="Dr. Maria Santos - Cardiology">Dr. Maria Santos - Cardiology</option>
+                                            <option value="Dr. Jose Garcia - Cardiac Surgeon">Dr. Jose Garcia - Cardiac Surgeon</option>
+                                            <option value="Dr. Roberto Cruz - General Medicine">Dr. Roberto Cruz - General Medicine</option>
+                                            <option value="Dr. Ana Cruz - Pediatrics">Dr. Ana Cruz - Pediatrics</option>
+                                            <option value="Dr. Anna Reyes - Psychology">Dr. Anna Reyes - Psychology</option>
+                                        </optgroup>
+                                        <optgroup label="Departments">
+                                            <option value="Billing Department">Billing Department</option>
+                                            <option value="Pharmacy">Pharmacy</option>
+                                            <option value="Laboratory">Laboratory</option>
+                                            <option value="Front Desk / Reception">Front Desk / Reception</option>
+                                            <option value="Administration">Administration</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+
+                                <!-- Subject -->
+                                <div class="form-group">
+                                    <label>Subject: *</label>
+                                    <input type="text" id="subject" required placeholder="Enter message subject">
+                                </div>
+
+                                <!-- Category -->
+                                <div class="form-group">
+                                    <label>Category: *</label>
+                                    <select id="category" required>
+                                        <option value="">Select Category</option>
+                                        <option value="Appointment Inquiry">Appointment Inquiry</option>
+                                        <option value="Medical Question">Medical Question</option>
+                                        <option value="Prescription Request">Prescription Request</option>
+                                        <option value="Billing Inquiry">Billing Inquiry</option>
+                                        <option value="Test Results">Test Results</option>
+                                        <option value="Feedback/Complaint">Feedback/Complaint</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+
+                                <!-- Message -->
+                                <div class="form-group">
+                                    <label>Message: *</label>
+                                    <textarea id="messageBody" rows="6" required placeholder="Type your message here..."></textarea>
+                                </div>
+
+                                <!-- Priority -->
+                                <div class="form-group">
+                                    <label>Priority:</label>
+                                    <div class="priority-options">
+                                        <label class="radio-option">
+                                            <input type="radio" name="priority" value="normal" checked>
+                                            <span>📋 Normal</span>
+                                        </label>
+                                        <label class="radio-option">
+                                            <input type="radio" name="priority" value="urgent">
+                                            <span>⚠️ Urgent</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Submit Buttons -->
+                                <div class="form-actions">
+                                    <button type="button" class="btn-secondary" onclick="closeComposeModal()">Cancel</button>
+                                    <button type="submit" class="btn-primary">Send Message</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- View Message Modal -->
+                <div id="viewMessageModal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>Message Details</h2>
+                            <span class="close-modal" onclick="closeViewMessageModal()">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <div class="message-view">
+                                <div class="message-view-header">
+                                    <h3 id="viewSubject"></h3>
+                                    <p><strong>To:</strong> <span id="viewRecipient"></span></p>
+                                    <p><strong>Category:</strong> <span id="viewCategory"></span></p>
+                                    <p><strong>Date:</strong> <span id="viewDate"></span></p>
+                                    <p><strong>Priority:</strong> <span id="viewPriority"></span></p>
+                                </div>
+                                <div class="message-view-body">
+                                    <p id="viewBody"></p>
+                                </div>
+                                <div class="message-view-actions">
+                                    <button class="btn-primary" onclick="showReplyModal()">Reply</button>
+                                    <button class="btn-secondary" onclick="closeViewMessageModal()">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reply Message Modal -->
+                <div id="replyModal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>Reply to Message</h2>
+                            <span class="close-modal" onclick="closeReplyModal()">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <form id="replyForm" onsubmit="sendReply(event)">
+                                <!-- Original Message Info (Read-only) -->
+                                <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                                    <p><strong>Original Subject:</strong> <span id="replyOriginalSubject"></span></p>
+                                    <p><strong>To:</strong> <span id="replyRecipient"></span></p>
+                                </div>
+
+                                <!-- Reply Message -->
+                                <div class="form-group">
+                                    <label>Your Reply: *</label>
+                                    <textarea id="replyBody" rows="6" required placeholder="Type your reply here..."></textarea>
+                                </div>
+
+                                <!-- Priority -->
+                                <div class="form-group">
+                                    <label>Priority:</label>
+                                    <div class="priority-options">
+                                        <label class="radio-option">
+                                            <input type="radio" name="replyPriority" value="normal" checked>
+                                            <span>📋 Normal</span>
+                                        </label>
+                                        <label class="radio-option">
+                                            <input type="radio" name="replyPriority" value="urgent">
+                                            <span>⚠️ Urgent</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Hidden fields to store original message data -->
+                                <input type="hidden" id="replyToDoctor">
+                                <input type="hidden" id="replyToCategory">
+                                <input type="hidden" id="replyToSubject">
+
+                                <!-- Submit Buttons -->
+                                <div class="form-actions">
+                                    <button type="button" class="btn-secondary" onclick="closeReplyModal()">Cancel</button>
+                                    <button type="submit" class="btn-primary">Send Reply</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+        
+                
+                <!-- TRANSACTIONS SECTION -->
+                <div id="transactions-section" class="page-section" style="display:none;">
+                    <div class="section">
+                        <div class="section-header">
+                            <h2>Transactions & Billing</h2>
+                        </div>
+
+                        <!-- Summary Cards -->
+                        <div class="cards-grid" style="margin-bottom: 30px;">
+                            <div class="card">
+                                <div class="card-icon orange">
+                                    <svg fill="currentColor" viewBox="0 0 20 20" width="24" height="24">
+                                        <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"/>
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd"/>
+                                    </svg>
+                                </div>
+                                <h3>Total Paid</h3>
+                                <div class="value">₱45,890</div>
+                            </div>
+                            <div class="card">
+                                <div class="card-icon purple">
+                                    <svg fill="currentColor" viewBox="0 0 20 20" width="24" height="24">
+                                        <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"/>
+                                        <path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd"/>
+                                    </svg>
+                                </div>
+                                <h3>Pending Payment</h3>
+                                <div class="value" style="color: #ff9800;">₱2,450</div>
+                            </div>
+                            <div class="card">
+                                <div class="card-icon green">
+                                    <svg fill="currentColor" viewBox="0 0 20 20" width="24" height="24">
+                                        <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z" clip-rule="evenodd"/>
+                                    </svg>
+                                </div>
+                                <h3>Total Transactions</h3>
+                                <div class="value">24</div>
+                            </div>
+                        </div>
+
+                        <!-- Transaction Filter -->
+                        <div style="margin-bottom: 20px; display: flex; gap: 15px; flex-wrap: wrap;">
+                            <select class="filter-select" onchange="filterTransactions(this.value)">
+                                <option value="all">All Transactions</option>
+                                <option value="paid">Paid</option>
+                                <option value="pending">Pending</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                            <select class="filter-select">
+                                <option value="all">All Time</option>
+                                <option value="month">This Month</option>
+                                <option value="quarter">Last 3 Months</option>
+                                <option value="year">This Year</option>
+                            </select>
+                        </div>
+
+                        <!-- Pending Payments -->
+                        <h3 style="color: #2c5aa0; margin-bottom: 15px; font-size: 18px;">⏳ Pending Payments</h3>
+                        <div class="transaction-item pending">
+                            <div class="transaction-icon">💳</div>
+                            <div class="transaction-details">
+                                <h4>General Check-up - Dr. Roberto Cruz</h4>
+                                <p>📅 November 28, 2025 Appointment</p>
+                                <p class="transaction-id">Transaction ID: #TXN-2025-0128</p>
+                            </div>
+                            <div class="transaction-amount">
+                                <span class="amount">₱1,500</span>
+                                <button class="btn-pay" onclick="payNow('TXN-2025-0128', 1500)">Pay Now</button>
+                            </div>
+                        </div>
+
+                        <div class="transaction-item pending">
+                            <div class="transaction-icon">🏥</div>
+                            <div class="transaction-details">
+                                <h4>Laboratory Tests</h4>
+                                <p>📅 November 20, 2025</p>
+                                <p class="transaction-id">Transaction ID: #TXN-2025-0125</p>
+                            </div>
+                            <div class="transaction-amount">
+                                <span class="amount">₱950</span>
+                                <button class="btn-pay" onclick="payNow('TXN-2025-0125', 950)">Pay Now</button>
+                            </div>
+                        </div>
+
+                        <!-- Transaction History -->
+                        <h3 style="color: #2c5aa0; margin: 30px 0 15px 0; font-size: 18px;">📋 Transaction History</h3>
+                        
+                        <div class="transaction-item paid">
+                            <div class="transaction-icon">✅</div>
+                            <div class="transaction-details">
+                                <h4>Cardiology Consultation - Dr. Maria Santos</h4>
+                                <p>📅 November 15, 2025</p>
+                                <p class="transaction-id">Transaction ID: #TXN-2025-0120</p>
+                                <span class="payment-method">💳 Paid via Credit Card</span>
+                            </div>
+                            <div class="transaction-amount">
+                                <span class="amount paid">₱2,500</span>
+                                <button class="btn-receipt" onclick="downloadReceipt('TXN-2025-0120')">📄 Receipt</button>
+                            </div>
+                        </div>
+
+                        <div class="transaction-item paid">
+                            <div class="transaction-icon">✅</div>
+                            <div class="transaction-details">
+                                <h4>Counselling Session - Dr. Anna Reyes</h4>
+                                <p>📅 November 10, 2025</p>
+                                <p class="transaction-id">Transaction ID: #TXN-2025-0115</p>
+                                <span class="payment-method">💵 Paid at Hospital</span>
+                            </div>
+                            <div class="transaction-amount">
+                                <span class="amount paid">₱1,500</span>
+                                <button class="btn-receipt" onclick="downloadReceipt('TXN-2025-0115')">📄 Receipt</button>
+                            </div>
+                        </div>
+
+                        <div class="transaction-item paid">
+                            <div class="transaction-icon">✅</div>
+                            <div class="transaction-details">
+                                <h4>X-Ray Imaging</h4>
+                                <p>📅 November 5, 2025</p>
+                                <p class="transaction-id">Transaction ID: #TXN-2025-0110</p>
+                                <span class="payment-method">💳 Paid via GCash</span>
+                            </div>
+                            <div class="transaction-amount">
+                                <span class="amount paid">₱1,200</span>
+                                <button class="btn-receipt" onclick="downloadReceipt('TXN-2025-0110')">📄 Receipt</button>
+                            </div>
+                        </div>
+
+                        <div class="transaction-item paid">
+                            <div class="transaction-icon">✅</div>
+                            <div class="transaction-details">
+                                <h4>Emergency Room Visit</h4>
+                                <p>📅 October 28, 2025</p>
+                                <p class="transaction-id">Transaction ID: #TXN-2025-0098</p>
+                                <span class="payment-method">💳 Paid via Debit Card</span>
+                            </div>
+                            <div class="transaction-amount">
+                                <span class="amount paid">₱5,800</span>
+                                <button class="btn-receipt" onclick="downloadReceipt('TXN-2025-0098')">📄 Receipt</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment Modal -->
+                <div id="paymentModal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>Payment</h2>
+                            <span class="close-modal" onclick="closePaymentModal()">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <div class="payment-summary">
+                                <h3>Payment Summary</h3>
+                                <div class="summary-row">
+                                    <span>Transaction ID:</span>
+                                    <strong id="paymentTxnId">#TXN-2025-0128</strong>
+                                </div>
+                                <div class="summary-row">
+                                    <span>Amount:</span>
+                                    <strong id="paymentAmount" style="color: #2c5aa0; font-size: 24px;">₱1,500</strong>
+                                </div>
+                            </div>
+
+                            <form id="paymentForm" onsubmit="processPayment(event)">
+                                <div class="form-group">
+                                    <label>Select Payment Method *</label>
+                                    <div class="payment-methods">
+                                        <label class="payment-card">
+                                            <input type="radio" name="paymentMethod" value="card" required>
+                                            <div class="card-content">
+                                                <span style="font-size: 24px;">💳</span>
+                                                <span>Credit/Debit Card</span>
+                                            </div>
+                                        </label>
+                                        <label class="payment-card">
+                                            <input type="radio" name="paymentMethod" value="gcash" required>
+                                            <div class="card-content">
+                                                <span style="font-size: 24px;">📱</span>
+                                                <span>GCash</span>
+                                            </div>
+                                        </label>
+                                        <label class="payment-card">
+                                            <input type="radio" name="paymentMethod" value="paymaya" required>
+                                            <div class="card-content">
+                                                <span style="font-size: 24px;">💰</span>
+                                                <span>PayMaya</span>
+                                            </div>
+                                        </label>
+                                        <label class="payment-card">
+                                            <input type="radio" name="paymentMethod" value="bank" required>
+                                            <div class="card-content">
+                                                <span style="font-size: 24px;">🏦</span>
+                                                <span>Bank Transfer</span>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="form-actions">
+                                    <button type="button" class="btn-secondary" onclick="closePaymentModal()">Cancel</button>
+                                    <button type="submit" class="btn-primary">Proceed to Payment</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MEDICAL RECORDS SECTION -->
+                <div id="medical-records-section" class="page-section" style="display:none;">
+                    <div class="section">
+                        <div class="section-header">
+                            <h2>Medical Records</h2>
+                            <button class="btn-view-all" onclick="requestRecord()">📄 Request Records</button>
+                        </div>
+
+                        <!-- Patient Information -->
+                        <div class="medical-info-card">
+                            <h3>👤 Patient Information</h3>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <span class="info-label">Patient ID:</span>
+                                    <span class="info-value">#STH2024-001</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Blood Type:</span>
+                                    <span class="info-value">O+</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Allergies:</span>
+                                    <span class="info-value">Penicillin, Peanuts</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Height:</span>
+                                    <span class="info-value">170 cm</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Weight:</span>
+                                    <span class="info-value">68 kg</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">BMI:</span>
+                                    <span class="info-value">23.5 (Normal)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Medical Records Tabs -->
+                        <div class="message-tabs" style="margin-top: 30px;">
+                            <button class="tab-btn active" onclick="showRecordTab('visits')">Visit History</button>
+                            <button class="tab-btn" onclick="showRecordTab('prescriptions')">Prescriptions</button>
+                            <button class="tab-btn" onclick="showRecordTab('lab')">Lab Results</button>
+                            <button class="tab-btn" onclick="showRecordTab('imaging')">Imaging</button>
+                            <button class="tab-btn" onclick="showRecordTab('documents')">Documents</button>
+                        </div>
+
+                        <!-- Visit History Tab -->
+                        <div id="visits-tab" class="record-tab-content">
+                            <div class="record-item">
+                                <div class="record-header">
+                                    <div>
+                                        <h4>🩺 Cardiology Consultation</h4>
+                                        <p>Dr. Maria Santos | November 15, 2025</p>
+                                    </div>
+                                    <button class="btn-view-doc" onclick="viewDocument('visit1')">View Details</button>
+                                </div>
+                                <div class="record-content">
+                                    <p><strong>Diagnosis:</strong> Hypertension - Stage 1</p>
+                                    <p><strong>Notes:</strong> Patient presents with elevated blood pressure readings. Prescribed medication and lifestyle modifications.</p>
+                                </div>
+                            </div>
+
+                            <div class="record-item">
+                                <div class="record-header">
+                                    <div>
+                                        <h4>🧠 Counselling Session</h4>
+                                        <p>Dr. Anna Reyes | November 10, 2025</p>
+                                    </div>
+                                    <button class="btn-view-doc" onclick="viewDocument('visit2')">View Details</button>
+                                </div>
+                                <div class="record-content">
+                                    <p><strong>Session Type:</strong> Stress Management</p>
+                                    <p><strong>Notes:</strong> Patient responding well to cognitive behavioral therapy techniques. Continue weekly sessions.</p>
+                                </div>
+                            </div>
+
+                            <div class="record-item">
+                                <div class="record-header">
+                                    <div>
+                                        <h4>🏥 General Check-up</h4>
+                                        <p>Dr. Roberto Cruz | October 20, 2025</p>
+                                    </div>
+                                    <button class="btn-view-doc" onclick="viewDocument('visit3')">View Details</button>
+                                </div>
+                                <div class="record-content">
+                                    <p><strong>Diagnosis:</strong> Annual Physical Examination</p>
+                                    <p><strong>Notes:</strong> Overall health good. Recommended increased physical activity and balanced diet.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Prescriptions Tab -->
+                        <div id="prescriptions-tab" class="record-tab-content" style="display:none;">
+                            <div class="record-item">
+                                <div class="record-header">
+                                    <div>
+                                        <h4>💊 Active Prescription</h4>
+                                        <p>Dr. Maria Santos | November 15, 2025</p>
+                                    </div>
+                                    <span class="status-badge active">Active</span>
+                                </div>
+                                <div class="record-content">
+                                    <p><strong>Medication:</strong> Amlodipine 5mg</p>
+                                    <p><strong>Dosage:</strong> Once daily, morning</p>
+                                    <p><strong>Duration:</strong> 30 days (Refillable)</p>
+                                    <p><strong>Instructions:</strong> Take with or without food. Monitor blood pressure regularly.</p>
+                                </div>
+                            </div>
+
+                            <div class="record-item">
+                                <div class="record-header">
+                                    <div>
+                                        <h4>💊 Active Prescription</h4>
+                                        <p>Dr. Anna Reyes | November 10, 2025</p>
+                                    </div>
+                                    <span class="status-badge active">Active</span>
+                                </div>
+                                <div class="record-content">
+                                    <p><strong>Medication:</strong> Sertraline 50mg</p>
+                                    <p><strong>Dosage:</strong> Once daily, morning</p>
+                                    <p><strong>Duration:</strong> 90 days</p>
+                                    <p><strong>Instructions:</strong> Take with food. Do not discontinue without consulting doctor.</p>
+                                </div>
+                            </div>
+
+                            <div class="record-item">
+                                <div class="record-header">
+                                    <div>
+                                        <h4>💊 Past Prescription</h4>
+                                        <p>Dr. Roberto Cruz | September 15, 2025</p>
+                                    </div>
+                                    <span class="status-badge completed">Completed</span>
+                                </div>
+                                <div class="record-content">
+                                    <p><strong>Medication:</strong> Amoxicillin 500mg</p>
+                                    <p><strong>Dosage:</strong> Three times daily</p>
+                                    <p><strong>Duration:</strong> 7 days (Completed)</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Lab Results Tab -->
+                        <div id="lab-tab" class="record-tab-content" style="display:none;">
+                            <div class="record-item">
+                                <div class="record-header">
+                                    <div>
+                                        <h4>🔬 Complete Blood Count (CBC)</h4>
+                                        <p>November 20, 2025</p>
+                                    </div>
+                                    <button class="btn-download" onclick="downloadFile('cbc-nov2025.pdf')">⬇️ Download PDF</button>
+                                </div>
+                                <div class="record-content">
+                                    <div class="lab-results">
+                                        <div class="lab-result-row">
+                                            <span>Hemoglobin:</span>
+                                            <span>14.5 g/dL</span>
+                                            <span class="result-normal">Normal</span>
+                                        </div>
+                                        <div class="lab-result-row">
+                                            <span>White Blood Cells:</span>
+                                            <span>7,200 cells/mcL</span>
+                                            <span class="result-normal">Normal</span>
+                                        </div>
+                                        <div class="lab-result-row">
+                                            <span>Platelets:</span>
+                                            <span>250,000 cells/mcL</span>
+                                            <span class="result-normal">Normal</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="record-item">
+                                <div class="record-header">
+                                    <div>
+                                        <h4>🔬 Lipid Panel</h4>
+                                        <p>November 15, 2025</p>
+                                    </div>
+                                    <button class="btn-download" onclick="downloadFile('lipid-nov2025.pdf')">⬇️ Download PDF</button>
+                                </div>
+                                <div class="record-content">
+                                    <div class="lab-results">
+                                        <div class="lab-result-row">
+                                            <span>Total Cholesterol:</span>
+                                            <span>195 mg/dL</span>
+                                            <span class="result-normal">Normal</span>
+                                        </div>
+                                        <div class="lab-result-row">
+                                            <span>LDL Cholesterol:</span>
+                                            <span>125 mg/dL</span>
+                                            <span class="result-normal">Normal</span>
+                                        </div>
+                                        <div class="lab-result-row">
+                                            <span>HDL Cholesterol:</span>
+                                            <span>55 mg/dL</span>
+                                            <span class="result-normal">Normal</span>
+                                        </div>
+                                        <div class="lab-result-row">
+                                            <span>Triglycerides:</span>
+                                            <span>140 mg/dL</span>
+                                            <span class="result-borderline">Borderline</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Imaging Tab -->
+                        <div id="imaging-tab" class="record-tab-content" style="display:none;">
+                            <div class="record-item">
+                                <div class="record-header">
+                                    <div>
+                                        <h4>📷 Chest X-Ray</h4>
+                                        <p>November 5, 2025 | Radiologist: Dr. Pedro Ramos</p>
+                                    </div>
+                                    <button class="btn-download" onclick="downloadFile('xray-chest-nov2025.pdf')">⬇️ Download</button>
+                                </div>
+                                <div class="record-content">
+                                    <p><strong>Findings:</strong> No acute cardiopulmonary abnormality. Lungs are clear. Heart size normal.</p>
+                                    <p><strong>Impression:</strong> Normal chest radiograph.</p>
+                                </div>
+                            </div>
+
+                            <div class="record-item">
+                                <div class="record-header">
+                                    <div>
+                                        <h4>📷 ECG (Electrocardiogram)</h4>
+                                        <p>November 15, 2025</p>
+                                    </div>
+                                    <button class="btn-download" onclick="downloadFile('ecg-nov2025.pdf')">⬇️ Download</button>
+                                </div>
+                                <div class="record-content">
+                                    <p><strong>Findings:</strong> Normal sinus rhythm. Heart rate: 72 bpm.</p>
+                                    <p><strong>Impression:</strong> Normal ECG findings.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Documents Tab -->
+                        <div id="documents-tab" class="record-tab-content" style="display:none;">
+                            <div class="record-item">
+                                <div class="record-header">
+                                    <div>
+                                        <h4>📄 Medical Certificate</h4>
+                                        <p>Issued: November 15, 2025</p>
+                                    </div>
+                                    <button class="btn-download" onclick="downloadFile('med-cert-nov2025.pdf')">⬇️ Download</button>
+                                </div>
+                                <div class="record-content">
+                                    <p><strong>Purpose:</strong> Fitness to Work</p>
+                                    <p><strong>Valid Until:</strong> December 15, 2025</p>
+                                </div>
+                            </div>
+
+                            <div class="record-item">
+                                <div class="record-header">
+                                    <div>
+                                        <h4>📄 Discharge Summary</h4>
+                                        <p>October 30, 2025</p>
+                                    </div>
+                                    <button class="btn-download" onclick="downloadFile('discharge-oct2025.pdf')">⬇️ Download</button>
+                                </div>
+                                <div class="record-content">
+                                    <p><strong>Admission Date:</strong> October 28, 2025</p>
+                                    <p><strong>Discharge Date:</strong> October 30, 2025</p>
+                                    <p><strong>Diagnosis:</strong> Acute Gastroenteritis</p>
+                                </div>
+                            </div>
+
+                            <div class="record-item">
+                                <div class="record-header">
+                                    <div>
+                                        <h4>📄 Vaccination Record</h4>
+                                        <p>Updated: September 1, 2025</p>
+                                    </div>
+                                    <button class="btn-download" onclick="downloadFile('vaccination-record.pdf')">⬇️ Download</button>
+                                </div>
+                                <div class="record-content">
+                                    <p><strong>Last Vaccine:</strong> Influenza (Flu Shot)</p>
+                                    <p><strong>Date:</strong> September 1, 2025</p>
+                                    <p><strong>Next Due:</strong> September 2026</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SETTINGS SECTION -->
+                <div id="settings-section" class="page-section" style="display:none;">
+                    <div class="section">
+                        <div class="section-header">
+                            <h2>Settings</h2>
+                        </div>
+                        <p style="color: #666; margin-bottom: 20px;">Manage your account settings and preferences. You can add your settings content in this section.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    // ============================================
+    // NAVIGATION & UI FUNCTIONS
+    // ============================================
+    function showSection(section, event) {
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => item.classList.remove('active'));
+    
+        if (event && event.currentTarget) {
+            event.currentTarget.classList.add('active');
+        }
+    
+        const sections = document.querySelectorAll('.page-section');
+        sections.forEach(s => s.style.display = 'none');
+    
+        const selectedSection = document.getElementById(section + '-section');
+        if (selectedSection) selectedSection.style.display = 'block';
+    
+        if (section === 'appointments') {
+            loadAppointments();
+        }
+        if (section === 'messages') {
+            loadMessages();
+        }
+    }
+    
+    function viewProfile() {
+        const sections = document.querySelectorAll('.page-section');
+        sections.forEach(s => s.style.display = 'none');
+        document.getElementById('profile-section').style.display = 'block';
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => item.classList.remove('active'));
+    }
+    
+    function goToSettings() {
+        const sections = document.querySelectorAll('.page-section');
+        sections.forEach(s => s.style.display = 'none');
+        document.getElementById('settings-section').style.display = 'block';
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => item.classList.remove('active'));
+    }
+    
+    function goToHelp() {
+        const sections = document.querySelectorAll('.page-section');
+        sections.forEach(s => s.style.display = 'none');
+        document.getElementById('help-section').style.display = 'block';
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => item.classList.remove('active'));
+    }
+    
+    function toggleProfileDropdown() {
+        const dropdown = document.getElementById('profileDropdown');
+        dropdown.classList.toggle('show');
+    }
+    
+    function closeDropdown() {
+        const dropdown = document.getElementById('profileDropdown');
+        dropdown.classList.remove('show');
+    }
+    
+    // LOGOUT FUNCTION - FIXED
+    async function logout() {
+        try {
+            const response = await fetch('/api/logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+    
+            if (response.ok) {
+                window.location.href = '/website';
+            } else {
+                window.location.href = '/website';
+            }
+        } catch (error) {
+            console.error('Logout error:', error);
+            window.location.href = '/website';
+        }
+    }
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        const dropdown = document.getElementById('profileDropdown');
+        const avatar = document.querySelector('.user-avatar');
+        
+        if (dropdown && avatar && !dropdown.contains(event.target) && !avatar.contains(event.target)) {
+            dropdown.classList.remove('show');
+        }
+    });
+    
+    // Set current date
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const today = new Date().toLocaleDateString('en-US', options);
+    const headerDate = document.querySelector('.header-left p');
+    if (headerDate) {
+        headerDate.textContent = today;
+    }
+    
+    // ============================================
+    // APPOINTMENT BOOKING DATA
+    // ============================================
+    const doctors = {
+        cardiology: [
+            { value: "dr-santos", name: "Dr. Maria Santos - Cardiologist", fee: 1500 },
+            { value: "dr-reyes", name: "Dr. Juan Reyes - Heart Specialist", fee: 2000 }
+        ],
+        pediatrics: [
+            { value: "dr-cruz", name: "Dr. Roberto Cruz - Pediatrician", fee: 1200 },
+            { value: "dr-garcia", name: "Dr. Ana Garcia - Child Specialist", fee: 1300 }
+        ],
+        orthopedics: [
+            { value: "dr-lopez", name: "Dr. Carlos Lopez - Orthopedic Surgeon", fee: 1800 },
+            { value: "dr-mendoza", name: "Dr. Sofia Mendoza - Sports Medicine", fee: 1600 }
+        ],
+        neurology: [
+            { value: "dr-torres", name: "Dr. Miguel Torres - Neurologist", fee: 2200 },
+            { value: "dr-rivera", name: "Dr. Elena Rivera - Brain Specialist", fee: 2500 }
+        ],
+        general: [
+            { value: "dr-martinez", name: "Dr. Jose Martinez - General Practitioner", fee: 800 },
+            { value: "dr-santos-gen", name: "Dr. Lisa Santos - Family Medicine", fee: 900 }
+        ],
+        psychology: [
+            { value: "dr-anna-reyes", name: "Dr. Anna Reyes - Clinical Psychologist", fee: 1500 },
+            { value: "dr-fernando", name: "Dr. Miguel Fernandez - Counselor", fee: 1200 }
+        ],
+        emergency: [
+            { value: "dr-emergency", name: "Emergency Department - On-Call Doctor", fee: 2000 }
+        ]
+    };
+    
+    const serviceCosts = {
+        checkup: { name: "General Check-up", cost: 800 },
+        consultation: { name: "Specialist Consultation", cost: 1500 },
+        counselling: { name: "Counselling Session", cost: 1500 },
+        room: { name: "Room Booking", cost: 0 },
+        emergency: { name: "Emergency Service", cost: 3000 },
+        laboratory: { name: "Laboratory Tests", cost: 500 },
+        xray: { name: "X-Ray / Imaging", cost: 1000 }
+    };
+    
+    const roomCosts = {
+        private: 5000,
+        "semi-private": 3000,
+        ward: 1500,
+        icu: 10000
+    };
+    
+    // ============================================
+    // APPOINTMENT BOOKING FUNCTIONS
+    // ============================================
+    function showBookingModal() {
+        document.getElementById('bookingModal').style.display = 'block';
+        document.body.style.overflow = 'hidden';
+        const dateInput = document.getElementById('appointmentDate');
+        if (dateInput) {
+            const today = new Date().toISOString().split('T')[0];
+            dateInput.setAttribute('min', today);
+        }
+    }
+    
+    function closeBookingModal() {
+        document.getElementById('bookingModal').style.display = 'none';
+        document.body.style.overflow = 'auto';
+        document.getElementById('bookingForm').reset();
+        updateCost();
+    }
+    
+    function updateDoctorList() {
+        const serviceType = document.getElementById('serviceType').value;
+        const department = document.getElementById('department').value;
+        const doctorSelect = document.getElementById('doctor');
+        const roomTypeGroup = document.getElementById('roomTypeGroup');
+        const durationGroup = document.getElementById('durationGroup');
+        const departmentGroup = document.getElementById('departmentGroup');
+        
+        if (serviceType === 'room') {
+            roomTypeGroup.style.display = 'block';
+            durationGroup.style.display = 'block';
+            departmentGroup.style.display = 'block';
+            document.getElementById('roomType').required = true;
+            document.getElementById('duration').required = true;
+            document.getElementById('department').required = true;
+        } else {
+            roomTypeGroup.style.display = 'none';
+            durationGroup.style.display = 'none';
+            departmentGroup.style.display = 'block';
+            document.getElementById('roomType').required = false;
+            document.getElementById('duration').required = false;
+            document.getElementById('department').required = true;
+        }
+        
+        doctorSelect.innerHTML = '<option value="">Choose a doctor</option>';
+        
+        if (department && doctors[department]) {
+            doctors[department].forEach(doctor => {
+                const option = document.createElement('option');
+                option.value = doctor.value;
+                option.textContent = `${doctor.name} (₱${doctor.fee})`;
+                option.dataset.fee = doctor.fee;
+                doctorSelect.appendChild(option);
+            });
+        }
+        
+        updateCost();
+    }
+    
+    function updateCost() {
+        const serviceType = document.getElementById('serviceType').value;
+        const roomType = document.getElementById('roomType').value;
+        const duration = parseInt(document.getElementById('duration').value) || 1;
+        const doctorSelect = document.getElementById('doctor');
+        const doctorFee = doctorSelect.selectedIndex > 0 ? parseInt(doctorSelect.options[doctorSelect.selectedIndex].dataset.fee) || 0 : 0;
+        const costDisplay = document.getElementById('costDisplay');
+        
+        if (!serviceType) {
+            costDisplay.innerHTML = 'Please select service type to see estimated cost';
+            return;
+        }
+        
+        let totalCost = 0;
+        let breakdown = '';
+        
+        if (serviceType === 'room' && roomType) {
+            const roomCost = roomCosts[roomType];
+            totalCost = roomCost * duration;
+            breakdown = `Room: ₱${roomCost.toLocaleString()}/day × ${duration} day(s)`;
+            if (doctorFee > 0) {
+                totalCost += doctorFee;
+                breakdown += ` + Doctor: ₱${doctorFee.toLocaleString()}`;
+            }
+        } else if (serviceCosts[serviceType]) {
+            totalCost = serviceCosts[serviceType].cost;
+            breakdown = `Service: ₱${totalCost.toLocaleString()}`;
+            if (doctorFee > 0) {
+                totalCost += doctorFee;
+                breakdown += ` + Doctor: ₱${doctorFee.toLocaleString()}`;
+            }
+        }
+        
+        if (totalCost > 0) {
+            costDisplay.innerHTML = `
+                <strong style="font-size: 24px; color: #2c5aa0;">₱${totalCost.toLocaleString()}</strong><br>
+                <span style="color: #666; font-size: 14px;">${breakdown}</span>
+            `;
+        } else {
+            costDisplay.innerHTML = 'Cost will be calculated based on your selection';
+        }
+    }
+    
+    function calculateTotalCost() {
+        const serviceType = document.getElementById('serviceType').value;
+        const roomType = document.getElementById('roomType').value;
+        const duration = parseInt(document.getElementById('duration').value) || 1;
+        const doctorSelect = document.getElementById('doctor');
+        const doctorFee = doctorSelect.selectedIndex > 0 ? parseInt(doctorSelect.options[doctorSelect.selectedIndex].dataset.fee) || 0 : 0;
+        
+        let totalCost = 0;
+        
+        if (serviceType === 'room' && roomType) {
+            totalCost = roomCosts[roomType] * duration + doctorFee;
+        } else if (serviceCosts[serviceType]) {
+            totalCost = serviceCosts[serviceType].cost + doctorFee;
+        }
+        
+        return totalCost;
+    }
+    
+    async function submitBooking(event) {
+        event.preventDefault();
+        
+        const doctorSelect = document.getElementById('doctor');
+        const selectedDoctor = doctorSelect.options[doctorSelect.selectedIndex].text;
+        
+        const formData = {
+            serviceType: document.getElementById('serviceType').value,
+            department: document.getElementById('department').value,
+            doctor: selectedDoctor,
+            appointmentDate: document.getElementById('appointmentDate').value,
+            appointmentTime: document.getElementById('appointmentTime').value,
+            roomType: document.getElementById('roomType').value,
+            duration: parseInt(document.getElementById('duration').value) || null,
+            reason: document.getElementById('reason').value,
+            paymentMethod: document.querySelector('input[name="payment"]:checked').value,
+            estimatedCost: calculateTotalCost()
+        };
+        
+        const submitBtn = event.target.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Booking...';
+        
+        try {
+            const response = await fetch('/api/book-appointment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            });
+            
+            const data = await response.json();
+            
+            if (data.status === 'success') {
+                alert('✅ Appointment booked successfully!\n\nYour appointment has been confirmed.');
+                closeBookingModal();
+                loadAppointments();
+            } else {
+                alert('❌ Error: ' + (data.message || 'Failed to book appointment'));
+            }
+            
+        } catch (error) {
+            alert('❌ Error: Failed to book appointment. Please try again.');
+            console.error('Booking error:', error);
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Book Appointment';
+        }
+    }
+    
+    // ============================================
+    // LOAD APPOINTMENTS FROM DATABASE
+    // ============================================
+    async function loadAppointments() {
+        const upcomingContainer = document.getElementById('upcomingAppointmentsContainer');
+        const pastContainer = document.getElementById('pastAppointmentsContainer');
+        
+        if (upcomingContainer) {
+            upcomingContainer.innerHTML = `
+                <div class="loading-message">
+                    <p>📅 Loading your upcoming appointments...</p>
+                </div>
+            `;
+        }
+        
+        if (pastContainer) {
+            pastContainer.innerHTML = `
+                <div class="loading-message">
+                    <p>📋 Loading your past appointments...</p>
+                </div>
+            `;
+        }
+        
+        try {
+            const response = await fetch('/api/my-appointments');
+            const data = await response.json();
+            
+            if (data.status === 'success') {
+                displayAppointments(data.upcoming, data.past);
+            } else {
+                showError(upcomingContainer, 'Failed to load appointments');
+                showError(pastContainer, 'Failed to load appointments');
+            }
+        } catch (error) {
+            console.error('Error loading appointments:', error);
+            showError(upcomingContainer, 'Error connecting to server');
+            showError(pastContainer, 'Error connecting to server');
+        }
+    }
+    
+    function displayAppointments(upcoming, past) {
+        const upcomingContainer = document.getElementById('upcomingAppointmentsContainer');
+        const pastContainer = document.getElementById('pastAppointmentsContainer');
+        
+        if (upcomingContainer) {
+            if (upcoming && upcoming.length > 0) {
+                upcomingContainer.innerHTML = upcoming.map(apt => createAppointmentHTML(apt, true)).join('');
+            } else {
+                upcomingContainer.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📅</div>
+                        <h4>No Upcoming Appointments</h4>
+                        <p>You don't have any scheduled appointments at the moment.</p>
+                        <button class="btn-view-all" onclick="showBookingModal()" style="margin-top: 10px;">
+                            + Book Your First Appointment
+                        </button>
+                    </div>
+                `;
+            }
+        }
+        
+        if (pastContainer) {
+            if (past && past.length > 0) {
+                pastContainer.innerHTML = past.map(apt => createAppointmentHTML(apt, false)).join('');
+            } else {
+                pastContainer.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📋</div>
+                        <h4>No Past Appointments</h4>
+                        <p>Your appointment history will appear here.</p>
+                    </div>
+                `;
+            }
+        }
+    }
+    
+    function createAppointmentHTML(appointment, isUpcoming) {
+        const date = new Date(appointment.appointment_date);
+        const formattedDate = date.toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        });
+        
+        const timeStr = appointment.appointment_time;
+        let displayTime = timeStr;
+        
+        if (timeStr) {
+            const [hours, minutes] = timeStr.split(':');
+            const hour = parseInt(hours);
+            const ampm = hour >= 12 ? 'PM' : 'AM';
+            const displayHour = hour % 12 || 12;
+            displayTime = `${displayHour}:${minutes} ${ampm}`;
+        }
+        
+        const paymentText = appointment.payment_method === 'online' ? 'Paid Online' : 'Pay at Hospital';
+        
+        let statusClass = 'status-confirmed';
+        let borderColor = '#2c5aa0';
+        let statusText = appointment.status || 'Confirmed';
+        
+        if (appointment.status === 'Completed') {
+            statusClass = 'status-completed';
+            borderColor = '#4caf50';
+        } else if (appointment.status === 'Cancelled') {
+            statusClass = 'status-cancelled';
+            borderColor = '#d32f2f';
+        }
+        
+        const serviceDisplay = formatServiceType(appointment.service_type);
+        
+        return `
+            <div class="appointment-item" style="border-left-color: ${borderColor};">
+                <div class="appointment-info">
+                    <h4>${appointment.doctor} - ${serviceDisplay}</h4>
+                    <p>📅 ${formattedDate} at ${displayTime}</p>
+                    <p style="margin-top: 5px;">💳 Payment: ${paymentText}</p>
+                    ${appointment.estimated_cost ? `<p style="margin-top: 5px;">💰 Cost: ₱${parseFloat(appointment.estimated_cost).toLocaleString()}</p>` : ''}
+                </div>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <span class="appointment-status ${statusClass}">${statusText}</span>
+                    ${isUpcoming && appointment.status === 'Confirmed' ? 
+                        `<button class="btn-cancel" onclick="cancelAppointment(${appointment.id})">Cancel</button>` 
+                        : ''}
+                </div>
+            </div>
+        `;
+    }
+    
+    function formatServiceType(serviceType) {
+        const serviceNames = {
+            'checkup': 'General Check-up',
+            'consultation': 'Specialist Consultation',
+            'counselling': 'Counselling',
+            'room': 'Room Booking',
+            'emergency': 'Emergency',
+            'laboratory': 'Laboratory Tests',
+            'xray': 'X-Ray / Imaging'
+        };
+        
+        return serviceNames[serviceType] || serviceType;
+    }
+    
+    function showError(container, message) {
+        if (container) {
+            container.innerHTML = `
+                <div class="empty-state" style="background: #ffebee; border-left: 4px solid #d32f2f;">
+                    <div class="empty-state-icon">⚠️</div>
+                    <h4 style="color: #d32f2f;">Error</h4>
+                    <p>${message}</p>
+                    <button class="btn-view-all" onclick="loadAppointments()" style="margin-top: 10px;">
+                        🔄 Try Again
+                    </button>
+                </div>
+            `;
+        }
+    }
+    
+    async function cancelAppointment(appointmentId) {
+        if (!appointmentId) {
+            alert('⚠️ Invalid appointment ID');
+            return;
+        }
+        
+        if (!confirm('Are you sure you want to cancel this appointment?\n\nThis action cannot be undone.')) {
+            return;
+        }
+        
+        try {
+            const response = await fetch(`/api/cancel-appointment/${appointmentId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            
+            const data = await response.json();
+            
+            if (data.status === 'success') {
+                alert('✅ Appointment cancelled successfully!');
+                loadAppointments();
+            } else {
+                alert('❌ Error: ' + (data.message || 'Failed to cancel appointment.'));
+            }
+            
+        } catch (error) {
+            console.error('Cancel error:', error);
+            alert('❌ Error: Failed to connect to server.');
+        }
+    }
+    
+    // ============================================
+    // MESSAGE FUNCTIONS - ALIGNED WITH DATABASE
+    // ============================================
+    let currentMessageTab = 'sent';
+    let currentMessage = null;
+    
+    function loadMessages() {
+        loadSentMessages();
+    }
+    
+    function loadSentMessages() {
+        const container = document.getElementById('sentMessagesContainer');
+        
+        if (container) {
+            container.innerHTML = `
+                <div class="loading-message">
+                    <p>📧 Loading sent messages...</p>
+                </div>
+            `;
+        }
+        
+        fetch('/api/my-messages')
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    displaySentMessages(data.messages);
+                } else {
+                    showSentMessagesError('Failed to load messages');
+                }
+            })
+            .catch(error => {
+                console.error('Error loading sent messages:', error);
+                showSentMessagesError('Error connecting to server');
+            });
+    }
+    
+    function displaySentMessages(messages) {
+        const container = document.getElementById('sentMessagesContainer');
+        
+        if (!container) return;
+        
+        if (messages && messages.length > 0) {
+            container.innerHTML = messages.map(msg => createSentMessageHTML(msg)).join('');
+        } else {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">📧</div>
+                    <h4>No Sent Messages</h4>
+                    <p>You haven't sent any messages yet. Click "Compose Message" to send your first message to the hospital.</p>
+                    <button class="btn-view-all" onclick="showComposeModal()" style="margin-top: 10px;">
+                        + Compose Your First Message
+                    </button>
+                </div>
+            `;
+        }
+    }
+    
+    function createSentMessageHTML(message) {
+        const date = new Date(message.created_at);
+        const formattedDate = date.toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        
+        let icon = '📧';
+        if (message.category.includes('Medical')) icon = '🩺';
+        else if (message.category.includes('Prescription')) icon = '💊';
+        else if (message.category.includes('Appointment')) icon = '📅';
+        else if (message.category.includes('Billing')) icon = '💳';
+        
+        let priorityBadge = '';
+        if (message.priority === 'urgent') {
+            priorityBadge = '<span class="priority-badge urgent" style="background: #ff5252; color: white; padding: 2px 8px; border-radius: 4px; font-size: 11px; margin-left: 10px;">⚠️ URGENT</span>';
+        }
+        
+        const messagePreview = message.message.substring(0, 100) + (message.message.length > 100 ? '...' : '');
+        
+        return `
+            <div class="message-item" onclick='viewSentMessage(${JSON.stringify(message).replace(/'/g, "&#39;")})' style="cursor: pointer;">
+                <div class="message-icon">${icon}</div>
+                <div class="message-details">
+                    <h4>To: ${message.doctor_name} ${priorityBadge}</h4>
+                    <p class="message-preview" style="font-weight: 600; color: #2c5aa0;">${message.subject}</p>
+                    <p class="message-preview">${messagePreview}</p>
+                    <span class="message-time">${formattedDate}</span>
+                </div>
+                <span class="message-category" style="background: #e3f2fd; color: #2c5aa0; padding: 5px 12px; border-radius: 20px; font-size: 12px;">
+                    ${message.category}
+                </span>
+            </div>
+        `;
+    }
+    
+    function viewSentMessage(message) {
+        currentMessage = { ...message, type: 'sent' };
+        
+        const date = new Date(message.created_at);
+        const formattedDate = date.toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        
+        document.getElementById('viewSubject').textContent = message.subject;
+        const recipientLabel = document.querySelector('#viewMessageModal .message-view-header p:first-of-type strong');
+        if (recipientLabel) recipientLabel.textContent = 'To:';
+        document.getElementById('viewRecipient').textContent = message.doctor_name;
+        document.getElementById('viewCategory').textContent = message.category;
+        document.getElementById('viewDate').textContent = formattedDate;
+        document.getElementById('viewPriority').textContent = message.priority === 'urgent' ? '⚠️ Urgent' : '📋 Normal';
+        document.getElementById('viewBody').innerHTML = message.message.replace(/\n/g, '<br>');
+        
+        document.getElementById('viewMessageModal').style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+    
+    function closeViewMessageModal() {
+        document.getElementById('viewMessageModal').style.display = 'none';
+        document.body.style.overflow = 'auto';
+        currentMessage = null;
+    }
+    
+    function showSentMessagesError(message) {
+        const container = document.getElementById('sentMessagesContainer');
+        if (container) {
+            container.innerHTML = `
+                <div class="empty-state" style="background: #ffebee; border-left: 4px solid #d32f2f;">
+                    <div class="empty-state-icon">⚠️</div>
+                    <h4 style="color: #d32f2f;">Error</h4>
+                    <p>${message}</p>
+                    <button class="btn-view-all" onclick="loadSentMessages()" style="margin-top: 10px;">
+                        🔄 Try Again
+                    </button>
+                </div>
+            `;
+        }
+    }
+    
+    function showMessageTab(tab) {
+        const tabBtns = document.querySelectorAll('.message-tabs .tab-btn');
+        tabBtns.forEach(btn => btn.classList.remove('active'));
+        if (event && event.currentTarget) {
+            event.currentTarget.classList.add('active');
+        }
+        
+        currentMessageTab = tab;
+        
+        document.getElementById('inbox-tab').style.display = tab === 'inbox' ? 'block' : 'none';
+        document.getElementById('sent-tab').style.display = tab === 'sent' ? 'block' : 'none';
+    }
+    
+    function showComposeModal() {
+        document.getElementById('composeModal').style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+    
+    function closeComposeModal() {
+        document.getElementById('composeModal').style.display = 'none';
+        document.body.style.overflow = 'auto';
+        document.getElementById('composeForm').reset();
+    }
+    
+    async function sendMessage(event) {
+        event.preventDefault();
+        
+        const doctorName = document.getElementById('recipient').value;
+        const subject = document.getElementById('subject').value;
+        const category = document.getElementById('category').value;
+        const message = document.getElementById('messageBody').value;
+        const priority = document.querySelector('input[name="priority"]:checked').value;
+        
+        const submitBtn = event.target.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending...';
+        
+        try {
+            const response = await fetch('/api/send-message', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    doctorName: doctorName,
+                    subject: subject,
+                    category: category,
+                    message: message,
+                    priority: priority
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (data.status === 'success') {
+                alert('✅ Message sent successfully!\n\nYour message has been sent.');
+                closeComposeModal();
+                loadSentMessages();
+            } else {
+                alert('❌ Error: ' + (data.message || 'Failed to send message'));
+            }
+            
+        } catch (error) {
+            alert('❌ Error: Failed to send message. Please try again.');
+            console.error('Send message error:', error);
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Send Message';
+        }
+    }
+    
+    function showReplyModal() {
+        if (!currentMessage) return;
+        
+        closeViewMessageModal();
+        
+        let recipientName = currentMessage.doctor_name;
+        
+        document.getElementById('replyOriginalSubject').textContent = currentMessage.subject;
+        document.getElementById('replyRecipient').textContent = recipientName;
+        document.getElementById('replyToDoctor').value = recipientName;
+        document.getElementById('replyToCategory').value = currentMessage.category;
+        document.getElementById('replyToSubject').value = 'Re: ' + currentMessage.subject;
+        
+        document.getElementById('replyModal').style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+    
+    function closeReplyModal() {
+        document.getElementById('replyModal').style.display = 'none';
+        document.body.style.overflow = 'auto';
+        document.getElementById('replyForm').reset();
+    }
+    
+    async function sendReply(event) {
+        event.preventDefault();
+    
+        const doctorName = document.getElementById('replyToDoctor').value;
+        const subject = document.getElementById('replyToSubject').value;
+        const category = document.getElementById('replyToCategory').value;
+        const message = document.getElementById('replyBody').value;
+        const priority = document.querySelector('input[name="replyPriority"]:checked').value;
+    
+        const submitBtn = event.target.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending Reply...';
+    
+        try {
+            const response = await fetch('/api/send-message', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    doctorName: doctorName,
+                    subject: subject,
+                    category: category,
+                    message: message,
+                    priority: priority
+                })
+            });
+    
+            const data = await response.json();
+    
+            if (data.status === 'success') {
+                alert('✅ Reply sent successfully!');
+                closeReplyModal();
+                loadSentMessages();
+            } else {
+                alert('❌ Error: ' + (data.message || 'Failed to send reply'));
+            }
+    
+        } catch (error) {
+            console.error('Reply error:', error);
+            alert('❌ Error: Failed to send reply. Please try again.');
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Send Reply';
+        }
+    }
+    // ============================================
+    // REMAINING FUNCTIONS (Add after sendReply)
+    // ============================================
+    
+    // Transaction Functions
+    function payNow(txnId, amount) {
+        document.getElementById('paymentTxnId').textContent = txnId;
+        document.getElementById('paymentAmount').textContent = '₱' + amount.toLocaleString();
+        document.getElementById('paymentModal').style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+    
+    function closePaymentModal() {
+        document.getElementById('paymentModal').style.display = 'none';
+        document.body.style.overflow = 'auto';
+        document.getElementById('paymentForm').reset();
+    }
+    
+    function processPayment(event) {
+        event.preventDefault();
+        const method = document.querySelector('input[name="paymentMethod"]:checked').value;
+        const amount = document.getElementById('paymentAmount').textContent;
+        
+        alert(`Processing payment of ${amount} via ${method}...`);
+        closePaymentModal();
+    }
+    
+    function downloadReceipt(txnId) {
+        alert(`Downloading receipt for transaction ${txnId}...`);
+    }
+    
+    function filterTransactions(filter) {
+        alert(`Filtering transactions by: ${filter}`);
+    }
+    
+    // Medical Records Functions
+    function showRecordTab(tab) {
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        tabBtns.forEach(btn => btn.classList.remove('active'));
+        event.currentTarget.classList.add('active');
+        
+        document.querySelectorAll('.record-tab-content').forEach(content => {
+            content.style.display = 'none';
+        });
+        
+        document.getElementById(tab + '-tab').style.display = 'block';
+    }
+    
+    function requestRecord() {
+        const request = prompt('Which medical record would you like to request?');
+        if (request) {
+            alert(`Your request for "${request}" has been submitted.`);
+        }
+    }
+    
+    function viewDocument(docId) {
+        alert(`Viewing document: ${docId}`);
+    }
+    
+    function downloadFile(filename) {
+        alert(`Downloading: ${filename}`);
+    }
+    
+    // Profile Functions
+    function enableEditProfile() {
+        const inputs = document.querySelectorAll('#profileForm input, #profileForm select, #profileForm textarea');
+        inputs.forEach(input => input.disabled = false);
+        
+        document.getElementById('profileActions').style.display = 'flex';
+        
+        event.currentTarget.textContent = '🔒 Cancel Edit';
+        event.currentTarget.onclick = cancelEditProfile;
+    }
+    
+    function cancelEditProfile() {
+        const inputs = document.querySelectorAll('#profileForm input, #profileForm select, #profileForm textarea');
+        inputs.forEach(input => input.disabled = true);
+        
+        document.getElementById('profileActions').style.display = 'none';
+        
+        const editBtn = document.querySelector('#profile-section .btn-view-all');
+        editBtn.textContent = '✏️ Edit Profile';
+        editBtn.onclick = enableEditProfile;
+        
+        alert('Changes cancelled.');
+    }
+    
+    function saveProfile() {
+        alert('Profile Updated Successfully!');
+        cancelEditProfile();
+    }
+    
+    // Support Functions
+    function callSupport() {
+        alert('Calling Hospital Support\n\nPhone: (046) 483-0000');
+    }
+    
+    function emailSupport() {
+        alert('Opening email client...\n\nTo: support@standrews.com');
+    }
+    
+    function visitHospital() {
+        alert('St. Andrew Hospital\nTagaytay City, Cavite 4120');
+    }
+    
+    function toggleFaq(element) {
+        element.classList.toggle('active');
+        const answer = element.nextElementSibling;
+        answer.classList.toggle('show');
+    }
+    
+    // Modal Click Outside Handler
+    window.onclick = function(event) {
+        const bookingModal = document.getElementById('bookingModal');
+        const composeModal = document.getElementById('composeModal');
+        const viewModal = document.getElementById('viewMessageModal');
+        const replyModal = document.getElementById('replyModal');
+        const paymentModal = document.getElementById('paymentModal');
+        
+        if (event.target == bookingModal) closeBookingModal();
+        if (event.target == composeModal) closeComposeModal();
+        if (event.target == viewModal) closeViewMessageModal();
+        if (event.target == replyModal) closeReplyModal();
+        if (event.target == paymentModal) closePaymentModal();
+    }
+    
+    // Page Load Event Listeners
+    document.addEventListener('DOMContentLoaded', function() {
+        const serviceType = document.getElementById('serviceType');
+        const department = document.getElementById('department');
+        const doctor = document.getElementById('doctor');
+        const roomType = document.getElementById('roomType');
+        const duration = document.getElementById('duration');
+        
+        if (serviceType) serviceType.addEventListener('change', updateCost);
+        if (department) department.addEventListener('change', updateCost);
+        if (doctor) doctor.addEventListener('change', updateCost);
+        if (roomType) roomType.addEventListener('change', updateCost);
+        if (duration) duration.addEventListener('input', updateCost);
+        
+        const appointmentsSection = document.getElementById('appointments-section');
+        if (appointmentsSection && window.getComputedStyle(appointmentsSection).display !== 'none') {
+            loadAppointments();
+        }
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,2020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pharmacy Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: 168 85% 60%;
+            --primary-foreground: 0 0% 100%;
+            --secondary: 240 4% 16%;
+            --secondary-foreground: 0 0% 100%;
+            --accent: 142 71% 45%;
+            --accent-foreground: 0 0% 100%;
+            --background: 0 0% 7%;
+            --foreground: 0 0% 98%;
+            --card: 240 4% 10%;
+            --card-foreground: 0 0% 98%;
+            --border: 240 4% 16%;
+            --muted: 240 4% 16%;
+            --muted-foreground: 240 5% 65%;
+        }
+        
+        body {
+            background-color: hsl(var(--background));
+            color: hsl(var(--foreground));
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+        }
+
+        /* Navigation Topbar */
+        .navbar {
+            background-color: hsl(var(--card));
+            border-bottom: 1px solid hsl(var(--border));
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 24px;
+            max-width: 1920px;
+            margin: 0 auto;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            font-size: 28px;
+        }
+
+        .brand-info h1 {
+            font-size: 18px;
+            font-weight: 600;
+            color: hsl(var(--foreground));
+        }
+
+        .brand-info p {
+            font-size: 12px;
+            color: hsl(var(--muted-foreground));
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 8px;
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background-color: transparent;
+            border: 1px solid hsl(var(--border));
+            border-radius: 6px;
+            color: hsl(var(--foreground));
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .nav-btn:hover {
+            background-color: hsl(var(--secondary));
+        }
+
+        .nav-btn.active {
+            background-color: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
+            border-color: hsl(var(--primary));
+        }
+
+        .nav-icon {
+            font-size: 18px;
+        }
+
+        .nav-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .user-name {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .user-role {
+            font-size: 12px;
+            color: hsl(var(--muted-foreground));
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: hsl(var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        /* Section Management */
+        .section {
+            display: none;
+            padding: 24px;
+            max-width: 1920px;
+            margin: 0 auto;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* POS Section */
+        .pos-container {
+            display: grid;
+            grid-template-columns: 1fr 450px;
+            gap: 24px;
+            height: calc(100vh - 100px);
+        }
+
+        .pos-left {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .search-container {
+            background-color: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            color: hsl(var(--muted-foreground));
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 12px 12px 40px;
+            background-color: hsl(var(--secondary));
+            border: 1px solid hsl(var(--border));
+            border-radius: 6px;
+            color: hsl(var(--foreground));
+            font-size: 14px;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: hsl(var(--primary));
+        }
+
+        .search-filters select {
+            width: 100%;
+            padding: 10px 12px;
+            background-color: hsl(var(--secondary));
+            border: 1px solid hsl(var(--border));
+            border-radius: 6px;
+            color: hsl(var(--foreground));
+            font-size: 14px;
+        }
+
+        .medicine-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            overflow-y: auto;
+            max-height: calc(100vh - 280px);
+            padding-right: 8px;
+        }
+
+        .medicine-card {
+            background-color: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: 8px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .medicine-card:hover {
+            border-color: hsl(var(--primary));
+            transform: translateY(-2px);
+        }
+
+        .medicine-card.low-stock {
+            border-color: hsl(0 72% 51%);
+        }
+
+        .medicine-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: hsl(var(--foreground));
+        }
+
+        .medicine-generic {
+            font-size: 12px;
+            color: hsl(var(--muted-foreground));
+            margin-bottom: 8px;
+        }
+
+        .medicine-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .medicine-price {
+            font-size: 16px;
+            font-weight: 700;
+            color: hsl(var(--primary));
+        }
+
+        .medicine-stock {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background-color: hsl(var(--secondary));
+        }
+
+        .medicine-stock.low {
+            background-color: hsl(0 72% 51% / 0.2);
+            color: hsl(0 72% 65%);
+        }
+
+        /* Cart Section */
+        .pos-right {
+            background-color: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid hsl(var(--border));
+        }
+
+        .cart-header h2 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .btn-clear {
+            background-color: transparent;
+            border: 1px solid hsl(var(--border));
+            color: hsl(var(--foreground));
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .btn-clear:hover {
+            background-color: hsl(0 72% 51%);
+            border-color: hsl(0 72% 51%);
+            color: white;
+        }
+
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+
+        .empty-cart {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: hsl(var(--muted-foreground));
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .cart-item {
+            background-color: hsl(var(--secondary));
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+
+        .cart-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 8px;
+        }
+
+        .cart-item-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .btn-remove {
+            background: none;
+            border: none;
+            color: hsl(0 72% 51%);
+            cursor: pointer;
+            font-size: 18px;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .cart-item-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .qty-btn {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            border: 1px solid hsl(var(--border));
+            background-color: hsl(var(--background));
+            color: hsl(var(--foreground));
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qty-btn:hover {
+            background-color: hsl(var(--primary));
+            border-color: hsl(var(--primary));
+        }
+
+        .qty-value {
+            font-size: 14px;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .cart-item-price {
+            font-size: 14px;
+            font-weight: 600;
+            color: hsl(var(--primary));
+        }
+
+        .cart-summary {
+            padding: 16px 20px;
+            border-top: 1px solid hsl(var(--border));
+            border-bottom: 1px solid hsl(var(--border));
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .summary-row.total {
+            font-size: 18px;
+            font-weight: 700;
+            color: hsl(var(--primary));
+            padding-top: 12px;
+            border-top: 1px solid hsl(var(--border));
+        }
+
+        .summary-row input[type="number"] {
+            width: 60px;
+            padding: 4px 8px;
+            background-color: hsl(var(--secondary));
+            border: 1px solid hsl(var(--border));
+            border-radius: 4px;
+            color: hsl(var(--foreground));
+            text-align: center;
+        }
+
+        .payment-section {
+            padding: 16px 20px;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            color: hsl(var(--muted-foreground));
+            margin-bottom: 6px;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            background-color: hsl(var(--secondary));
+            border: 1px solid hsl(var(--border));
+            border-radius: 6px;
+            color: hsl(var(--foreground));
+            font-size: 14px;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: hsl(var(--primary));
+        }
+
+        .btn-checkout {
+            width: 100%;
+            padding: 14px;
+            background-color: hsl(var(--accent));
+            color: hsl(var(--accent-foreground));
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-checkout:hover {
+            opacity: 0.9;
+        }
+
+        .btn-checkout:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Reports Section */
+        .reports-container {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .reports-header {
+            background-color: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .reports-header h2 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .report-filters {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            background-color: transparent;
+            border: 1px solid hsl(var(--border));
+            border-radius: 6px;
+            color: hsl(var(--foreground));
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover {
+            background-color: hsl(var(--secondary));
+        }
+
+        .filter-btn.active {
+            background-color: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
+            border-color: hsl(var(--primary));
+        }
+
+        .custom-date {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .custom-date input {
+            padding: 8px 12px;
+            background-color: hsl(var(--secondary));
+            border: 1px solid hsl(var(--border));
+            border-radius: 6px;
+            color: hsl(var(--foreground));
+            font-size: 14px;
+        }
+
+        .btn-apply {
+            padding: 8px 16px;
+            background-color: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .summary-card {
+            background-color: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .card-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .card-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-label {
+            font-size: 12px;
+            color: hsl(var(--muted-foreground));
+            margin-bottom: 4px;
+        }
+
+        .card-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: hsl(var(--foreground));
+            margin-bottom: 4px;
+        }
+
+        .card-change {
+            font-size: 12px;
+        }
+
+        .card-change.positive {
+            color: hsl(var(--accent));
+        }
+
+        .card-change.negative {
+            color: hsl(0 72% 51%);
+        }
+
+        .report-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+        }
+
+        .report-card {
+            background-color: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .report-card.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .report-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid hsl(var(--border));
+        }
+
+        .report-card-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .btn-export {
+            padding: 6px 12px;
+            background-color: transparent;
+            border: 1px solid hsl(var(--border));
+            border-radius: 6px;
+            color: hsl(var(--foreground));
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .btn-export:hover {
+            background-color: hsl(var(--secondary));
+        }
+
+        .report-table {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background-color: hsl(var(--secondary));
+        }
+
+        th {
+            text-align: left;
+            padding: 12px 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: hsl(var(--muted-foreground));
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 12px 20px;
+            font-size: 14px;
+            border-bottom: 1px solid hsl(var(--border));
+        }
+
+        tr:hover {
+            background-color: hsl(240 4% 12%);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .badge-success {
+            background-color: hsl(142 71% 45% / 0.2);
+            color: hsl(142 71% 60%);
+        }
+
+        .badge-warning {
+            background-color: hsl(45 93% 47% / 0.2);
+            color: hsl(45 93% 60%);
+        }
+
+        .badge-danger {
+            background-color: hsl(0 72% 51% / 0.2);
+            color: hsl(0 72% 65%);
+        }
+
+        .badge-critical {
+            background-color: hsl(0 72% 51%);
+            color: white;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: hsl(var(--card));
+            border-radius: 8px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .receipt-modal {
+            max-width: 400px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: hsl(var(--foreground));
+            font-size: 24px;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+        }
+
+        .modal-close:hover {
+            background-color: hsl(var(--secondary));
+        }
+
+        .receipt-container {
+            padding: 32px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .receipt-header {
+            text-align: center;
+            margin-bottom: 24px;
+            border-bottom: 2px dashed hsl(var(--border));
+            padding-bottom: 16px;
+        }
+
+        .receipt-header h2 {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .receipt-info {
+            font-size: 12px;
+            color: hsl(var(--muted-foreground));
+            margin-bottom: 4px;
+        }
+
+        .receipt-items {
+            margin: 20px 0;
+        }
+
+        .receipt-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .receipt-totals {
+            border-top: 2px dashed hsl(var(--border));
+            padding-top: 16px;
+            margin-top: 16px;
+        }
+
+        .receipt-total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .receipt-total-row.final {
+            font-size: 16px;
+            font-weight: 700;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 2px solid hsl(var(--border));
+        }
+
+        .receipt-footer {
+            text-align: center;
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 2px dashed hsl(var(--border));
+            font-size: 12px;
+            color: hsl(var(--muted-foreground));
+        }
+
+        .receipt-actions {
+            display: flex;
+            gap: 12px;
+            padding: 20px;
+            border-top: 1px solid hsl(var(--border));
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 12px;
+            background-color: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .btn-action.secondary {
+            background-color: transparent;
+            border: 1px solid hsl(var(--border));
+            color: hsl(var(--foreground));
+        }
+
+        /* Loading & Notification */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid hsl(var(--border));
+            border-top-color: hsl(var(--primary));
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .notification {
+            position: fixed;
+            top: 80px;
+            right: 24px;
+            background-color: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: 8px;
+            padding: 16px 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 1500;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            border-left: 4px solid hsl(var(--accent));
+        }
+
+        .notification.error {
+            border-left: 4px solid hsl(0 72% 51%);
+        }
+
+        @media (max-width: 1200px) {
+            .pos-container {
+                grid-template-columns: 1fr;
+            }
+
+            .pos-right {
+                max-height: 600px;
+            }
+
+            .report-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <div class="brand-icon">⚕️</div>
+                <div class="brand-info">
+                    <h1>St. Andrew Hospital Pharmacy</h1>
+                    <p>Pharmacy Management System</p>
+                </div>
+            </div>
+            <div class="nav-menu">
+                <button class="nav-btn active" onclick="showSection('pos')" id="navPOS">
+                    <span class="nav-icon">🛒</span>
+                    <span>Point of Sale</span>
+                </button>
+                <button class="nav-btn" onclick="showSection('reports')" id="navReports">
+                    <span class="nav-icon">📊</span>
+                    <span>Sales Reports</span>
+                </button>
+            </div>
+            <div class="nav-user">
+                <div class="user-info">
+                    <span class="user-name" id="currentUserName">{{ user_info.full_name }}</span>
+                    <span class="user-role">{{ user_info.role }}</span>
+                </div>
+                <div class="user-avatar">👨‍⚕️</div>
+                <button class="btn-secondary" onclick="logout()" style="margin-left: 12px;">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- POS Section -->
+    <section id="posSection" class="section active">
+        <div class="pos-container">
+            <!-- Left Panel - Product Search & List -->
+            <div class="pos-left">
+                <div class="search-container">
+                    <div class="search-box">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="searchInput" placeholder="Search medicine by name or barcode..." oninput="searchMedicine()">
+                    </div>
+                    <div class="search-filters">
+                        <select id="categoryFilter" onchange="filterByCategory()">
+                            <option value="all">All Categories</option>
+                            <option value="antibiotics">Antibiotics</option>
+                            <option value="analgesics">Analgesics</option>
+                            <option value="vitamins">Vitamins</option>
+                            <option value="supplements">Supplements</option>
+                            <option value="otc">Over-the-Counter</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="medicine-grid" id="medicineGrid">
+                    <!-- Medicine items will be dynamically loaded -->
+                </div>
+            </div>
+
+            <!-- Right Panel - Cart & Checkout -->
+            <div class="pos-right">
+                <div class="cart-header">
+                    <h2>Current Transaction</h2>
+                    <button class="btn-clear" onclick="clearCart()">Clear All</button>
+                </div>
+
+                <div class="cart-items" id="cartItems">
+                    <div class="empty-cart">
+                        <div class="empty-icon">🛒</div>
+                        <p>No items in cart</p>
+                        <span>Search and add medicines to start</span>
+                    </div>
+                </div>
+
+                <div class="cart-summary">
+                    <div class="summary-row">
+                        <span>Subtotal:</span>
+                        <span id="subtotal">₱0.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Discount:</span>
+                        <div style="display: flex; align-items: center; gap: 4px;">
+                            <input type="number" id="discountInput" value="0" min="0" max="100" onchange="updateTotals()">
+                            <span>%</span>
+                        </div>
+                    </div>
+                    <div class="summary-row">
+                        <span>Tax (12%):</span>
+                        <span id="tax">₱0.00</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Total:</span>
+                        <span id="total">₱0.00</span>
+                    </div>
+                </div>
+
+                <div class="payment-section">
+                    <div class="form-group">
+                        <label>Payment Method</label>
+                        <select id="paymentMethod">
+                            <option value="cash">Cash</option>
+                            <option value="card">Credit/Debit Card</option>
+                            <option value="gcash">GCash</option>
+                            <option value="paymaya">PayMaya</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Amount Received</label>
+                        <input type="number" id="amountReceived" placeholder="0.00" oninput="calculateChange()">
+                    </div>
+                    <div class="form-group">
+                        <label>Change</label>
+                        <input type="text" id="change" readonly value="₱0.00">
+                    </div>
+                </div>
+
+                <button class="btn-checkout" onclick="processCheckout()" id="checkoutBtn" disabled>
+                    Complete Transaction
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reports Section -->
+    <section id="reportsSection" class="section">
+        <div class="reports-container">
+            <div class="reports-header">
+                <h2>Sales Reports & Analytics</h2>
+                <div class="report-filters">
+                    <button class="filter-btn active" onclick="setReportPeriod('today')">Today</button>
+                    <button class="filter-btn" onclick="setReportPeriod('week')">This Week</button>
+                    <button class="filter-btn" onclick="setReportPeriod('month')">This Month</button>
+                    <button class="filter-btn" onclick="setReportPeriod('year')">This Year</button>
+                    <div class="custom-date">
+                        <input type="date" id="startDate">
+                        <span>to</span>
+                        <input type="date" id="endDate">
+                        <button class="btn-apply" onclick="applyCustomDate()">Apply</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="summary-cards">
+                <div class="summary-card">
+                    <div class="card-icon" style="background: linear-gradient(135deg, hsl(168 85% 60%) 0%, hsl(168 85% 40%) 100%);">💰</div>
+                    <div class="card-content">
+                        <span class="card-label">Total Sales</span>
+                        <span class="card-value" id="reportTotalSales">₱0.00</span>
+                        <span class="card-change positive">+12.5% from last period</span>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <div class="card-icon" style="background: linear-gradient(135deg, hsl(142 71% 45%) 0%, hsl(142 71% 30%) 100%);">📈</div>
+                    <div class="card-content">
+                        <span class="card-label">Total Profit</span>
+                        <span class="card-value" id="reportTotalProfit">₱0.00</span>
+                        <span class="card-change positive">+8.3% from last period</span>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <div class="card-icon" style="background: linear-gradient(135deg, hsl(200 90% 50%) 0%, hsl(200 90% 35%) 100%);">🧾</div>
+                    <div class="card-content">
+                        <span class="card-label">Transactions</span>
+                        <span class="card-value" id="reportTransactions">0</span>
+                        <span class="card-change positive">+15.2% from last period</span>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <div class="card-icon" style="background: linear-gradient(135deg, hsl(280 70% 60%) 0%, hsl(280 70% 40%) 100%);">💊</div>
+                    <div class="card-content">
+                        <span class="card-label">Items Sold</span>
+                        <span class="card-value" id="reportItemsSold">0</span>
+                        <span class="card-change positive">+10.8% from last period</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Report Tables -->
+            <div class="report-grid">
+                <!-- Top Selling Products -->
+                <div class="report-card">
+                    <div class="report-card-header">
+                        <h3>Top Selling Products</h3>
+                        <button class="btn-export" onclick="exportTopSelling()">📥 Export</button>
+                    </div>
+                    <div class="report-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Medicine</th>
+                                    <th>Qty Sold</th>
+                                    <th>Revenue</th>
+                                </tr>
+                            </thead>
+                            <tbody id="topSellingTable">
+                                <tr>
+                                    <td colspan="4" style="text-align: center; color: hsl(var(--muted-foreground));">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Low Stock Alert -->
+                <div class="report-card">
+                    <div class="report-card-header">
+                        <h3>Low Stock Alert</h3>
+                        <button class="btn-export" onclick="exportLowStock()">📥 Export</button>
+                    </div>
+                    <div class="report-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Medicine</th>
+                                    <th>Current Stock</th>
+                                    <th>Reorder Level</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="lowStockTable">
+                                <!-- Dynamic content -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sales History -->
+            <div class="report-card full-width">
+                <div class="report-card-header">
+                    <h3>Recent Transactions</h3>
+                    <button class="btn-export" onclick="exportSalesHistory()">📥 Export All</button>
+                </div>
+                <div class="report-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Receipt #</th>
+                                <th>Date & Time</th>
+                                <th>Items</th>
+                                <th>Payment Method</th>
+                                <th>Total</th>
+                                <th>Profit</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="salesHistoryTable">
+                            <tr>
+                                <td colspan="7" style="text-align: center; color: hsl(var(--muted-foreground));">No transactions yet</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Receipt Modal -->
+    <div class="modal" id="receiptModal">
+        <div class="modal-content receipt-modal">
+            <button class="modal-close" onclick="closeReceiptModal()">×</button>
+            <div class="receipt-container" id="receiptContent">
+                <!-- Receipt content will be generated here -->
+            </div>
+            <div class="receipt-actions">
+                <button class="btn-action" onclick="printReceipt()">🖨️ Print</button>
+                <button class="btn-action secondary" onclick="closeReceiptModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <p>Processing...</p>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <span id="notificationMessage"></span>
+    </div>
+
+    <script>
+        // Global State Management
+        let medicines = [
+            {
+                id: 1,
+                name: 'Amoxicillin 500mg',
+                generic: 'Amoxicillin',
+                price: 15.50,
+                cost: 8.00,
+                stock: 150,
+                reorderLevel: 50,
+                category: 'antibiotics',
+                barcode: '1234567890'
+            },
+            {
+                id: 2,
+                name: 'Paracetamol 500mg',
+                generic: 'Paracetamol',
+                price: 5.00,
+                cost: 2.50,
+                stock: 300,
+                reorderLevel: 100,
+                category: 'analgesics',
+                barcode: '1234567891'
+            },
+            {
+                id: 3,
+                name: 'Ibuprofen 400mg',
+                generic: 'Ibuprofen',
+                price: 8.50,
+                cost: 4.00,
+                stock: 200,
+                reorderLevel: 75,
+                category: 'analgesics',
+                barcode: '1234567892'
+            },
+            {
+                id: 4,
+                name: 'Vitamin C 1000mg',
+                generic: 'Ascorbic Acid',
+                price: 12.00,
+                cost: 6.00,
+                stock: 180,
+                reorderLevel: 60,
+                category: 'vitamins',
+                barcode: '1234567893'
+            },
+            {
+                id: 5,
+                name: 'Cetirizine 10mg',
+                generic: 'Cetirizine HCl',
+                price: 6.50,
+                cost: 3.00,
+                stock: 25,
+                reorderLevel: 50,
+                category: 'otc',
+                barcode: '1234567894'
+            },
+            {
+                id: 6,
+                name: 'Metformin 500mg',
+                generic: 'Metformin',
+                price: 10.00,
+                cost: 5.00,
+                stock: 120,
+                reorderLevel: 40,
+                category: 'otc',
+                barcode: '1234567895'
+            },
+            {
+                id: 7,
+                name: 'Losartan 50mg',
+                generic: 'Losartan Potassium',
+                price: 18.00,
+                cost: 9.00,
+                stock: 45,
+                reorderLevel: 50,
+                category: 'otc',
+                barcode: '1234567896'
+            },
+            {
+                id: 8,
+                name: 'Omeprazole 20mg',
+                generic: 'Omeprazole',
+                price: 14.50,
+                cost: 7.00,
+                stock: 90,
+                reorderLevel: 30,
+                category: 'otc',
+                barcode: '1234567897'
+            },
+            {
+                id: 9,
+                name: 'Multivitamins',
+                generic: 'Mixed Vitamins',
+                price: 20.00,
+                cost: 10.00,
+                stock: 15,
+                reorderLevel: 40,
+                category: 'vitamins',
+                barcode: '1234567898'
+            },
+            {
+                id: 10,
+                name: 'Azithromycin 500mg',
+                generic: 'Azithromycin',
+                price: 25.00,
+                cost: 12.00,
+                stock: 8,
+                reorderLevel: 30,
+                category: 'antibiotics',
+                barcode: '1234567899'
+            }
+        ];
+
+        let cart = [];
+        let transactions = [];
+
+        // Initialization
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                const response = await fetch('/api/check-session');
+                const data = await response.json();
+                
+                if (!data.authenticated) {
+                    window.location.href = '/IMS';
+                    return;
+                }
+                
+                // Update user info in navbar
+                const userNameElement = document.getElementById('currentUserName');
+                if (userNameElement) {
+                    userNameElement.textContent = data.full_name;
+                }
+                
+                // Continue with existing initialization
+                loadMedicines();
+                loadSavedData();
+                updateReports();
+                updateLowStockTable();
+            } catch (error) {
+                console.error('Session check error:', error);
+                window.location.href = '/IMS';
+            }
+        });
+
+        // Data Persistence
+        function saveData() {
+            localStorage.setItem('pharmacyMedicines', JSON.stringify(medicines));
+            localStorage.setItem('pharmacyTransactions', JSON.stringify(transactions));
+        }
+
+        function loadSavedData() {
+            const savedMedicines = localStorage.getItem('pharmacyMedicines');
+            const savedTransactions = localStorage.getItem('pharmacyTransactions');
+            
+            if (savedMedicines) {
+                medicines = JSON.parse(savedMedicines);
+            }
+            
+            if (savedTransactions) {
+                transactions = JSON.parse(savedTransactions);
+            } else {
+                generateSampleTransactions();
+            }
+        }
+
+        function generateSampleTransactions() {
+            const today = new Date();
+            
+            for (let i = 0; i < 50; i++) {
+                const daysAgo = Math.floor(Math.random() * 30);
+                const transactionDate = new Date(today);
+                transactionDate.setDate(transactionDate.getDate() - daysAgo);
+                
+                const itemCount = Math.floor(Math.random() * 5) + 1;
+                const items = [];
+                let subtotal = 0;
+                let totalCost = 0;
+                
+                for (let j = 0; j < itemCount; j++) {
+                    const medicine = medicines[Math.floor(Math.random() * medicines.length)];
+                    const quantity = Math.floor(Math.random() * 3) + 1;
+                    const itemTotal = medicine.price * quantity;
+                    const itemCost = medicine.cost * quantity;
+                    
+                    items.push({
+                        id: medicine.id,
+                        name: medicine.name,
+                        price: medicine.price,
+                        cost: medicine.cost,
+                        quantity: quantity,
+                        total: itemTotal
+                    });
+                    
+                    subtotal += itemTotal;
+                    totalCost += itemCost;
+                }
+                
+                const discount = Math.random() > 0.7 ? Math.floor(Math.random() * 20) : 0;
+                const discountAmount = subtotal * (discount / 100);
+                const taxableAmount = subtotal - discountAmount;
+                const tax = taxableAmount * 0.12;
+                const total = taxableAmount + tax;
+                const profit = total - totalCost;
+                
+                transactions.push({
+                    id: `RCP${String(Date.now() + i).slice(-8)}`,
+                    date: transactionDate,
+                    items: items,
+                    subtotal: subtotal,
+                    discount: discount,
+                    discountAmount: discountAmount,
+                    tax: tax,
+                    total: total,
+                    profit: profit,
+                    paymentMethod: ['cash', 'card', 'gcash', 'paymaya'][Math.floor(Math.random() * 4)],
+                    amountReceived: total + Math.floor(Math.random() * 100),
+                    change: Math.floor(Math.random() * 100)
+                });
+            }
+            saveData();
+        }
+
+        // Section Navigation
+        function showSection(section) {
+            document.querySelectorAll('.section').forEach(sec => {
+                sec.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            if (section === 'pos') {
+                document.getElementById('posSection').classList.add('active');
+                document.getElementById('navPOS').classList.add('active');
+            } else if (section === 'reports') {
+                document.getElementById('reportsSection').classList.add('active');
+                document.getElementById('navReports').classList.add('active');
+                updateReports();
+            }
+        }
+
+        // Load Medicines
+        function loadMedicines() {
+            const grid = document.getElementById('medicineGrid');
+            grid.innerHTML = '';
+            
+            medicines.forEach(medicine => {
+                const isLowStock = medicine.stock <= medicine.reorderLevel;
+                const card = document.createElement('div');
+                card.className = `medicine-card ${isLowStock ? 'low-stock' : ''}`;
+                card.onclick = () => addToCart(medicine);
+                
+                card.innerHTML = `
+                    <div class="medicine-name">${medicine.name}</div>
+                    <div class="medicine-generic">${medicine.generic}</div>
+                    <div class="medicine-footer">
+                        <div class="medicine-price">₱${medicine.price.toFixed(2)}</div>
+                        <div class="medicine-stock ${isLowStock ? 'low' : ''}">
+                            Stock: ${medicine.stock}
+                        </div>
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        // Search Medicine
+        function searchMedicine() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const category = document.getElementById('categoryFilter').value;
+            
+            const filtered = medicines.filter(medicine => {
+                const matchesSearch = medicine.name.toLowerCase().includes(searchTerm) ||
+                                    medicine.generic.toLowerCase().includes(searchTerm) ||
+                                    medicine.barcode.includes(searchTerm);
+                const matchesCategory = category === 'all' || medicine.category === category;
+                return matchesSearch && matchesCategory;
+            });
+            
+            const grid = document.getElementById('medicineGrid');
+            grid.innerHTML = '';
+            
+            filtered.forEach(medicine => {
+                const isLowStock = medicine.stock <= medicine.reorderLevel;
+                const card = document.createElement('div');
+                card.className = `medicine-card ${isLowStock ? 'low-stock' : ''}`;
+                card.onclick = () => addToCart(medicine);
+                
+                card.innerHTML = `
+                    <div class="medicine-name">${medicine.name}</div>
+                    <div class="medicine-generic">${medicine.generic}</div>
+                    <div class="medicine-footer">
+                        <div class="medicine-price">₱${medicine.price.toFixed(2)}</div>
+                        <div class="medicine-stock ${isLowStock ? 'low' : ''}">
+                            Stock: ${medicine.stock}
+                        </div>
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        function filterByCategory() {
+            searchMedicine();
+        }
+
+        // Cart Management
+        function addToCart(medicine) {
+            if (medicine.stock <= 0) {
+                showNotification('Out of stock!', 'error');
+                return;
+            }
+            
+            const existingItem = cart.find(item => item.id === medicine.id);
+            
+            if (existingItem) {
+                if (existingItem.quantity < medicine.stock) {
+                    existingItem.quantity++;
+                } else {
+                    showNotification('Not enough stock!', 'error');
+                    return;
+                }
+            } else {
+                cart.push({
+                    id: medicine.id,
+                    name: medicine.name,
+                    price: medicine.price,
+                    cost: medicine.cost,
+                    quantity: 1,
+                    maxStock: medicine.stock
+                });
+            }
+            
+            updateCart();
+        }
+
+        function updateCart() {
+            const cartItems = document.getElementById('cartItems');
+            
+            if (cart.length === 0) {
+                cartItems.innerHTML = `
+                    <div class="empty-cart">
+                        <div class="empty-icon">🛒</div>
+                        <p>No items in cart</p>
+                        <span>Search and add medicines to start</span>
+                    </div>
+                `;
+                document.getElementById('checkoutBtn').disabled = true;
+            } else {
+                cartItems.innerHTML = cart.map(item => `
+                    <div class="cart-item">
+                        <div class="cart-item-header">
+                            <div class="cart-item-name">${item.name}</div>
+                            <button class="btn-remove" onclick="removeFromCart(${item.id})">×</button>
+                        </div>
+                        <div class="cart-item-details">
+                            <div class="quantity-control">
+                                <button class="qty-btn" onclick="decreaseQuantity(${item.id})">−</button>
+                                <span class="qty-value">${item.quantity}</span>
+                                <button class="qty-btn" onclick="increaseQuantity(${item.id})">+</button>
+                            </div>
+                            <div class="cart-item-price">₱${(item.price * item.quantity).toFixed(2)}</div>
+                        </div>
+                    </div>
+                `).join('');
+                document.getElementById('checkoutBtn').disabled = false;
+            }
+            
+            updateTotals();
+        }
+
+        function increaseQuantity(medicineId) {
+            const item = cart.find(i => i.id === medicineId);
+            if (item && item.quantity < item.maxStock) {
+                item.quantity++;
+                updateCart();
+            } else {
+                showNotification('Not enough stock!', 'error');
+            }
+        }
+
+        function decreaseQuantity(medicineId) {
+            const item = cart.find(i => i.id === medicineId);
+            if (item && item.quantity > 1) {
+                item.quantity--;
+                updateCart();
+            }
+        }
+
+        function removeFromCart(medicineId) {
+            cart = cart.filter(item => item.id !== medicineId);
+            updateCart();
+        }
+
+        function clearCart() {
+            if (cart.length === 0) return;
+            
+            if (confirm('Are you sure you want to clear the cart?')) {
+                cart = [];
+                updateCart();
+                document.getElementById('amountReceived').value = '';
+                document.getElementById('change').value = '₱0.00';
+            }
+        }
+
+        function updateTotals() {
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const discount = parseFloat(document.getElementById('discountInput').value) || 0;
+            const discountAmount = subtotal * (discount / 100);
+            const taxableAmount = subtotal - discountAmount;
+            const tax = taxableAmount * 0.12;
+            const total = taxableAmount + tax;
+            
+            document.getElementById('subtotal').textContent = `₱${subtotal.toFixed(2)}`;
+            document.getElementById('tax').textContent = `₱${tax.toFixed(2)}`;
+            document.getElementById('total').textContent = `₱${total.toFixed(2)}`;
+        }
+
+        function calculateChange() {
+            const total = parseFloat(document.getElementById('total').textContent.replace('₱', ''));
+            const received = parseFloat(document.getElementById('amountReceived').value) || 0;
+            const change = received - total;
+            
+            document.getElementById('change').value = change >= 0 ? `₱${change.toFixed(2)}` : '₱0.00';
+        }
+
+        // Checkout
+        function processCheckout() {
+            if (cart.length === 0) return;
+            
+            const total = parseFloat(document.getElementById('total').textContent.replace('₱', ''));
+            const received = parseFloat(document.getElementById('amountReceived').value) || 0;
+            
+            if (received < total) {
+                showNotification('Insufficient payment amount!', 'error');
+                return;
+            }
+            
+            showLoading();
+            
+            setTimeout(() => {
+                // Update stock
+                cart.forEach(cartItem => {
+                    const medicine = medicines.find(m => m.id === cartItem.id);
+                    if (medicine) {
+                        medicine.stock -= cartItem.quantity;
+                    }
+                });
+                
+                // Create transaction
+                const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                const discount = parseFloat(document.getElementById('discountInput').value) || 0;
+                const discountAmount = subtotal * (discount / 100);
+                const taxableAmount = subtotal - discountAmount;
+                const tax = taxableAmount * 0.12;
+                const totalCost = cart.reduce((sum, item) => sum + (item.cost * item.quantity), 0);
+                const profit = total - totalCost;
+                
+                const transaction = {
+                    id: `RCP${Date.now()}`,
+                    date: new Date(),
+                    items: [...cart],
+                    subtotal: subtotal,
+                    discount: discount,
+                    discountAmount: discountAmount,
+                    tax: tax,
+                    total: total,
+                    profit: profit,
+                    paymentMethod: document.getElementById('paymentMethod').value,
+                    amountReceived: received,
+                    change: received - total
+                };
+                
+                transactions.unshift(transaction);
+                saveData();
+                
+                hideLoading();
+                showReceipt(transaction);
+                
+                // Reset
+                cart = [];
+                updateCart();
+                loadMedicines();
+                document.getElementById('discountInput').value = '0';
+                document.getElementById('amountReceived').value = '';
+                document.getElementById('change').value = '₱0.00';
+                
+                showNotification('Transaction completed successfully!', 'success');
+            }, 1000);
+        }
+
+        // Receipt
+        function showReceipt(transaction) {
+            const receiptContent = document.getElementById('receiptContent');
+            const date = new Date(transaction.date);
+            
+            receiptContent.innerHTML = `
+                <div class="receipt-header">
+                    <h2>⚕️ St. Andrew Hospital</h2>
+                    <div class="receipt-info">Pharmacy Department</div>
+                    <div class="receipt-info">Receipt #: ${transaction.id}</div>
+                    <div class="receipt-info">${date.toLocaleString()}</div>
+                </div>
+                
+                <div class="receipt-items">
+                    ${transaction.items.map(item => `
+                        <div class="receipt-item">
+                            <div>
+                                <div>${item.name}</div>
+                                <div style="font-size: 11px; color: hsl(var(--muted-foreground));">
+                                    ${item.quantity} x ₱${item.price.toFixed(2)}
+                                </div>
+                            </div>
+                            <div>₱${(item.quantity * item.price).toFixed(2)}</div>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <div class="receipt-totals">
+                    <div class="receipt-total-row">
+                        <span>Subtotal:</span>
+                        <span>₱${transaction.subtotal.toFixed(2)}</span>
+                    </div>
+                    ${transaction.discount > 0 ? `
+                        <div class="receipt-total-row">
+                            <span>Discount (${transaction.discount}%):</span>
+                            <span>-₱${transaction.discountAmount.toFixed(2)}</span>
+                        </div>
+                    ` : ''}
+                    <div class="receipt-total-row">
+                        <span>Tax (12%):</span>
+                        <span>₱${transaction.tax.toFixed(2)}</span>
+                    </div>
+                    <div class="receipt-total-row final">
+                        <span>Total:</span>
+                        <span>₱${transaction.total.toFixed(2)}</span>
+                    </div>
+                    <div class="receipt-total-row">
+                        <span>Payment (${transaction.paymentMethod}):</span>
+                        <span>₱${transaction.amountReceived.toFixed(2)}</span>
+                    </div>
+                    <div class="receipt-total-row">
+                        <span>Change:</span>
+                        <span>₱${transaction.change.toFixed(2)}</span>
+                    </div>
+                </div>
+                
+                <div class="receipt-footer">
+                    <p>Thank you for your purchase!</p>
+                    <p>Get well soon!</p>
+                </div>
+            `;
+            
+            document.getElementById('receiptModal').classList.add('active');
+        }
+
+        function closeReceiptModal() {
+            document.getElementById('receiptModal').classList.remove('active');
+        }
+
+        function printReceipt() {
+            window.print();
+        }
+
+        // Reports
+        function setReportPeriod(period) {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            updateReports(period);
+        }
+
+        function applyCustomDate() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            
+            if (!startDate || !endDate) {
+                showNotification('Please select both dates', 'error');
+                return;
+            }
+            
+            updateReports('custom', new Date(startDate), new Date(endDate));
+        }
+
+        function updateReports(period = 'today', customStart = null, customEnd = null) {
+            const now = new Date();
+            let filteredTransactions = [];
+            
+            if (period === 'custom' && customStart && customEnd) {
+                filteredTransactions = transactions.filter(t => {
+                    const tDate = new Date(t.date);
+                    return tDate >= customStart && tDate <= customEnd;
+                });
+            } else {
+                filteredTransactions = transactions.filter(t => {
+                    const tDate = new Date(t.date);
+                    
+                    switch(period) {
+                        case 'today':
+                            return tDate.toDateString() === now.toDateString();
+                        case 'week':
+                            const weekAgo = new Date(now);
+                            weekAgo.setDate(weekAgo.getDate() - 7);
+                            return tDate >= weekAgo;
+                        case 'month':
+                            return tDate.getMonth() === now.getMonth() && 
+                                   tDate.getFullYear() === now.getFullYear();
+                        case 'year':
+                            return tDate.getFullYear() === now.getFullYear();
+                        default:
+                            return true;
+                    }
+                });
+            }
+            
+            // Calculate totals
+            const totalSales = filteredTransactions.reduce((sum, t) => sum + t.total, 0);
+            const totalProfit = filteredTransactions.reduce((sum, t) => sum + t.profit, 0);
+            const totalItems = filteredTransactions.reduce((sum, t) => 
+                sum + t.items.reduce((iSum, item) => iSum + item.quantity, 0), 0);
+            
+            document.getElementById('reportTotalSales').textContent = `₱${totalSales.toFixed(2)}`;
+            document.getElementById('reportTotalProfit').textContent = `₱${totalProfit.toFixed(2)}`;
+            document.getElementById('reportTransactions').textContent = filteredTransactions.length;
+            document.getElementById('reportItemsSold').textContent = totalItems;
+            
+            // Update tables
+            updateTopSellingTable(filteredTransactions);
+            updateSalesHistoryTable(filteredTransactions);
+        }
+
+        function updateTopSellingTable(filteredTransactions) {
+            const medicineStats = {};
+            
+            filteredTransactions.forEach(t => {
+                t.items.forEach(item => {
+                    if (!medicineStats[item.id]) {
+                        medicineStats[item.id] = {
+                            name: item.name,
+                            quantity: 0,
+                            revenue: 0
+                        };
+                    }
+                    medicineStats[item.id].quantity += item.quantity;
+                    medicineStats[item.id].revenue += item.total;
+                });
+            });
+            
+            const sorted = Object.values(medicineStats)
+                .sort((a, b) => b.quantity - a.quantity)
+                .slice(0, 10);
+            
+            const tbody = document.getElementById('topSellingTable');
+            
+            if (sorted.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: hsl(var(--muted-foreground));">No data available</td></tr>';
+            } else {
+                tbody.innerHTML = sorted.map((item, index) => `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${item.name}</td>
+                        <td>${item.quantity}</td>
+                        <td>₱${item.revenue.toFixed(2)}</td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function updateLowStockTable() {
+            const lowStock = medicines.filter(m => m.stock <= m.reorderLevel)
+                .sort((a, b) => a.stock - b.stock);
+            
+            const tbody = document.getElementById('lowStockTable');
+            
+            if (lowStock.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: hsl(var(--muted-foreground));">All items well stocked</td></tr>';
+            } else {
+                tbody.innerHTML = lowStock.map(item => {
+                    const isCritical = item.stock <= item.reorderLevel * 0.3;
+                    return `
+                        <tr>
+                            <td>${item.name}</td>
+                            <td>${item.stock}</td>
+                            <td>${item.reorderLevel}</td>
+                            <td>
+                                <span class="badge ${isCritical ? 'badge-critical' : 'badge-warning'}">
+                                    ${isCritical ? 'Critical' : 'Low Stock'}
+                                </span>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+        }
+
+        function updateSalesHistoryTable(filteredTransactions) {
+            const tbody = document.getElementById('salesHistoryTable');
+            
+            if (filteredTransactions.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: hsl(var(--muted-foreground));">No transactions found</td></tr>';
+            } else {
+                tbody.innerHTML = filteredTransactions.slice(0, 20).map(t => {
+                    const date = new Date(t.date);
+                    return `
+                        <tr>
+                            <td>${t.id}</td>
+                            <td>${date.toLocaleString()}</td>
+                            <td>${t.items.length} items</td>
+                            <td>
+                                <span class="badge badge-success">${t.paymentMethod}</span>
+                            </td>
+                            <td>₱${t.total.toFixed(2)}</td>
+                            <td style="color: hsl(var(--accent));">₱${t.profit.toFixed(2)}</td>
+                            <td>
+                                <button class="btn-export" onclick='showReceipt(${JSON.stringify(t)})'>
+                                    View
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+        }
+
+        // Export Functions
+        function exportTopSelling() {
+            showNotification('Export feature would download CSV file', 'success');
+        }
+
+        function exportLowStock() {
+            showNotification('Export feature would download CSV file', 'success');
+        }
+
+        function exportSalesHistory() {
+            showNotification('Export feature would download CSV file', 'success');
+        }
+
+        // UI Helpers
+        function showLoading() {
+            document.getElementById('loadingOverlay').classList.add('active');
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').classList.remove('active');
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const messageEl = document.getElementById('notificationMessage');
+            
+            messageEl.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        async function logout() {
+            if (!confirm('Are you sure you want to logout?')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/logout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    window.location.href = data.redirect;
+                }
+            } catch (err) {
+                console.error('Logout error:', err);
+                window.location.href = '/IMS';
+            }
+        }
+
+    </script>
+</body>
+</html>

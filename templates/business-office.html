@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Office - Healthcare Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Updated to match admin design system with HSL color tokens */
+        :root {
+            --primary: 168 85% 60%;
+            --primary-foreground: 0 0% 100%;
+            --secondary: 240 4% 16%;
+            --secondary-foreground: 0 0% 100%;
+            --accent: 142 71% 45%;
+            --accent-foreground: 0 0% 100%;
+            --background: 0 0% 7%;
+            --foreground: 0 0% 98%;
+            --card: 240 4% 10%;
+            --card-foreground: 0 0% 98%;
+            --border: 240 4% 16%;
+            --muted: 240 4% 16%;
+            --muted-foreground: 240 5% 65%;
+        }
+        
+        body {
+            background-color: hsl(var(--background));
+            color: hsl(var(--foreground));
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .card {
+            background-color: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: 8px;
+        }
+        
+        .btn-primary {
+            background-color: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: opacity 0.2s;
+        }
+        
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+        
+        .btn-secondary {
+            background-color: hsl(var(--secondary));
+            color: hsl(var(--secondary-foreground));
+            border: 1px solid hsl(var(--border));
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        
+        .btn-secondary:hover {
+            background-color: hsl(240 4% 20%);
+        }
+        
+        .btn-danger {
+            background-color: hsl(0 72% 51%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .btn-success {
+            background-color: hsl(var(--accent));
+            color: hsl(var(--accent-foreground));
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .nav-item {
+            padding: 12px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .nav-item:hover {
+            background-color: hsl(var(--secondary));
+        }
+        
+        .nav-item.active {
+            background-color: hsl(var(--secondary));
+            color: hsl(var(--primary));
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .table th {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid hsl(var(--border));
+            color: hsl(var(--muted-foreground));
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .table td {
+            padding: 12px;
+            border-bottom: 1px solid hsl(var(--border));
+        }
+        
+        .table tr:hover {
+            background-color: hsl(240 4% 12%);
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .badge-success {
+            background-color: hsl(142 71% 45% / 0.2);
+            color: hsl(142 71% 60%);
+        }
+        
+        .badge-warning {
+            background-color: hsl(45 93% 47% / 0.2);
+            color: hsl(45 93% 60%);
+        }
+        
+        .badge-info {
+            background-color: hsl(200 90% 50% / 0.2);
+            color: hsl(200 90% 60%);
+        }
+        
+        .badge-danger {
+            background-color: hsl(0 72% 51% / 0.2);
+            color: hsl(0 72% 65%);
+        }
+        
+        input, select, textarea {
+            background-color: hsl(var(--secondary));
+            border: 1px solid hsl(var(--border));
+            color: hsl(var(--foreground));
+            padding: 8px 12px;
+            border-radius: 6px;
+            width: 100%;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: hsl(var(--primary));
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background-color: hsl(var(--card));
+            border-radius: 8px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(240 4% 13%) 100%);
+            border: 1px solid hsl(var(--border));
+            border-radius: 8px;
+            padding: 20px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="p-0 m-0">
+    <!-- Updated header to match admin design -->
+    <header class="border-b" style="border-color: hsl(var(--border)); background-color: hsl(var(--card));">
+        <div class="flex items-center justify-between px-6 py-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background-color: hsl(var(--primary));">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-semibold">St. Andrew Hospital</h1>
+                    <p class="text-sm" style="color: hsl(var(--muted-foreground));">Business-Office System</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <span style="color: hsl(var(--muted-foreground));">Office Manager: <span id="currentUserName">{{ user_info.full_name }}</span></span>
+                <button class="btn-secondary" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex">
+        <!-- Updated sidebar to match admin design -->
+        <aside class="w-64 min-h-screen border-r p-4" style="border-color: hsl(var(--border)); background-color: hsl(var(--card));">
+            <nav class="space-y-2">
+                <div class="nav-item active" onclick="showSection('dashboard')">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                    </svg>
+                    Dashboard
+                </div>
+                <div class="nav-item" onclick="showSection('bookings')">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    Online Bookings
+                </div>
+                <div class="nav-item" onclick="showSection('payments')">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                    </svg>
+                    Payments
+                </div>
+                <div class="nav-item" onclick="showSection('inventory')">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                    </svg>
+                    Inventory
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="content-section">
+                <h2 class="text-2xl font-semibold mb-6">Dashboard Overview</h2>
+                
+                <!-- Updated stat cards to match admin design -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between mb-2">
+                            <span style="color: hsl(var(--muted-foreground));">Today's Bookings</span>
+                            <svg class="w-5 h-5" style="color: hsl(var(--primary));" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                        </div>
+                        <div class="text-3xl font-bold" id="todayBookings">12</div>
+                        <div class="text-sm mt-1" style="color: hsl(var(--accent));">+3 from yesterday</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between mb-2">
+                            <span style="color: hsl(var(--muted-foreground));">Pending Payments</span>
+                            <svg class="w-5 h-5" style="color: hsl(var(--accent));" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                            </svg>
+                        </div>
+                        <div class="text-3xl font-bold" id="pendingPayments">$8,450</div>
+                        <div class="text-sm mt-1" style="color: hsl(var(--muted-foreground));">5 invoices</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between mb-2">
+                            <span style="color: hsl(var(--muted-foreground));">Low Stock Items</span>
+                            <svg class="w-5 h-5" style="color: hsl(45 93% 60%);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                            </svg>
+                        </div>
+                        <div class="text-3xl font-bold" id="lowStockCount">8</div>
+                        <div class="text-sm mt-1" style="color: hsl(0 72% 65%);">Restock required</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between mb-2">
+                            <span style="color: hsl(var(--muted-foreground));">Total Revenue</span>
+                            <svg class="w-5 h-5" style="color: hsl(168 85% 60%);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <div class="text-3xl font-bold">$45,280</div>
+                        <div class="text-sm mt-1" style="color: hsl(var(--accent));">This month</div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="card p-6">
+                        <h3 class="text-lg font-semibold mb-4">Recent Bookings</h3>
+                        <div class="space-y-3" id="recentBookingsList">
+                            <div class="flex items-center justify-between p-3 rounded-lg" style="background-color: hsl(var(--secondary));">
+                                <div>
+                                    <div class="font-medium">John Smith</div>
+                                    <div class="text-sm" style="color: hsl(var(--muted-foreground));">Laboratory - 10:00 AM</div>
+                                </div>
+                                <span class="badge badge-warning">Pending</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 rounded-lg" style="background-color: hsl(var(--secondary));">
+                                <div>
+                                    <div class="font-medium">Sarah Johnson</div>
+                                    <div class="text-sm" style="color: hsl(var(--muted-foreground));">Nurses - 11:30 AM</div>
+                                </div>
+                                <span class="badge badge-success">Confirmed</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 rounded-lg" style="background-color: hsl(var(--secondary));">
+                                <div>
+                                    <div class="font-medium">Mike Wilson</div>
+                                    <div class="text-sm" style="color: hsl(var(--muted-foreground));">Pharmacy - 2:00 PM</div>
+                                </div>
+                                <span class="badge badge-warning">Pending</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card p-6">
+                        <h3 class="text-lg font-semibold mb-4">Quick Actions</h3>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button onclick="showSection('bookings'); openModal('bookingModal')" class="btn-primary w-full py-4">
+                                <div class="flex flex-col items-center gap-2">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                    </svg>
+                                    <span>New Booking</span>
+                                </div>
+                            </button>
+                            <button onclick="showSection('payments'); openModal('paymentModal')" class="btn-success w-full py-4">
+                                <div class="flex flex-col items-center gap-2">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                                    </svg>
+                                    <span>Process Payment</span>
+                                </div>
+                            </button>
+                            <button onclick="showSection('inventory'); openModal('inventoryModal')" class="btn-secondary w-full py-4">
+                                <div class="flex flex-col items-center gap-2">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                                    </svg>
+                                    <span>Add Inventory</span>
+                                </div>
+                            </button>
+                            <button onclick="forwardToAdmin()" class="btn-secondary w-full py-4">
+                                <div class="flex flex-col items-center gap-2">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                                    </svg>
+                                    <span>Forward to Admin</span>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Bookings Section -->
+            <section id="bookings" class="content-section hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-semibold">Online Booking Management</h2>
+                    <button onclick="openModal('bookingModal')" class="btn-primary">+ New Booking</button>
+                </div>
+                
+                <div class="card p-6 mb-6">
+                    <div class="flex gap-4 mb-4 flex-wrap">
+                        <input type="text" id="bookingSearch" placeholder="Search bookings..." class="flex-1" oninput="filterBookings()">
+                        <select id="bookingStatusFilter" onchange="filterBookings()">
+                            <option value="">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="confirmed">Confirmed</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Booking ID</th>
+                                    <th>Patient Name</th>
+                                    <th>Department</th>
+                                    <th>Date & Time</th>
+                                    <th>Status</th>
+                                    <th>Payment</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bookingsTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Payments Section -->
+            <section id="payments" class="content-section hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-semibold">Payment Management</h2>
+                    <button onclick="openModal('paymentModal')" class="btn-success">+ Process Payment</button>
+                </div>
+                
+                <div class="card p-6 mb-6">
+                    <div class="flex gap-4 mb-4 flex-wrap">
+                        <input type="text" id="paymentSearch" placeholder="Search payments..." class="flex-1" oninput="filterPayments()">
+                        <select id="paymentStatusFilter" onchange="filterPayments()">
+                            <option value="">All Status</option>
+                            <option value="paid">Paid</option>
+                            <option value="unpaid">Unpaid</option>
+                            <option value="pending">Pending</option>
+                        </select>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Invoice ID</th>
+                                    <th>Patient Name</th>
+                                    <th>Service</th>
+                                    <th>Amount</th>
+                                    <th>Payment Method</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="paymentsTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Operations Section -->
+            <div id="operations-section" class="section-content" style="display: none;">
+                <div class="card mb-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-bold">Hospital Affairs & Operational Records</h2>
+                        <button onclick="openModal('operationModal')" class="btn btn-primary">+ Log Operation</button>
+                    </div>
+                    <div class="flex gap-4 mb-4 flex-wrap">
+                        <input type="text" id="operationSearch" placeholder="Search operations..." class="input-field flex-1" oninput="filterOperations()">
+                        <select id="operationDeptFilter" class="input-field" style="width: auto;" onchange="filterOperations()">
+                            <option value="">All Departments</option>
+                            <option value="nurses">Nurses</option>
+                            <option value="laboratory">Laboratory</option>
+                            <option value="pharmacy">Pharmacy</option>
+                            <option value="business-office">Business Office</option>
+                        </select>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Operation ID</th>
+                                    <th>Department</th>
+                                    <th>Description</th>
+                                    <th>Handled By</th>
+                                    <th>Date & Time</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="operationsTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inventory Section -->
+            <section id="inventory" class="content-section hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-semibold">Inventory Management</h2>
+                    <button onclick="openModal('inventoryModal')" class="btn-primary">+ Add Item</button>
+                </div>
+                
+                <div class="card p-6 mb-6">
+                    <div class="flex gap-4 mb-4 flex-wrap">
+                        <input type="text" id="inventorySearch" placeholder="Search inventory..." class="flex-1" oninput="filterInventory()">
+                        <select id="inventoryStockFilter" onchange="filterInventory()">
+                            <option value="">All Stock Levels</option>
+                            <option value="low">Low Stock</option>
+                            <option value="medium">Medium Stock</option>
+                            <option value="high">High Stock</option>
+                        </select>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Product ID</th>
+                                    <th>Product Name</th>
+                                    <th>Category</th>
+                                    <th>Quantity</th>
+                                    <th>Unit Price</th>
+                                    <th>Total Value</th>
+                                    <th>Stock Level</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inventoryTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Booking Modal -->
+    <div id="bookingModal" class="modal">
+        <div class="modal-content p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold" id="bookingModalTitle">New Booking</h2>
+                <button onclick="closeModal('bookingModal')" class="text-2xl hover:opacity-70">&times;</button>
+            </div>
+            <form id="bookingForm" onsubmit="handleBookingSubmit(event)">
+                <input type="hidden" id="bookingId">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">Patient Name</label>
+                    <input type="text" id="bookingPatientName" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">Contact Number</label>
+                    <input type="tel" id="bookingContact" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">Email</label>
+                    <input type="email" id="bookingEmail" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">Department</label>
+                    <select id="bookingDepartment" required>
+                        <option value="">Select Department</option>
+                        <option value="nurses">Nurses</option>
+                        <option value="laboratory">Laboratory</option>
+                        <option value="pharmacy">Pharmacy</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">Service/Doctor</label>
+                    <input type="text" id="bookingService" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">Appointment Date</label>
+                    <input type="date" id="bookingDate" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">Appointment Time</label>
+                    <input type="time" id="bookingTime" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">Amount ($)</label>
+                    <input type="number" id="bookingAmount" step="0.01" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">Payment Status</label>
+                    <select id="bookingPaymentStatus" required>
+                        <option value="unpaid">Unpaid</option>
+                        <option value="paid">Paid</option>
+                        <option value="pending">Pending</option>
+                    </select>
+                </div>
+                <div class="flex gap-2 justify-end">
+                    <button type="button" onclick="closeModal('bookingModal')" class="btn-secondary">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Booking</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div id="paymentModal" class="modal">
+        <div class="modal-content p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold" id="paymentModalTitle">Process Payment</h2>
+                <button onclick="closeModal('paymentModal')" class="text-2xl hover:opacity-70">&times;</button>
+            </div>
+            <form id="paymentForm" onsubmit="handlePaymentSubmit(event)">
+                <input type="hidden" id="paymentId">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">Patient Name</label>
+                    <input type="text" id="paymentPatientName" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">Service Description</label>
+                    <input type="text" id="paymentService" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">Amount ($)</label>
+                    <input type="number" id="paymentAmount" step="0.01" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">Payment Method</label>
+                    <select id="paymentMethod" required>
+                        <option value="">Select Method</option>
+                        <option value="cash">Cash</option>
+                        <option value="credit-card">Credit Card</option>
+                        <option value="debit-card">Debit Card</option>
+                        <option value="insurance">Insurance</option>
+                        <option value="bank-transfer">Bank Transfer</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">Status</label>
+                    <select id="paymentStatus" required>
+                        <option value="paid">Paid</option>
+                        <option value="unpaid">Unpaid</option>
+                        <option value="pending">Pending</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">Notes</label>
+                    <textarea id="paymentNotes" rows="3"></textarea>
+                </div>
+                <div class="flex gap-2 justify-end">
+                    <button type="button" onclick="closeModal('paymentModal')" class="btn-secondary">Cancel</button>
+                    <button type="submit" class="btn-success">Save Payment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Operation Modal -->
+    <div id="operationModal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold">Log Hospital Operation</h2>
+                <button onclick="closeModal('operationModal')" class="text-2xl">&times;</button>
+            </div>
+            <form id="operationForm" onsubmit="handleOperationSubmit(event)">
+                <input type="hidden" id="operationId">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">Department</label>
+                    <select id="operationDepartment" class="input-field" required>
+                        <option value="">Select Department</option>
+                        <option value="nurses">Nurses</option>
+                        <option value="laboratory">Laboratory</option>
+                        <option value="pharmacy">Pharmacy</option>
+                        <option value="business-office">Business Office</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">Operation Type</label>
+                    <select id="operationType" class="input-field" required>
+                        <option value="">Select Type</option>
+                        <option value="patient-admission">Patient Admission</option>
+                        <option value="patient-discharge">Patient Discharge</option>
+                        <option value="equipment-maintenance">Equipment Maintenance</option>
+                        <option value="staff-meeting">Staff Meeting</option>
+                        <option value="emergency-response">Emergency Response</option>
+                        <option value="routine-checkup">Routine Checkup</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">Description</label>
+                    <textarea id="operationDescription" class="input-field" rows="4" required></textarea>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">Handled By</label>
+                    <input type="text" id="operationHandler" class="input-field" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">Status</label>
+                    <select id="operationStatus" class="input-field" required>
+                        <option value="pending">Pending</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+                <div class="flex gap-3">
+                    <button type="submit" class="btn btn-primary flex-1">Log Operation</button>
+                    <button type="button" onclick="closeModal('operationModal')" class="btn btn-danger">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Inventory Modal -->
+    <div id="inventoryModal" class="modal">
+        <div class="modal-content p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold" id="inventoryModalTitle">Add Inventory Item</h2>
+                <button onclick="closeModal('inventoryModal')" class="text-2xl hover:opacity-70">&times;</button>
+            </div>
+            <form id="inventoryForm" onsubmit="handleInventorySubmit(event)">
+                <input type="hidden" id="inventoryId">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">Product Name</label>
+                    <input type="text" id="inventoryProductName" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">Category</label>
+                    <select id="inventoryCategory" required>
+                        <option value="">Select Category</option>
+                        <option value="medicines">Medicines</option>
+                        <option value="equipment">Equipment</option>
+                        <option value="supplies">Supplies</option>
+                        <option value="consumables">Consumables</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">Quantity</label>
+                    <input type="number" id="inventoryQuantity" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">Unit Price ($)</label>
+                    <input type="number" id="inventoryUnitPrice" step="0.01" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">Supplier</label>
+                    <input type="text" id="inventorySupplier" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">Restock Level</label>
+                    <input type="number" id="inventoryRestockLevel" required>
+                </div>
+                <div class="flex gap-2 justify-end">
+                    <button type="button" onclick="closeModal('inventoryModal')" class="btn-secondary">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Item</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Sample data
+        let bookings = [
+            {id: 'BK001', patientName: 'John Smith', contact: '555-0101', email: 'john@email.com', department: 'laboratory', service: 'Blood Test', date: '2024-01-20', time: '10:00', amount: 150, paymentStatus: 'paid', status: 'confirmed'},
+            {id: 'BK002', patientName: 'Sarah Johnson', contact: '555-0102', email: 'sarah@email.com', department: 'nurses', service: 'Check-up', date: '2024-01-20', time: '11:30', amount: 100, paymentStatus: 'unpaid', status: 'pending'},
+            {id: 'BK003', patientName: 'Mike Wilson', contact: '555-0103', email: 'mike@email.com', department: 'pharmacy', service: 'Prescription', date: '2024-01-20', time: '14:00', amount: 75, paymentStatus: 'pending', status: 'confirmed'},
+        ];
+
+        let payments = [
+            {id: 'INV001', patientName: 'John Smith', service: 'Blood Test', amount: 150, method: 'credit-card', status: 'paid', date: '2024-01-20', notes: 'Online payment'},
+            {id: 'INV002', patientName: 'Sarah Johnson', service: 'Check-up', amount: 100, method: 'cash', status: 'unpaid', date: '2024-01-20', notes: ''},
+            {id: 'INV003', patientName: 'Mike Wilson', service: 'Prescription', amount: 75, method: 'insurance', status: 'pending', date: '2024-01-20', notes: 'Insurance claim submitted'},
+        ];
+
+        let inventory = [
+            {id: 'PRD001', productName: 'Paracetamol', category: 'medicines', quantity: 500, unitPrice: 2.50, supplier: 'PharmaCorp', restockLevel: 100, stockLevel: 'high'},
+            {id: 'PRD002', productName: 'Syringes', category: 'supplies', quantity: 45, unitPrice: 0.50, supplier: 'MedSupply', restockLevel: 50, stockLevel: 'low'},
+            {id: 'PRD003', productName: 'Bandages', category: 'consumables', quantity: 200, unitPrice: 1.00, supplier: 'HealthPlus', restockLevel: 100, stockLevel: 'medium'},
+        ];
+
+        // Check session on page load
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                const response = await fetch('/api/check-session');
+                const data = await response.json();
+                
+                if (!data.authenticated) {
+                    window.location.href = '/IMS';
+                    return;
+                }
+                
+                // Update user name if element exists
+                const userNameElement = document.getElementById('currentUserName');
+                if (userNameElement && data.full_name) {
+                    userNameElement.textContent = data.full_name;
+                }
+                
+                // Continue with existing initialization
+                // ... rest of your DOMContentLoaded code
+            } catch (error) {
+                console.error('Session check error:', error);
+                window.location.href = '/IMS';
+            }
+        });
+
+        // Section navigation
+        function showSection(sectionName) {
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            document.getElementById(sectionName).classList.remove('hidden');
+            
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            // Use event.target to refer to the element that triggered the event
+            event.target.closest('.nav-item').classList.add('active');
+            
+            if (sectionName === 'bookings') renderBookings();
+            if (sectionName === 'payments') renderPayments();
+            if (sectionName === 'inventory') renderInventory();
+        }
+
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+            // Reset the form associated with the modal
+            const formId = modalId.replace('Modal', 'Form');
+            const form = document.getElementById(formId);
+            if (form) {
+                form.reset();
+                // Clear hidden input values as well if they exist
+                const hiddenInput = form.querySelector('input[type="hidden"]');
+                if (hiddenInput) {
+                    hiddenInput.value = '';
+                }
+            }
+            // Reset modal titles if they exist
+            const titleElement = document.getElementById(modalId.replace('Modal', 'ModalTitle'));
+            if (titleElement && modalId === 'bookingModal') titleElement.textContent = 'New Booking';
+            if (titleElement && modalId === 'inventoryModal') titleElement.textContent = 'Add Inventory Item';
+        }
+
+        // Booking functions
+        function renderBookings() {
+            const tbody = document.getElementById('bookingsTable');
+            tbody.innerHTML = bookings.map(booking => `
+                <tr>
+                    <td>${booking.id}</td>
+                    <td>${booking.patientName}</td>
+                    <td>${booking.department}</td>
+                    <td>${booking.date} ${booking.time}</td>
+                    <td><span class="badge badge-${booking.status === 'confirmed' ? 'success' : booking.status === 'pending' ? 'warning' : booking.status === 'completed' ? 'info' : 'danger'}">${booking.status}</span></td>
+                    <td><span class="badge badge-${booking.paymentStatus === 'paid' ? 'success' : booking.paymentStatus === 'pending' ? 'warning' : 'danger'}">${booking.paymentStatus}</span></td>
+                    <td>
+                        <button onclick="editBooking('${booking.id}')" class="btn-secondary" style="padding: 4px 12px; margin-right: 4px;">Edit</button>
+                        <button onclick="deleteBooking('${booking.id}')" class="btn-danger" style="padding: 4px 12px;">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function handleBookingSubmit(event) {
+            event.preventDefault();
+            const id = document.getElementById('bookingId').value || 'BK' + String(bookings.length + 1).padStart(3, '0');
+            const booking = {
+                id,
+                patientName: document.getElementById('bookingPatientName').value,
+                contact: document.getElementById('bookingContact').value,
+                email: document.getElementById('bookingEmail').value,
+                department: document.getElementById('bookingDepartment').value,
+                service: document.getElementById('bookingService').value,
+                date: document.getElementById('bookingDate').value,
+                time: document.getElementById('bookingTime').value,
+                amount: parseFloat(document.getElementById('bookingAmount').value),
+                paymentStatus: document.getElementById('bookingPaymentStatus').value,
+                status: 'pending' // Default status for new bookings
+            };
+
+            const index = bookings.findIndex(b => b.id === id);
+            if (index >= 0) {
+                bookings[index] = booking; // Update existing booking
+            } else {
+                bookings.push(booking); // Add new booking
+            }
+
+            renderBookings();
+            closeModal('bookingModal');
+            alert('Booking saved successfully!');
+        }
+
+        function editBooking(id) {
+            const booking = bookings.find(b => b.id === id);
+            document.getElementById('bookingId').value = booking.id;
+            document.getElementById('bookingPatientName').value = booking.patientName;
+            document.getElementById('bookingContact').value = booking.contact;
+            document.getElementById('bookingEmail').value = booking.email;
+            document.getElementById('bookingDepartment').value = booking.department;
+            document.getElementById('bookingService').value = booking.service;
+            document.getElementById('bookingDate').value = booking.date;
+            document.getElementById('bookingTime').value = booking.time;
+            document.getElementById('bookingAmount').value = booking.amount;
+            document.getElementById('bookingPaymentStatus').value = booking.paymentStatus;
+            document.getElementById('bookingModalTitle').textContent = 'Edit Booking';
+            openModal('bookingModal');
+        }
+
+        function deleteBooking(id) {
+            if (confirm('Are you sure you want to delete this booking?')) {
+                bookings = bookings.filter(b => b.id !== id);
+                renderBookings();
+                alert('Booking deleted successfully!');
+            }
+        }
+
+        function filterBookings() {
+            const search = document.getElementById('bookingSearch').value.toLowerCase();
+            const status = document.getElementById('bookingStatusFilter').value;
+            
+            const filtered = bookings.filter(b => {
+                const matchesSearch = b.patientName.toLowerCase().includes(search) || b.id.toLowerCase().includes(search);
+                const matchesStatus = !status || b.status === status;
+                return matchesSearch && matchesStatus;
+            });
+            
+            const tbody = document.getElementById('bookingsTable');
+            tbody.innerHTML = filtered.map(booking => `
+                <tr>
+                    <td>${booking.id}</td>
+                    <td>${booking.patientName}</td>
+                    <td>${booking.department}</td>
+                    <td>${booking.date} ${booking.time}</td>
+                    <td><span class="badge badge-${booking.status === 'confirmed' ? 'success' : booking.status === 'pending' ? 'warning' : booking.status === 'completed' ? 'info' : 'danger'}">${booking.status}</span></td>
+                    <td><span class="badge badge-${booking.paymentStatus === 'paid' ? 'success' : booking.paymentStatus === 'pending' ? 'warning' : 'danger'}">${booking.paymentStatus}</span></td>
+                    <td>
+                        <button onclick="editBooking('${booking.id}')" class="btn-secondary" style="padding: 4px 12px; margin-right: 4px;">Edit</button>
+                        <button onclick="deleteBooking('${booking.id}')" class="btn-danger" style="padding: 4px 12px;">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Payment functions
+        function renderPayments() {
+            const tbody = document.getElementById('paymentsTable');
+            tbody.innerHTML = payments.map(payment => `
+                <tr>
+                    <td>${payment.id}</td>
+                    <td>${payment.patientName}</td>
+                    <td>${payment.service}</td>
+                    <td>$${payment.amount.toFixed(2)}</td>
+                    <td>${payment.method}</td>
+                    <td><span class="badge badge-${payment.status === 'paid' ? 'success' : payment.status === 'pending' ? 'warning' : 'danger'}">${payment.status}</span></td>
+                    <td>${payment.date}</td>
+                    <td>
+                        <button onclick="editPayment('${payment.id}')" class="btn-secondary" style="padding: 4px 12px; margin-right: 4px;">Edit</button>
+                        <button onclick="deletePayment('${payment.id}')" class="btn-danger" style="padding: 4px 12px;">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function handlePaymentSubmit(event) {
+            event.preventDefault();
+            const id = document.getElementById('paymentId').value || 'INV' + String(payments.length + 1).padStart(3, '0');
+            const payment = {
+                id,
+                patientName: document.getElementById('paymentPatientName').value,
+                service: document.getElementById('paymentService').value,
+                amount: parseFloat(document.getElementById('paymentAmount').value),
+                method: document.getElementById('paymentMethod').value,
+                status: document.getElementById('paymentStatus').value,
+                date: new Date().toISOString().split('T')[0],
+                notes: document.getElementById('paymentNotes').value
+            };
+
+            const index = payments.findIndex(p => p.id === id);
+            if (index >= 0) {
+                payments[index] = payment; // Update existing payment
+            } else {
+                payments.push(payment); // Add new payment
+            }
+
+            renderPayments();
+            closeModal('paymentModal');
+            alert('Payment processed successfully!');
+        }
+
+        function editPayment(id) {
+            const payment = payments.find(p => p.id === id);
+            document.getElementById('paymentId').value = payment.id;
+            document.getElementById('paymentPatientName').value = payment.patientName;
+            document.getElementById('paymentService').value = payment.service;
+            document.getElementById('paymentAmount').value = payment.amount;
+            document.getElementById('paymentMethod').value = payment.method;
+            document.getElementById('paymentStatus').value = payment.status;
+            document.getElementById('paymentNotes').value = payment.notes;
+            document.getElementById('paymentModalTitle').textContent = 'Edit Payment';
+            openModal('paymentModal');
+        }
+
+        function deletePayment(id) {
+            if (confirm('Are you sure you want to delete this payment?')) {
+                payments = payments.filter(p => p.id !== id);
+                renderPayments();
+                alert('Payment deleted successfully!');
+            }
+        }
+
+        function filterPayments() {
+            const search = document.getElementById('paymentSearch').value.toLowerCase();
+            const status = document.getElementById('paymentStatusFilter').value;
+            
+            const filtered = payments.filter(p => {
+                const matchesSearch = p.patientName.toLowerCase().includes(search) || p.id.toLowerCase().includes(search);
+                const matchesStatus = !status || p.status === status;
+                return matchesSearch && matchesStatus;
+            });
+            
+            const tbody = document.getElementById('paymentsTable');
+            tbody.innerHTML = filtered.map(payment => `
+                <tr>
+                    <td>${payment.id}</td>
+                    <td>${payment.patientName}</td>
+                    <td>${payment.service}</td>
+                    <td>$${payment.amount.toFixed(2)}</td>
+                    <td>${payment.method}</td>
+                    <td><span class="badge badge-${payment.status === 'paid' ? 'success' : payment.status === 'pending' ? 'warning' : 'danger'}">${payment.status}</span></td>
+                    <td>${payment.date}</td>
+                    <td>
+                        <button onclick="editPayment('${payment.id}')" class="btn-secondary" style="padding: 4px 12px; margin-right: 4px;">Edit</button>
+                        <button onclick="deletePayment('${payment.id}')" class="btn-danger" style="padding: 4px 12px;">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Operations Functions (kept from original but not in updates)
+        function renderOperations() {
+            const tbody = document.getElementById('operationsTable');
+            tbody.innerHTML = operations.map(op => `
+                <tr>
+                    <td>${op.id}</td>
+                    <td class="capitalize">${op.department}</td>
+                    <td>${op.description}</td>
+                    <td>${op.handler}</td>
+                    <td>${op.date}</td>
+                    <td><span class="badge badge-${op.status === 'completed' ? 'success' : op.status === 'in-progress' ? 'info' : 'warning'}">${op.status}</span></td>
+                    <td>
+                        <button onclick="editOperation('${op.id}')" class="btn-primary btn-sm mr-2">Edit</button>
+                        <button onclick="deleteOperation('${op.id}')" class="btn-danger btn-sm">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function filterOperations() {
+            const search = document.getElementById('operationSearch').value.toLowerCase();
+            const dept = document.getElementById('operationDeptFilter').value;
+            
+            const filtered = operations.filter(o => {
+                const matchSearch = o.description.toLowerCase().includes(search) || 
+                                   o.id.toLowerCase().includes(search) ||
+                                   o.handler.toLowerCase().includes(search);
+                const matchDept = !dept || o.department === dept;
+                return matchSearch && matchDept;
+            });
+            
+            const tbody = document.getElementById('operationsTable');
+            tbody.innerHTML = filtered.map(op => `
+                <tr>
+                    <td>${op.id}</td>
+                    <td class="capitalize">${op.department}</td>
+                    <td>${op.description}</td>
+                    <td>${op.handler}</td>
+                    <td>${op.date}</td>
+                    <td><span class="badge badge-${op.status === 'completed' ? 'success' : op.status === 'in-progress' ? 'info' : 'warning'}">${op.status}</span></td>
+                    <td>
+                        <button onclick="editOperation('${op.id}')" class="btn-primary btn-sm mr-2">Edit</button>
+                        <button onclick="deleteOperation('${op.id}')" class="btn-danger btn-sm">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function handleOperationSubmit(event) {
+            event.preventDefault();
+            const id = document.getElementById('operationId').value || 'OP' + String(operations.length + 1).padStart(3, '0');
+            const operation = {
+                id,
+                department: document.getElementById('operationDepartment').value,
+                type: document.getElementById('operationType').value,
+                description: document.getElementById('operationDescription').value,
+                handler: document.getElementById('operationHandler').value,
+                date: new Date().toISOString().replace('T', ' ').substring(0, 16),
+                status: document.getElementById('operationStatus').value
+            };
+
+            const index = operations.findIndex(o => o.id === id);
+            if (index >= 0) {
+                operations[index] = operation;
+            } else {
+                operations.unshift(operation);
+            }
+
+            renderOperations();
+            updateDashboard(); // Still updating dashboard if needed
+            closeModal('operationModal');
+            alert('Operation logged successfully!');
+        }
+
+        function editOperation(id) {
+            const operation = operations.find(o => o.id === id);
+            document.getElementById('operationId').value = operation.id;
+            document.getElementById('operationDepartment').value = operation.department;
+            document.getElementById('operationType').value = operation.type;
+            document.getElementById('operationDescription').value = operation.description;
+            document.getElementById('operationHandler').value = operation.handler;
+            document.getElementById('operationStatus').value = operation.status;
+            openModal('operationModal');
+        }
+
+        function deleteOperation(id) {
+            if (confirm('Are you sure you want to delete this operation record?')) {
+                operations = operations.filter(o => o.id !== id);
+                renderOperations();
+                updateDashboard(); // Still updating dashboard if needed
+                alert('Operation record deleted successfully!');
+            }
+        }
+        // End of Operations Functions
+
+        // Inventory functions
+        function renderInventory() {
+            const tbody = document.getElementById('inventoryTable');
+            tbody.innerHTML = inventory.map(item => `
+                <tr>
+                    <td>${item.id}</td>
+                    <td>${item.productName}</td>
+                    <td>${item.category}</td>
+                    <td>${item.quantity}</td>
+                    <td>$${item.unitPrice.toFixed(2)}</td>
+                    <td>$${(item.quantity * item.unitPrice).toFixed(2)}</td>
+                    <td><span class="badge badge-${item.stockLevel === 'high' ? 'success' : item.stockLevel === 'medium' ? 'warning' : 'danger'}">${item.stockLevel}</span></td>
+                    <td>
+                        <button onclick="editInventory('${item.id}')" class="btn-secondary" style="padding: 4px 12px; margin-right: 4px;">Edit</button>
+                        <button onclick="deleteInventory('${item.id}')" class="btn-danger" style="padding: 4px 12px;">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function handleInventorySubmit(event) {
+            event.preventDefault();
+            const id = document.getElementById('inventoryId').value || 'PRD' + String(inventory.length + 1).padStart(3, '0');
+            const quantity = parseInt(document.getElementById('inventoryQuantity').value);
+            const restockLevel = parseInt(document.getElementById('inventoryRestockLevel').value);
+            
+            let stockLevel = 'high';
+            if (quantity <= restockLevel) stockLevel = 'low';
+            else if (quantity <= restockLevel * 2) stockLevel = 'medium';
+            
+            const item = {
+                id,
+                productName: document.getElementById('inventoryProductName').value,
+                category: document.getElementById('inventoryCategory').value,
+                quantity,
+                unitPrice: parseFloat(document.getElementById('inventoryUnitPrice').value),
+                supplier: document.getElementById('inventorySupplier').value,
+                restockLevel,
+                stockLevel
+            };
+
+            const index = inventory.findIndex(i => i.id === id);
+            if (index >= 0) {
+                inventory[index] = item; // Update existing item
+            } else {
+                inventory.push(item); // Add new item
+            }
+
+            renderInventory();
+            closeModal('inventoryModal');
+            alert('Inventory item saved successfully!');
+        }
+
+        function editInventory(id) {
+            const item = inventory.find(i => i.id === id);
+            document.getElementById('inventoryId').value = item.id;
+            document.getElementById('inventoryProductName').value = item.productName;
+            document.getElementById('inventoryCategory').value = item.category;
+            document.getElementById('inventoryQuantity').value = item.quantity;
+            document.getElementById('inventoryUnitPrice').value = item.unitPrice;
+            document.getElementById('inventorySupplier').value = item.supplier;
+            document.getElementById('inventoryRestockLevel').value = item.restockLevel;
+            document.getElementById('inventoryModalTitle').textContent = 'Edit Inventory Item';
+            openModal('inventoryModal');
+        }
+
+        function deleteInventory(id) {
+            if (confirm('Are you sure you want to delete this item?')) {
+                inventory = inventory.filter(i => i.id !== id);
+                renderInventory();
+                alert('Inventory item deleted successfully!');
+            }
+        }
+
+        function filterInventory() {
+            const search = document.getElementById('inventorySearch').value.toLowerCase();
+            const stockLevelFilter = document.getElementById('inventoryStockFilter').value;
+            
+            const filtered = inventory.filter(i => {
+                const matchesSearch = i.productName.toLowerCase().includes(search) || i.id.toLowerCase().includes(search);
+                const matchesStock = !stockLevelFilter || i.stockLevel === stockLevelFilter;
+                return matchesSearch && matchesStock;
+            });
+            
+            const tbody = document.getElementById('inventoryTable');
+            tbody.innerHTML = filtered.map(item => `
+                <tr>
+                    <td>${item.id}</td>
+                    <td>${item.productName}</td>
+                    <td>${item.category}</td>
+                    <td>${item.quantity}</td>
+                    <td>$${item.unitPrice.toFixed(2)}</td>
+                    <td>$${(item.quantity * item.unitPrice).toFixed(2)}</td>
+                    <td><span class="badge badge-${item.stockLevel === 'high' ? 'success' : item.stockLevel === 'medium' ? 'warning' : 'danger'}">${item.stockLevel}</span></td>
+                    <td>
+                        <button onclick="editInventory('${item.id}')" class="btn-secondary" style="padding: 4px 12px; margin-right: 4px;">Edit</button>
+                        <button onclick="deleteInventory('${item.id}')" class="btn-danger" style="padding: 4px 12px;">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Forward to admin function
+        function forwardToAdmin() {
+            const dataToForward = {
+                bookings: bookings,
+                payments: payments,
+                timestamp: new Date().toISOString()
+            };
+            
+            console.log('Forwarding data to admin:', dataToForward);
+            alert('Booking and appointment data has been forwarded to Admin successfully!');
+        }
+
+        async function logout() {
+            if (!confirm('Are you sure you want to logout?')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/logout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    window.location.href = data.redirect;
+                }
+            } catch (err) {
+                console.error('Logout error:', err);
+                window.location.href = '/IMS';
+            }
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Render initial data for visible sections
+            renderBookings();
+            renderPayments();
+            renderInventory();
+            
+            // Update dashboard stats and recent bookings
+            updateDashboard();
+
+            // Ensure the correct section is displayed on load
+            showSection('dashboard'); 
+        });
+
+        // Update dashboard function from original code
+        function updateDashboard() {
+            const today = new Date().toISOString().split('T')[0];
+            const todayBookings = bookings.filter(b => b.date === today).length;
+            const pendingAmount = payments.filter(p => p.status === 'unpaid').reduce((sum, p) => sum + p.amount, 0);
+            const lowStockItems = inventory.filter(item => item.quantity <= item.restockLevel);
+            
+            document.getElementById('todayBookings').textContent = todayBookings;
+            document.getElementById('pendingPayments').textContent = '$' + pendingAmount.toFixed(2);
+            document.getElementById('lowStockCount').textContent = lowStockItems.length;
+
+            // Recent bookings
+            const recentBookings = bookings.slice(0, 3); // Show top 3
+            document.getElementById('recentBookingsList').innerHTML = recentBookings.map(b => `
+                <div class="flex items-center justify-between p-3 rounded-lg" style="background-color: hsl(var(--secondary));">
+                    <div>
+                        <div class="font-medium">${b.patientName}</div>
+                        <div class="text-sm" style="color: hsl(var(--muted-foreground));">${b.department} - ${b.date} ${b.time}</div>
+                    </div>
+                    <span class="badge badge-${b.status === 'confirmed' ? 'success' : b.status === 'pending' ? 'warning' : b.status === 'completed' ? 'info' : 'danger'}">${b.status}</span>
+                </div>
+            `).join('');
+        }
+
+
+    </script>
+</body>
+</html>

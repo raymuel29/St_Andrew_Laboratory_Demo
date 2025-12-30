@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>St. Andrew Hospital - Login & Signup</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='website-login.css') }}">
+    
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="loginPage" class="auth-page">
+        <div class="auth-container">
+            <div class="auth-left">
+                <h1>Welcome to St. Andrew Hospital 🏥</h1>
+                <p>Your trusted partner in healthcare excellence</p>
+                <ul class="feature-list">
+                    <li>24/7 Emergency Care Services</li>
+                    <li>Expert Medical Professionals</li>
+                    <li>State-of-the-art Facilities</li>
+                    <li>Easy Online Appointments</li>
+                    <li>Comprehensive Health Records</li>
+                </ul>
+            </div>
+            <div class="auth-right">
+                <div class="auth-card">
+                    <div class="auth-header">
+                        <div class="logo">🏥</div>
+                        <h2>Login to Your Account</h2>
+                        <p>Welcome back! Please enter your details</p>
+                    </div>
+                    
+                    <form id="loginForm">
+                        <div class="form-group">
+                            <label for="loginEmail">Email Address</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">📧</span>
+                                <input type="email" id="loginEmail" placeholder="Enter your email" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="loginPassword">Password</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">🔒</span>
+                                <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="submit-btn">Login Now</button>
+                    </form>
+
+                    <div class="divider">
+                        <span>OR</span>
+                    </div>
+
+                    <div class="social-login">
+                        <button class="social-btn">
+                            <span>📘</span> Facebook
+                        </button>
+                        <button class="social-btn">
+                            <span>🔍</span> Google
+                        </button>
+                    </div>
+
+                    <div class="auth-footer">
+                        Don't have an account? <a onclick="showSignup()">Sign Up</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Page -->
+    <div id="signupPage" class="auth-page hidden">
+        <div class="auth-container">
+            <div class="auth-left">
+                <h1>Join St. Andrew Hospital Today! 🎉</h1>
+                <p>Create your account and get access to world-class healthcare</p>
+                <ul class="feature-list">
+                    <li>Instant Access to Services</li>
+                    <li>Book Appointments Online</li>
+                    <li>Track Your Health Records</li>
+                    <li>Connect with Top Doctors</li>
+                    <li>Get Personalized Care Plans</li>
+                </ul>
+            </div>
+            <div class="auth-right">
+                <div class="auth-card">
+                    <div class="auth-header">
+                        <div class="logo">🏥</div>
+                        <h2>Create Your Account</h2>
+                        <p>Join thousands of satisfied patients</p>
+                    </div>
+                    
+                    <form id="signupForm">
+                        <div class="form-group">
+                            <label for="signupName">Full Name</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">👤</span>
+                                <input type="text" id="signupName" placeholder="Enter your full name" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="signupEmail">Email Address</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">📧</span>
+                                <input type="email" id="signupEmail" placeholder="Enter your email" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="signupPhone">Phone Number</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">📱</span>
+                                <input type="tel" id="signupPhone" placeholder="Enter your phone number" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="signupPassword">Password</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">🔒</span>
+                                <input type="password" id="signupPassword" placeholder="Create a strong password" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="submit-btn">Create Account</button>
+                    </form>
+
+                    <div class="divider">
+                        <span>OR</span>
+                    </div>
+
+                    <div class="social-login">
+                        <button class="social-btn">
+                            <span>📘</span> Facebook
+                        </button>
+                        <button class="social-btn">
+                            <span>🔍</span> Google
+                        </button>
+                    </div>
+
+                    <div class="auth-footer">
+                        Already have an account? <a onclick="showLogin()">Login</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // -------------------------------
+        // PAGE TOGGLE
+        // -------------------------------
+        function showLogin() {
+            document.getElementById('loginPage').classList.remove('hidden');
+            document.getElementById('signupPage').classList.add('hidden');
+        }
+    
+        function showSignup() {
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('signupPage').classList.remove('hidden');
+        }
+    
+        window.addEventListener('DOMContentLoaded', showLogin);
+    
+        // -------------------------------
+        // LOGIN
+        // -------------------------------
+        document.getElementById('loginForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+    
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+    
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+    
+                const data = await response.json();
+    
+                if (response.ok && data.status === 'success') {
+                    window.location.href = data.redirect;
+                } else {
+                    alert(data.message || 'Login failed');
+                }
+    
+            } catch (error) {
+                console.error('Login error:', error);
+                alert('Server error. Please try again.');
+            }
+        });
+    
+        // -------------------------------
+        // SIGNUP
+        // -------------------------------
+        document.getElementById('signupForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+    
+            const name = document.getElementById('signupName').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
+            const phone = document.getElementById('signupPhone').value.trim();
+            const password = document.getElementById('signupPassword').value;
+    
+            try {
+                const response = await fetch('/api/signup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name, email, phone, password })
+                });
+    
+                const data = await response.json();
+    
+                if (response.ok && data.status === 'success') {
+                    alert('Account created successfully');
+                    this.reset();
+                    showLogin();
+                } else {
+                    alert(data.message || 'Signup failed');
+                }
+    
+            } catch (error) {
+                console.error('Signup error:', error);
+                alert('Server error. Please try again.');
+            }
+        });
+    </script>
+    
+    
+</body>
+</html>

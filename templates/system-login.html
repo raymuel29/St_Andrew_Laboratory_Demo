@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#007bff">
+  <title>Thesis System</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='system-login.css') }}">
+  <link rel="icon" href="/static/logo.png" type="image/png">
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+<body>
+    
+    <div class="loading-panel">
+        <img src="{{ url_for('static', filename='St_Andrew_Logo.png') }}" alt="Barrion Grocery Store Logo" class="logo">
+        <div class="loading-dots">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+    </div>
+
+    <div class="security">
+        <div class="security-login-container">
+            <div class="profile-icon"></div>
+            <div class="security-header">
+                <p>IDENTITY VERIFICATION REQUIRED</p>
+            </div>
+            
+            <form class="security-form">
+                <div class="security-input-group">
+                    <i class="fas fa-user-secret"></i>
+                    <input type="text" placeholder="Username" id="login-username" required>
+                </div>
+                
+                <div class="security-input-group">
+                    <i class="fas fa-key"></i>
+                    <input type="password" placeholder="Password" id="login-password" required>
+                </div>
+
+                <div class="security-input-role">
+                    <div class="security-header">
+                        <p>CHOOSE IDENTITY ROLE REQUIRED</p>
+                    </div>
+                    <i class="fas fa-user"></i>
+                    <select id="hospital-role">
+                        <option value="">Select Role</option>
+                        <option>Head of Hospital</option>
+                        <option>Business Office</option>
+                        <option>Laboratory</option>
+                        <option>Pharmacy</option>
+                        <option>Nurse</option>
+                    </select>
+                </div>
+                
+                <button class="login-btn" onclick="submitLogin(event)">LOGIN</button>
+                
+            </form>
+        </div>
+    </div>
+
+    <script>
+        /* ===============================
+        GLOBAL VARIABLES
+        =============================== */
+        let selectedRole = null;
+
+        /* ===============================
+        PAGE INITIALIZATION
+        =============================== */
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if user is already logged in
+            checkSession();
+            
+            // Setup role selector
+            const roleSelect = document.getElementById('hospital-role');
+            if (roleSelect) {
+                roleSelect.addEventListener('change', (e) => {
+                    selectedRole = e.target.value;
+                });
+            }
+            
+            // Show loading screen then login form
+            showLoadingPanelWithTransition();
+            
+            // Prevent back button after logout
+            preventBackNavigation();
+        });
+
+        /* ===============================
+        SESSION CHECK
+        =============================== */
+        async function checkSession() {
+            try {
+                const response = await fetch('/api/check-session');
+                const data = await response.json();
+                
+                if (data.authenticated) {
+                    // User is already logged in, redirect to dashboard
+                    if (data.user_type === 'admin') {
+                        window.location.href = '/admin-dashboard';
+                    } else {
+                        window.location.href = '/user-dashboard';
+                    }
+                }
+            } catch (err) {
+                console.error('Session check error:', err);
+            }
+        }
+
+        /* ===============================
+        LOADING SCREEN
+        =============================== */
+        function showLoadingPanelWithTransition() {
+            const loading = document.querySelector('.loading-panel');
+            const security = document.querySelector('.security');
+
+            if (loading) loading.style.display = 'flex';
+            if (security) security.style.display = 'none';
+
+            setTimeout(() => {
+                if (loading) loading.style.display = 'none';
+                if (security) security.style.display = 'flex';
+            }, 3000);
+        }
+
+        /* ===============================
+        LOGIN SUBMISSION
+        =============================== */
+        async function submitLogin(event) {
+            event.preventDefault();
+
+            const username = document.getElementById('login-username').value.trim();
+            const password = document.getElementById('login-password').value.trim();
+            const role = document.getElementById('hospital-role').value;
+            const loginBtn = document.querySelector('.login-btn');
+
+            // Validation
+            if (!username || !password || !role) {
+                showAlert('error', '⚠️ All fields are required', 'Please fill in username, password, and select your role');
+                return;
+            }
+
+            // Disable button and show loading state
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'LOGGING IN...';
+            loginBtn.style.opacity = '0.7';
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        username, 
+                        password, 
+                        role 
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.status === 'success') {
+                    // Success - show success message
+                    showAlert('success', '✅ LOGIN SUCCESSFUL', `Welcome ${data.full_name}`);
+                    
+                    // Redirect after short delay
+                    setTimeout(() => {
+                        window.location.href = data.redirect;
+                    }, 1000);
+                } else {
+                    // Failed - show error message
+                    showAlert('error', '❌ LOGIN FAILED', data.message || 'Invalid credentials or role');
+                    
+                    // Re-enable button
+                    loginBtn.disabled = false;
+                    loginBtn.textContent = 'LOGIN';
+                    loginBtn.style.opacity = '1';
+                }
+
+            } catch (err) {
+                console.error('Login error:', err);
+                showAlert('error', '❌ CONNECTION ERROR', 'Unable to connect to server. Please try again.');
+                
+                // Re-enable button
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'LOGIN';
+                loginBtn.style.opacity = '1';
+            }
+        }
+
+        /* ===============================
+        LOGOUT FUNCTION
+        =============================== */
+        async function systemLogout() {
+            try {
+                const response = await fetch('/api/logout', { 
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    // Clear any local storage/session storage
+                    sessionStorage.clear();
+                    localStorage.removeItem('user_session');
+                    
+                    // Redirect to login page
+                    window.location.href = data.redirect;
+                }
+            } catch (err) {
+                console.error('Logout error:', err);
+                // Force redirect to login page even if request fails
+                window.location.href = '/IMS';
+            }
+        }
+
+        /* ===============================
+        ALERT/NOTIFICATION SYSTEM
+        =============================== */
+        function showAlert(type, title, message) {
+            // Create alert element
+            const alert = document.createElement('div');
+            alert.className = `custom-alert ${type}`;
+            alert.innerHTML = `
+                <div class="alert-content">
+                    <div class="alert-icon">
+                        ${type === 'success' ? '✅' : '❌'}
+                    </div>
+                    <div class="alert-text">
+                        <strong>${title}</strong>
+                        <p>${message}</p>
+                    </div>
+                </div>
+            `;
+            
+            // Add styles
+            alert.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#10b981' : '#ef4444'};
+                color: white;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+                z-index: 10000;
+                min-width: 300px;
+                animation: slideIn 0.3s ease;
+            `;
+            
+            // Add to body
+            document.body.appendChild(alert);
+            
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                alert.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => alert.remove(), 300);
+            }, 3000);
+        }
+
+        /* ===============================
+        PREVENT BACK NAVIGATION
+        =============================== */
+        function preventBackNavigation() {
+            // Prevent back button from going to authenticated pages after logout
+            window.history.pushState(null, "", window.location.href);
+            window.onpopstate = function () {
+                window.history.pushState(null, "", window.location.href);
+            };
+        }
+    </script>
+        
+</body>
+</html>
