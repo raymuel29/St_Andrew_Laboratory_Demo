@@ -196,8 +196,6 @@ if __name__ == '__main__':
     print("\n📍 Access Points:")
     print("   • Management System → http://127.0.0.1:5000/IMS")
     print("   • Public Website   → http://127.0.0.1:5000/website")
-    print("\n🔐 Default Admin Login:")
-    print("   Username: admin")
-    print("   Password: admin123")
+    
     
     app.run(debug=True, host='0.0.0.0', port=5000)
