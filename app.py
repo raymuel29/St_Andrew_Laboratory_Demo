@@ -3,6 +3,7 @@ from flask_login import LoginManager, current_user
 from models import db, init_db, AdminAccount, UserAccount
 from routes import api
 from datetime import timedelta
+import os
 
 app = Flask(__name__)
 
@@ -52,7 +53,7 @@ def load_user(user_id):
 # =============================================
 
 # Initialize database
-init_db(app)
+
 
 # Register API blueprint
 app.register_blueprint(api)
@@ -188,14 +189,21 @@ def inject_user_info():
             user_info['role'] = current_user.role
     
     return dict(user_info=user_info)
+
 # =============================================
 # RUN APPLICATION
 # =============================================
 
 if __name__ == '__main__':
-    print("\n📍 Access Points:")
-    print("   • Management System → http://127.0.0.1:5000/IMS")
-    print("   • Public Website   → http://127.0.0.1:5000/website")
+    init_db(app)
     
+    # Only print startup messages once (in the reloader process)
+    if os.environ.get('WERKZEUG_RUN_MAIN') == 'true':
+        print("\n📍 Access Points:")
+        print("   • Management System → http://127.0.0.1:5000/IMS")
+        print("   • Public Website   → http://127.0.0.1:5000/website")
+        print("\n🔐 Default Admin Login:")
+        print("   Username: admin")
+        print("   Password: admin123\n")
     
     app.run(debug=True, host='0.0.0.0', port=5000)

@@ -63,14 +63,10 @@
     </div>
 
     <script>
-        /* ===============================
-        GLOBAL VARIABLES
-        =============================== */
+        /* GLOBAL VARIABLES */
         let selectedRole = null;
 
-        /* ===============================
-        PAGE INITIALIZATION
-        =============================== */
+        /* PAGE INITIALIZATION */
         document.addEventListener('DOMContentLoaded', () => {
             // Check if user is already logged in
             checkSession();
@@ -90,9 +86,7 @@
             preventBackNavigation();
         });
 
-        /* ===============================
-        SESSION CHECK
-        =============================== */
+        /* SESSION CHECK */
         async function checkSession() {
             try {
                 const response = await fetch('/api/check-session');
@@ -111,9 +105,7 @@
             }
         }
 
-        /* ===============================
-        LOADING SCREEN
-        =============================== */
+        /* LOADING SCREEN */
         function showLoadingPanelWithTransition() {
             const loading = document.querySelector('.loading-panel');
             const security = document.querySelector('.security');
@@ -127,9 +119,7 @@
             }, 3000);
         }
 
-        /* ===============================
-        LOGIN SUBMISSION
-        =============================== */
+        /* LOGIN SUBMISSION */
         async function submitLogin(event) {
             event.preventDefault();
 
@@ -193,9 +183,7 @@
             }
         }
 
-        /* ===============================
-        LOGOUT FUNCTION
-        =============================== */
+        /* LOGOUT FUNCTION */
         async function systemLogout() {
             try {
                 const response = await fetch('/api/logout', { 
@@ -222,17 +210,14 @@
             }
         }
 
-        /* ===============================
-        ALERT/NOTIFICATION SYSTEM
-        =============================== */
+        /* ALERT/NOTIFICATION SYSTEM */
         function showAlert(type, title, message) {
-            // Create alert element
             const alert = document.createElement('div');
             alert.className = `custom-alert ${type}`;
             alert.innerHTML = `
                 <div class="alert-content">
                     <div class="alert-icon">
-                        ${type === 'success' ? '✅' : '❌'}
+                        ${type === 'success' ? '' : ''}
                     </div>
                     <div class="alert-text">
                         <strong>${title}</strong>
@@ -245,7 +230,8 @@
             alert.style.cssText = `
                 position: fixed;
                 top: 20px;
-                right: 20px;
+                left: 50%;
+                transform: translateX(-50%);
                 background: ${type === 'success' ? '#10b981' : '#ef4444'};
                 color: white;
                 padding: 20px;
@@ -266,9 +252,7 @@
             }, 3000);
         }
 
-        /* ===============================
-        PREVENT BACK NAVIGATION
-        =============================== */
+        /* PREVENT BACK NAVIGATION */
         function preventBackNavigation() {
             // Prevent back button from going to authenticated pages after logout
             window.history.pushState(null, "", window.location.href);

@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Front Desk/Admission Module - St. Andrew Hospital</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --primary: 168 85% 60%;
+            --primary-foreground: 0 0% 100%;
+            --secondary: 240 4% 16%;
+            --secondary-foreground: 0 0% 100%;
+            --accent: 142 71% 45%;
+            --accent-foreground: 0 0% 100%;
+            --background: 0 0% 7%;
+            --foreground: 0 0% 98%;
+            --card: 240 4% 10%;
+            --card-foreground: 0 0% 98%;
+            --border: 240 4% 16%;
+            --muted: 240 4% 16%;
+            --muted-foreground: 240 5% 65%;
+        }
+        
+        body {
+            background-color: hsl(var(--background));
+            color: hsl(var(--foreground));
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .card {
+            background-color: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: 8px;
+        }
+        
+        .btn-primary {
+            background-color: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: opacity 0.2s;
+        }
+        
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+        
+        .btn-secondary {
+            background-color: hsl(var(--secondary));
+            color: hsl(var(--secondary-foreground));
+            border: 1px solid hsl(var(--border));
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        
+        .btn-secondary:hover {
+            background-color: hsl(240 4% 20%);
+        }
+        
+        .btn-success {
+            background-color: hsl(var(--accent));
+            color: hsl(var(--accent-foreground));
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .btn-danger {
+            background-color: hsl(0 72% 51%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .btn-warning {
+            background-color: hsl(45 93% 47%);
+            color: hsl(0 0% 7%);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .nav-item {
+            padding: 12px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .nav-item:hover {
+            background-color: hsl(var(--secondary));
+        }
+        
+        .nav-item.active {
+            background-color: hsl(var(--secondary));
+            color: hsl(var(--primary));
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .table th {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid hsl(var(--border));
+            color: hsl(var(--muted-foreground));
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .table td {
+            padding: 12px;
+            border-bottom: 1px solid hsl(var(--border));
+        }
+        
+        .table tr:hover {
+            background-color: hsl(240 4% 12%);
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .badge-success {
+            background-color: hsl(142 71% 45% / 0.2);
+            color: hsl(142 71% 60%);
+        }
+        
+        .badge-warning {
+            background-color: hsl(45 93% 47% / 0.2);
+            color: hsl(45 93% 60%);
+        }
+        
+        .badge-info {
+            background-color: hsl(200 90% 50% / 0.2);
+            color: hsl(200 90% 60%);
+        }
+        
+        .badge-danger {
+            background-color: hsl(0 72% 51% / 0.2);
+            color: hsl(0 72% 65%);
+        }
+        
+        .badge-primary {
+            background-color: hsl(var(--primary) / 0.2);
+            color: hsl(var(--primary));
+        }
+        
+        input, select, textarea {
+            background-color: hsl(var(--secondary));
+            border: 1px solid hsl(var(--border));
+            color: hsl(var(--foreground));
+            padding: 10px 14px;
+            border-radius: 6px;
+            width: 100%;
+            font-size: 14px;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: hsl(var(--primary));
+            box-shadow: 0 0 0 3px hsl(var(--primary) / 0.1);
+        }
+        
+        input::placeholder {
+            color: hsl(var(--muted-foreground));
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+            color: hsl(var(--foreground));
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background-color: hsl(var(--card));
+            border-radius: 8px;
+            max-width: 700px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(240 4% 13%) 100%);
+            border: 1px solid hsl(var(--border));
+            border-radius: 8px;
+            padding: 20px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            padding-left: 40px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: hsl(var(--muted-foreground));
+        }
+
+        .patient-card {
+            background-color: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: 8px;
+            padding: 16px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .patient-card:hover {
+            border-color: hsl(var(--primary));
+            transform: translateY(-2px);
+        }
+
+        .time-slot {
+            padding: 10px 16px;
+            border: 1px solid hsl(var(--border));
+            border-radius: 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .time-slot:hover {
+            border-color: hsl(var(--primary));
+            background-color: hsl(var(--secondary));
+        }
+
+        .time-slot.selected {
+            background-color: hsl(var(--primary));
+            border-color: hsl(var(--primary));
+            color: white;
+        }
+
+        .time-slot.booked {
+            background-color: hsl(var(--muted));
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+        }
+
+        .form-section {
+            margin-bottom: 24px;
+        }
+
+        .form-section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid hsl(var(--border));
+            color: hsl(var(--primary));
+        }
+    </style>
+</head>
+<body class="p-0 m-0">
+    <!-- Header -->
+    <header class="border-b" style="border-color: hsl(var(--border)); background-color: hsl(var(--card));">
+        <div class="flex items-center justify-between px-6 py-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background-color: hsl(var(--accent));">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-semibold">Front Desk/Admission</h1>
+                    <p class="text-sm" style="color: hsl(var(--muted-foreground));">St. Andrew Hospital</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <span style="color: hsl(var(--muted-foreground));">Staff: <span id="currentUserName">Maria Santos</span></span>
+                <button class="btn-secondary" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside class="w-64 min-h-screen border-r p-4" style="border-color: hsl(var(--border)); background-color: hsl(var(--card));">
+            <nav class="space-y-2">
+                <div class="nav-item active" onclick="showSection('dashboard')">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                    </svg>
+                    Dashboard
+                </div>
+                <div class="nav-item" onclick="showSection('registration')">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
+                    </svg>
+                    Patient Registration
+                </div>
+                <div class="nav-item" onclick="showSection('appointments')">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    Appointments
+                </div>
+                <div class="nav-item" onclick="showSection('checkin')">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Check-in/Check-out
+                </div>
+                <div class="nav-item" onclick="showSection('insurance')">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    Insurance Verification
+                </div>
+                <div class="nav-item" onclick="showSection('waiting-room')">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                    Waiting Room
+                </div>
+                <div class="nav-item" onclick="showSection('patients')">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                    </svg>
+                    Patient Records
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="content-section">
+                <h2 class="text-2xl font-semibold mb-6">Front Desk Dashboard</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between mb-2">
+                            <span style="color: hsl(var(--muted-foreground));">Today's Check-ins</span>
+                            <svg class="w-5 h-5" style="color: hsl(var(--accent));" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <div class="text-3xl font-bold">32</div>
+                        <div class="text-sm mt-1" style="color: hsl(var(--accent));">+8 from yesterday</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between mb-2">
+                            <span style="color: hsl(var(--muted-foreground));">Scheduled Appointments</span>
+                            <svg class="w-5 h-5" style="color: hsl(var(--primary));" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                        </div>
+                        <div class="text-3xl font-bold">45</div>
+                        <div class="text-sm mt-1" style="color: hsl(var(--muted-foreground));">18 remaining today</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between mb-2">
+                            <span style="color: hsl(var(--muted-foreground));">Waiting Patients</span>
+                            <svg class="w-5 h-5" style="color: hsl(45 93% 60%);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <div class="text-3xl font-bold">12</div>
+                        <div class="text-sm mt-1" style="color: hsl(45 93% 60%);">Avg wait: 15 mins</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between mb-2">
+                            <span style="color: hsl(var(--muted-foreground));">New Registrations</span>
+                            <svg class="w-5 h-5" style="color: hsl(200 90% 60%);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
+                            </svg>
+                        </div>
+                        <div class="text-3xl font-bold">7</div>
+                        <div class="text-sm mt-1" style="color: hsl(var(--muted-foreground));">This week</div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="card p-6">
+                        <h3 class="text-lg font-semibold mb-4">Today's Appointments</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between p-3 rounded-lg" style="background-color: hsl(var(--secondary));">
+                                <div>
+                                    <div class="font-medium">John Smith</div>
+                                    <div class="text-sm" style="color: hsl(var(--muted-foreground));">Dr. Sarah Johnson - 9:00 AM</div>
+                                </div>
+                                <span class="badge badge-success">Checked-in</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 rounded-lg" style="background-color: hsl(var(--secondary));">
+                                <div>
+                                    <div class="font-medium">Emma Davis</div>
+                                    <div class="text-sm" style="color: hsl(var(--muted-foreground));">Dr. Michael Chen - 10:30 AM</div>
+                                </div>
+                                <span class="badge badge-warning">Waiting</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 rounded-lg" style="background-color: hsl(var(--secondary));">
+                                <div>
+                                    <div class="font-medium">Robert Taylor</div>
+                                    <div class="text-sm" style="color: hsl(var(--muted-foreground));">Dr. Sarah Johnson - 2:00 PM</div>
+                                </div>
+                                <span class="badge badge-info">Scheduled</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card p-6">
+                        <h3 class="text-lg font-semibold mb-4">Recent Activities</h3>
+                        <div class="space-y-3">
+                            <div class="flex gap-3 p-3 rounded-lg" style="background-color: hsl(var(--secondary));">
+                                <div class="w-2 h-2 rounded-full mt-2" style="background-color: hsl(var(--accent));"></div>
+                                <div class="flex-1">
+                                    <div class="font-medium">New patient registered</div>
+                                    <div class="text-sm" style="color: hsl(var(--muted-foreground));">Linda Martinez - #PAT1234</div>
+                                    <div class="text-xs mt-1" style="color: hsl(var(--muted-foreground));">10 minutes ago</div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex gap-3 p-3 rounded-lg" style="background-color: hsl(var(--secondary));">
+                                <div class="w-2 h-2 rounded-full mt-2" style="background-color: hsl(var(--primary));"></div>
+                                <div class="flex-1">
+                                    <div class="font-medium">Appointment scheduled</div>
+                                    <div class="text-sm" style="color: hsl(var(--muted-foreground));">Robert Wilson - Jan 5, 2025</div>
+                                    <div class="text-xs mt-1" style="color: hsl(var(--muted-foreground));">25 minutes ago</div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex gap-3 p-3 rounded-lg" style="background-color: hsl(var(--secondary));">
+                                <div class="w-2 h-2 rounded-full mt-2" style="background-color: hsl(45 93% 60%);"></div>
+                                <div class="flex-1">
+                                    <div class="font-medium">Insurance verified</div>
+                                    <div class="text-sm" style="color: hsl(var(--muted-foreground));">Emma Davis - PhilHealth</div>
+                                    <div class="text-xs mt-1" style="color: hsl(var(--muted-foreground));">1 hour ago</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Patient Registration Section -->
+            <section id="registration" class="content-section hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-semibold">Patient Registration</h2>
+                </div>
+
+                <div class="card p-6">
+                    <form onsubmit="registerPatient(event)" class="space-y-6">
+                        <div class="form-section">
+                            <h3 class="form-section-title">Personal Information</h3>
+                            <div class="form-grid">
+                                <div>
+                                    <label>First Name *</label>
+                                    <input type="text" id="firstName" required placeholder="Enter first name">
+                                </div>
+                                <div>
+                                    <label>Middle Name</label>
+                                    <input type="text" id="middleName" placeholder="Enter middle name">
+                                </div>
+                                <div>
+                                    <label>Last Name *</label>
+                                    <input type="text" id="lastName" required placeholder="Enter last name">
+                                </div>
+                                <div>
+                                    <label>Date of Birth *</label>
+                                    <input type="date" id="dob" required>
+                                </div>
+                                <div>
+                                    <label>Gender *</label>
+                                    <select id="gender" required>
+                                        <option value="">Select gender</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label>Civil Status</label>
+                                    <select id="civilStatus">
+                                        <option value="">Select status</option>
+                                        <option value="Single">Single</option>
+                                        <option value="Married">Married</option>
+                                        <option value="Widowed">Widowed</option>
+                                        <option value="Separated">Separated</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3 class="form-section-title">Contact Information</h3>
+                            <div class="form-grid">
+                                <div>
+                                    <label>Mobile Number *</label>
+                                    <input type="tel" id="mobile" required placeholder="+63 912 345 6789">
+                                </div>
+                                <div>
+                                    <label>Email Address</label>
+                                    <input type="email" id="email" placeholder="patient@email.com">
+                                </div>
+                                <div class="col-span-2">
+                                    <label>Address *</label>
+                                    <textarea id="address" required rows="2" placeholder="Complete address"></textarea>
+                                </div>
+                                <div>
+                                    <label>City *</label>
+                                    <input type="text" id="city" required placeholder="City">
+                                </div>
+                                <div>
+                                    <label>Province</label>
+                                    <input type="text" id="province" placeholder="Province">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3 class="form-section-title">Emergency Contact</h3>
+                            <div class="form-grid">
+                                <div>
+                                    <label>Contact Name *</label>
+                                    <input type="text" id="emergencyName" required placeholder="Full name">
+                                </div>
+                                <div>
+                                    <label>Relationship *</label>
+                                    <input type="text" id="emergencyRelation" required placeholder="e.g., Spouse, Parent">
+                                </div>
+                                <div>
+                                    <label>Contact Number *</label>
+                                    <input type="tel" id="emergencyPhone" required placeholder="+63 912 345 6789">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3 class="form-section-title">Insurance Information</h3>
+                            <div class="form-grid">
+                                <div>
+                                    <label>Insurance Provider</label>
+                                    <select id="insuranceProvider">
+                                        <option value="">Select provider</option>
+                                        <option value="PhilHealth">PhilHealth</option>
+                                        <option value="Maxicare">Maxicare</option>
+                                        <option value="Medicard">Medicard</option>
+                                        <option value="Pacific Cross">Pacific Cross</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label>Policy Number</label>
+                                    <input type="text" id="policyNumber" placeholder="Policy/Member ID">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-3 mt-6">
+                            <button type="submit" class="btn-primary flex-1">Register Patient</button>
+                            <button type="button" class="btn-secondary" onclick="resetForm()">Clear Form</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Appointments Section -->
+            <section id="appointments" class="content-section hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-semibold">Appointment Scheduling</h2>
+                    <button class="btn-primary" onclick="openModal('newAppointmentModal')">+ Schedule Appointment</button>
+                </div>
+
+                <div class="card p-6 mb-6">
+                    <div class="flex gap-4 flex-wrap">
+                        <div class="search-box flex-1 min-w-64">
+                            <svg class="search-icon w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                            <input type="text" id="appointmentSearch" placeholder="Search appointments..." onkeyup="filterAppointments()">
+                        </div>
+                        <input type="date" id="appointmentDate" class="w-48" onchange="filterAppointments()">
+                        <select id="appointmentStatus" onchange="filterAppointments()" class="w-48">
+                            <option value="">All Status</option>
+                            <option value="Scheduled">Scheduled</option>
+                            <option value="Checked-in">Checked-in</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Appointment ID</th>
+                                <th>Patient Name</th>
+                                <th>Doctor</th>
+                                <th>Date & Time</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="appointmentsTableBody">
+                            <tr>
+                                <td>#APT001</td>
+                                <td>John Smith</td>
+                                <td>Dr. Sarah Johnson</td>
+                                <td>Jan 02, 2025 - 9:00 AM</td>
+                                <td><span class="badge badge-info">Consultation</span></td>
+                                <td><span class="badge badge-success">Checked-in</span></td>
+                                <td>
+                                    <div class="flex gap-2">
+                                        <button class="btn-secondary text-sm" onclick="viewAppointment(1)">View</button>
+                                        <button class="btn-warning text-sm" onclick="rescheduleAppointment(1)">Reschedule</button>
+                                        <button class="btn-danger text-sm" onclick="cancelAppointment(1)">Cancel</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#APT002</td>
+                                <td>Emma Davis</td>
+                                <td>Dr. Michael Chen</td>
+                                <td>Jan 02, 2025 - 10:30 AM</td>
+                                <td><span class="badge badge-warning">Follow-up</span></td>
+                                <td><span class="badge badge-warning">Waiting</span></td>
+                                <td>
+                                    <div class="flex gap-2">
+                                        <button class="btn-secondary text-sm" onclick="viewAppointment(2)">View</button>
+                                        <button class="btn-warning text-sm" onclick="rescheduleAppointment(2)">Reschedule</button>
+                                        <button class="btn-danger text-sm" onclick="cancelAppointment(2)">Cancel</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#APT003</td>
+                                <td>Robert Taylor</td>
+                                <td>Dr. Sarah Johnson</td>
+                                <td>Jan 02, 2025 - 2:00 PM</td>
+                                <td><span class="badge badge-primary">Laboratory</span></td>
+                                <td><span class="badge badge-info">Scheduled</span></td>
+                                <td>
+                                    <div class="flex gap-2">
+                                        <button class="btn-secondary text-sm" onclick="viewAppointment(3)">View</button>
+                                        <button class="btn-warning text-sm" onclick="rescheduleAppointment(3)">Reschedule</button>
+                                        <button class="btn-danger text-sm" onclick="cancelAppointment(3)">Cancel</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Check-in/Check-out Section -->
+            <section id="checkin" class="content-section hidden">
+                <h2 class="text-2xl font-semibold mb-6">Patient Check-in/Check-out</h2>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    <div class="card p-6">
+                        <h3 class="text-lg font-semibold mb-4">Quick Check-in</h3>
+                        <div class="space-y-4">
+                            <div class="search-box">
+                                <svg class="search-icon w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                                </svg>
+                                <input type="text" id="checkinSearch" placeholder="Search by name, ID, or appointment #">
+                            </div>
+                            <button class="btn-primary w-full" onclick="performCheckin()">Check-in Patient</button>
+                        </div>
+                    </div>
+
+                    <div class="card p-6">
+                        <h3 class="text-lg font-semibold mb-4">Quick Check-out</h3>
+                        <div class="space-y-4">
+                            <div class="search-box">
+                                <svg class="search-icon w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                                </svg>
+                                <input type="text" id="checkoutSearch" placeholder="Search by name or patient ID">
+                            </div>
+                            <button class="btn-success w-full" onclick="performCheckout()">Check-out Patient</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="p-6 border-b" style="border-color: hsl(var(--border));">
+                        <h3 class="text-lg font-semibold">Today's Check-ins</h3>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Patient ID</th>
+                                <th>Patient Name</th>
+                                <th>Appointment</th>
+                                <th>Check-in Time</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#PAT001</td>
+                                <td>John Smith</td>
+                                <td>#APT001 - Dr. Sarah Johnson</td>
+                                <td>8:55 AM</td>
+                                <td><span class="badge badge-warning">In Progress</span></td>
+                                <td>
+                                    <button class="btn-success text-sm" onclick="checkoutPatient(1)">Check-out</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#PAT002</td>
+                                <td>Emma Davis</td>
+                                <td>#APT002 - Dr. Michael Chen</td>
+                                <td>10:25 AM</td>
+                                <td><span class="badge badge-info">Waiting</span></td>
+                                <td>
+                                    <button class="btn-success text-sm" onclick="checkoutPatient(2)">Check-out</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#PAT003</td>
+                                <td>Maria Santos</td>
+                                <td>#APT005 - Dr. Sarah Johnson</td>
+                                <td>11:30 AM</td>
+                                <td><span class="badge badge-success">Completed</span></td>
+                                <td>
+                                    <button class="btn-success text-sm" disabled>Checked-out</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Insurance Verification Section -->
+            <section id="insurance" class="content-section hidden">
+                <h2 class="text-2xl font-semibold mb-6">Insurance Verification</h2>
+
+                <div class="card p-6 mb-6">
+                    <h3 class="text-lg font-semibold mb-4">Verify Insurance Coverage</h3>
+                    <div class="form-grid">
+                        <div>
+                            <label>Patient ID or Name</label>
+                            <input type="text" id="insurancePatientSearch" placeholder="Search patient...">
+                        </div>
+                        <div>
+                            <label>Insurance Provider</label>
+                            <select id="insuranceProviderVerify">
+                                <option value="">Select provider</option>
+                                <option value="PhilHealth">PhilHealth</option>
+                                <option value="Maxicare">Maxicare</option>
+                                <option value="Medicard">Medicard</option>
+                                <option value="Pacific Cross">Pacific Cross</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Policy/Member Number</label>
+                            <input type="text" id="insurancePolicyVerify" placeholder="Enter policy number">
+                        </div>
+                        <div class="flex items-end">
+                            <button class="btn-primary w-full" onclick="verifyInsurance()">Verify Coverage</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="p-6 border-b" style="border-color: hsl(var(--border));">
+                        <h3 class="text-lg font-semibold">Recent Verifications</h3>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Patient</th>
+                                <th>Insurance Provider</th>
+                                <th>Policy Number</th>
+                                <th>Coverage Status</th>
+                                <th>Verified By</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Jan 02, 2025</td>
+                                <td>Emma Davis</td>
+                                <td>PhilHealth</td>
+                                <td>PH-123456789</td>
+                                <td><span class="badge badge-success">Active</span></td>
+                                <td>Maria Santos</td>
+                                <td>
+                                    <button class="btn-secondary text-sm" onclick="viewInsuranceDetails(1)">View Details</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Jan 02, 2025</td>
+                                <td>Robert Taylor</td>
+                                <td>Maxicare</td>
+                                <td>MAX-987654321</td>
+                                <td><span class="badge badge-success">Active</span></td>
+                                <td>Maria Santos</td>
+                                <td>
+                                    <button class="btn-secondary text-sm" onclick="viewInsuranceDetails(2)">View Details</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Jan 01, 2025</td>
+                                <td>Linda Martinez</td>
+                                <td>Medicard</td>
+                                <td>MED-456789123</td>
+                                <td><span class="badge badge-danger">Expired</span></td>
+                                <td>Maria Santos</td>
+                                <td>
+                                    <button class="btn-secondary text-sm" onclick="viewInsuranceDetails(3)">View Details</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Waiting Room Section -->
+            <section id="waiting-room" class="content-section hidden">
+                <h2 class="text-2xl font-semibold mb-6">Waiting Room Management</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="stat-card">
+                        <div class="text-sm mb-2" style="color: hsl(var(--muted-foreground));">Current Waiting</div>
+                        <div class="text-3xl font-bold">12</div>
+                        <div class="text-sm mt-1" style="color: hsl(var(--muted-foreground));">Patients</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="text-sm mb-2" style="color: hsl(var(--muted-foreground));">Average Wait Time</div>
+                        <div class="text-3xl font-bold">15</div>
+                        <div class="text-sm mt-1" style="color: hsl(var(--muted-foreground));">Minutes</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="text-sm mb-2" style="color: hsl(var(--muted-foreground));">Longest Wait</div>
+                        <div class="text-3xl font-bold">32</div>
+                        <div class="text-sm mt-1" style="color: hsl(var(--muted-foreground));">Minutes</div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold">Waiting Patients</h3>
+                            <button class="btn-secondary text-sm" onclick="refreshWaitingRoom()">Refresh</button>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="patient-card">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div>
+                                        <div class="font-semibold">Emma Davis</div>
+                                        <div class="text-sm" style="color: hsl(var(--muted-foreground));">#PAT002 - Dr. Michael Chen</div>
+                                    </div>
+                                    <span class="badge badge-warning">Waiting</span>
+                                </div>
+                                <div class="flex items-center justify-between text-sm">
+                                    <span style="color: hsl(var(--muted-foreground));">Wait time: 12 mins</span>
+                                    <button class="btn-primary text-sm" onclick="callPatient(2)">Call Patient</button>
+                                </div>
+                            </div>
+
+                            <div class="patient-card">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div>
+                                        <div class="font-semibold">Robert Wilson</div>
+                                        <div class="text-sm" style="color: hsl(var(--muted-foreground));">#PAT004 - Dr. Sarah Johnson</div>
+                                    </div>
+                                    <span class="badge badge-warning">Waiting</span>
+                                </div>
+                                <div class="flex items-center justify-between text-sm">
+                                    <span style="color: hsl(var(--muted-foreground));">Wait time: 8 mins</span>
+                                    <button class="btn-primary text-sm" onclick="callPatient(4)">Call Patient</button>
+                                </div>
+                            </div>
+
+                            <div class="patient-card">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div>
+                                        <div class="font-semibold">Linda Martinez</div>
+                                        <div class="text-sm" style="color: hsl(var(--muted-foreground));">#PAT005 - Dr. Michael Chen</div>
+                                    </div>
+                                    <span class="badge badge-warning">Waiting</span>
+                                </div>
+                                <div class="flex items-center justify-between text-sm">
+                                    <span style="color: hsl(var(--muted-foreground));">Wait time: 5 mins</span>
+                                    <button class="btn-primary text-sm" onclick="callPatient(5)">Call Patient</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card p-6">
+                        <h3 class="text-lg font-semibold mb-4">Queue by Doctor</h3>
+                        <div class="space-y-4">
+                            <div class="p-4 rounded-lg" style="background-color: hsl(var(--secondary));">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="font-semibold">Dr. Sarah Johnson</div>
+                                    <span class="badge badge-info">3 waiting</span>
+                                </div>
+                                <div class="text-sm" style="color: hsl(var(--muted-foreground));">
+                                    Avg wait: 15 mins
+                                </div>
+                            </div>
+
+                            <div class="p-4 rounded-lg" style="background-color: hsl(var(--secondary));">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="font-semibold">Dr. Michael Chen</div>
+                                    <span class="badge badge-info">5 waiting</span>
+                                </div>
+                                <div class="text-sm" style="color: hsl(var(--muted-foreground));">
+                                    Avg wait: 18 mins
+                                </div>
+                            </div>
+
+                            <div class="p-4 rounded-lg" style="background-color: hsl(var(--secondary));">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="font-semibold">Dr. Jennifer Adams</div>
+                                    <span class="badge badge-info">4 waiting</span>
+                                </div>
+                                <div class="text-sm" style="color: hsl(var(--muted-foreground));">
+                                    Avg wait: 12 mins
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Patient Records Section -->
+            <section id="patients" class="content-section hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-semibold">Patient Records</h2>
+                </div>
+
+                <div class="card p-6 mb-6">
+                    <div class="flex gap-4 flex-wrap">
+                        <div class="search-box flex-1 min-w-64">
+                            <svg class="search-icon w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                            <input type="text" id="patientSearch" placeholder="Search patients..." onkeyup="filterPatients()">
+                        </div>
+                        <select id="patientStatusFilter" onchange="filterPatients()" class="w-48">
+                            <option value="">All Status</option>
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Patient ID</th>
+                                <th>Name</th>
+                                <th>Date of Birth</th>
+                                <th>Contact</th>
+                                <th>Last Visit</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="patientsTableBody">
+                            <tr>
+                                <td>#PAT001</td>
+                                <td>John Smith</td>
+                                <td>Mar 15, 1985</td>
+                                <td>+63 912 345 6789</td>
+                                <td>Jan 02, 2025</td>
+                                <td><span class="badge badge-success">Active</span></td>
+                                <td>
+                                    <div class="flex gap-2">
+                                        <button class="btn-secondary text-sm" onclick="viewPatientRecord(1)">View</button>
+                                        <button class="btn-primary text-sm" onclick="bookAppointment(1)">Book</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#PAT002</td>
+                                <td>Emma Davis</td>
+                                <td>Jul 22, 1992</td>
+                                <td>+63 917 234 5678</td>
+                                <td>Jan 02, 2025</td>
+                                <td><span class="badge badge-success">Active</span></td>
+                                <td>
+                                    <div class="flex gap-2">
+                                        <button class="btn-secondary text-sm" onclick="viewPatientRecord(2)">View</button>
+                                        <button class="btn-primary text-sm" onclick="bookAppointment(2)">Book</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#PAT003</td>
+                                <td>Maria Santos</td>
+                                <td>Nov 08, 1978</td>
+                                <td>+63 918 345 6789</td>
+                                <td>Jan 02, 2025</td>
+                                <td><span class="badge badge-success">Active</span></td>
+                                <td>
+                                    <div class="flex gap-2">
+                                        <button class="btn-secondary text-sm" onclick="viewPatientRecord(3)">View</button>
+                                        <button class="btn-primary text-sm" onclick="bookAppointment(3)">Book</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- New Appointment Modal -->
+    <div id="newAppointmentModal" class="modal">
+        <div class="modal-content p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-semibold">Schedule New Appointment</h3>
+                <button onclick="closeModal('newAppointmentModal')" class="text-2xl">&times;</button>
+            </div>
+            <form onsubmit="scheduleAppointment(event)" class="space-y-4">
+                <div>
+                    <label>Patient</label>
+                    <input type="text" id="aptPatient" required placeholder="Search patient name or ID">
+                </div>
+                <div>
+                    <label>Doctor</label>
+                    <select id="aptDoctor" required>
+                        <option value="">Select doctor</option>
+                        <option value="1">Dr. Sarah Johnson - General Physician</option>
+                        <option value="2">Dr. Michael Chen - Cardiologist</option>
+                        <option value="3">Dr. Jennifer Adams - Pediatrician</option>
+                    </select>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label>Date</label>
+                        <input type="date" id="aptDate" required>
+                    </div>
+                    <div>
+                        <label>Time</label>
+                        <input type="time" id="aptTime" required>
+                    </div>
+                </div>
+                <div>
+                    <label>Appointment Type</label>
+                    <select id="aptType" required>
+                        <option value="">Select type</option>
+                        <option value="Consultation">Consultation</option>
+                        <option value="Follow-up">Follow-up</option>
+                        <option value="Laboratory">Laboratory</option>
+                        <option value="Procedure">Procedure</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Reason for Visit</label>
+                    <textarea id="aptReason" rows="3" placeholder="Brief description of reason for visit"></textarea>
+                </div>
+                <div class="flex gap-3 mt-6">
+                    <button type="submit" class="btn-primary flex-1">Schedule Appointment</button>
+                    <button type="button" class="btn-secondary flex-1" onclick="closeModal('newAppointmentModal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let appointments = [];
+        let patients = [];
+        let waitingRoom = [];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            setupEventListeners();
+            loadData();
+        });
+
+        function setupEventListeners() {
+            window.onclick = function(event) {
+                if (event.target.classList.contains('modal')) {
+                    event.target.classList.remove('active');
+                }
+            }
+        }
+
+        function loadData() {
+            // Load initial data here
+        }
+
+        // Navigation
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.classList.remove('hidden');
+            }
+            
+            event.target.closest('.nav-item').classList.add('active');
+        }
+
+        // Modal functions
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('active');
+            }
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('active');
+                const form = modal.querySelector('form');
+                if (form) form.reset();
+            }
+        }
+
+        // Patient Registration
+        function registerPatient(event) {
+            event.preventDefault();
+            showAlert('success', 'Success', 'Patient registered successfully!');
+            event.target.reset();
+        }
+
+        function resetForm() {
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => form.reset());
+        }
+
+        // Appointments
+        function filterAppointments() {
+            const searchTerm = document.getElementById('appointmentSearch').value.toLowerCase();
+            const statusFilter = document.getElementById('appointmentStatus').value.toLowerCase();
+            
+            const rows = document.querySelectorAll('#appointmentsTableBody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                const matchesSearch = text.includes(searchTerm);
+                const matchesStatus = !statusFilter || text.includes(statusFilter);
+                
+                row.style.display = (matchesSearch && matchesStatus) ? '' : 'none';
+            });
+        }
+
+        function scheduleAppointment(event) {
+            event.preventDefault();
+            showAlert('success', 'Success', 'Appointment scheduled successfully!');
+            closeModal('newAppointmentModal');
+        }
+
+        function viewAppointment(id) {
+            showAlert('info', 'Coming Soon', 'View appointment details');
+        }
+
+        function rescheduleAppointment(id) {
+            showAlert('info', 'Coming Soon', 'Reschedule appointment');
+        }
+
+        function cancelAppointment(id) {
+            if (confirm('Are you sure you want to cancel this appointment?')) {
+                showAlert('success', 'Success', 'Appointment cancelled successfully!');
+            }
+        }
+
+        // Check-in/Check-out
+        function performCheckin() {
+            const search = document.getElementById('checkinSearch').value;
+            if (!search) {
+                showAlert('error', 'Error', 'Please enter patient name, ID, or appointment number');
+                return;
+            }
+            showAlert('success', 'Success', 'Patient checked in successfully!');
+            document.getElementById('checkinSearch').value = '';
+        }
+
+        function performCheckout() {
+            const search = document.getElementById('checkoutSearch').value;
+            if (!search) {
+                showAlert('error', 'Error', 'Please enter patient name or ID');
+                return;
+            }
+            showAlert('success', 'Success', 'Patient checked out successfully!');
+            document.getElementById('checkoutSearch').value = '';
+        }
+
+        function checkoutPatient(id) {
+            if (confirm('Check out this patient?')) {
+                showAlert('success', 'Success', 'Patient checked out successfully!');
+            }
+        }
+
+        // Insurance
+        function verifyInsurance() {
+            const patient = document.getElementById('insurancePatientSearch').value;
+            const provider = document.getElementById('insuranceProviderVerify').value;
+            const policy = document.getElementById('insurancePolicyVerify').value;
+            
+            if (!patient || !provider || !policy) {
+                showAlert('error', 'Error', 'Please fill in all fields');
+                return;
+            }
+            
+            showAlert('success', 'Success', 'Insurance coverage verified!');
+        }
+
+        function viewInsuranceDetails(id) {
+            showAlert('info', 'Coming Soon', 'View insurance details');
+        }
+
+        // Waiting Room
+        function refreshWaitingRoom() {
+            showAlert('info', 'Refreshed', 'Waiting room data updated');
+        }
+
+        function callPatient(id) {
+            if (confirm('Call this patient to consultation room?')) {
+                showAlert('success', 'Success', 'Patient notification sent!');
+            }
+        }
+
+        // Patient Records
+        function filterPatients() {
+            const searchTerm = document.getElementById('patientSearch').value.toLowerCase();
+            const statusFilter = document.getElementById('patientStatusFilter').value.toLowerCase();
+            
+            const rows = document.querySelectorAll('#patientsTableBody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                const matchesSearch = text.includes(searchTerm);
+                const matchesStatus = !statusFilter || text.includes(statusFilter);
+                
+                row.style.display = (matchesSearch && matchesStatus) ? '' : 'none';
+            });
+        }
+
+        function viewPatientRecord(id) {
+            showAlert('info', 'Coming Soon', 'View patient full record');
+        }
+
+        function bookAppointment(id) {
+            openModal('newAppointmentModal');
+        }
+
+        // Logout
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                window.location.href = '/';
+            }
+        }
+
+        // Alert System
+        function showAlert(type, title, message) {
+            const alert = document.createElement('div');
+            alert.className = `custom-alert ${type}`;
+            alert.innerHTML = `
+                <div class="alert-content">
+                    <div class="alert-icon">
+                        ${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'}
+                    </div>
+                    <div class="alert-text">
+                        <strong>${title}</strong>
+                        <p>${message}</p>
+                    </div>
+                </div>
+            `;
+            
+            alert.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
+                color: white;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+                z-index: 10000;
+                min-width: 300px;
+                animation: slideIn 0.3s ease;
+            `;
+            
+            document.body.appendChild(alert);
+            
+            setTimeout(() => {
+                alert.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => alert.remove(), 300);
+            }, 3000);
+        }
+
+        // Add animation keyframes
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            
+            @keyframes slideOut {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

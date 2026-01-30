@@ -1,0 +1,1643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor/EMR Module - St. Andrew Hospital</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --primary: 168 85% 60%;
+            --primary-foreground: 0 0% 100%;
+            --secondary: 240 4% 16%;
+            --secondary-foreground: 0 0% 100%;
+            --accent: 142 71% 45%;
+            --accent-foreground: 0 0% 100%;
+            --background: 0 0% 7%;
+            --foreground: 0 0% 98%;
+            --card: 240 4% 10%;
+            --card-foreground: 0 0% 98%;
+            --border: 240 4% 16%;
+            --muted: 240 4% 16%;
+            --muted-foreground: 240 5% 65%;
+        }
+        
+        body {
+            background-color: hsl(var(--background));
+            color: hsl(var(--foreground));
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .card {
+            background-color: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: 8px;
+        }
+        
+        .btn-primary {
+            background-color: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: opacity 0.2s;
+        }
+        
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+        
+        .btn-secondary {
+            background-color: hsl(var(--secondary));
+            color: hsl(var(--secondary-foreground));
+            border: 1px solid hsl(var(--border));
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        
+        .btn-secondary:hover {
+            background-color: hsl(240 4% 20%);
+        }
+        
+        .btn-success {
+            background-color: hsl(var(--accent));
+            color: hsl(var(--accent-foreground));
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .btn-danger {
+            background-color: hsl(0 72% 51%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .btn-warning {
+            background-color: hsl(45 93% 47%);
+            color: hsl(0 0% 7%);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .nav-item {
+            padding: 12px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .nav-item:hover {
+            background-color: hsl(var(--secondary));
+        }
+        
+        .nav-item.active {
+            background-color: hsl(var(--secondary));
+            color: hsl(var(--primary));
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .table th {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid hsl(var(--border));
+            color: hsl(var(--muted-foreground));
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .table td {
+            padding: 12px;
+            border-bottom: 1px solid hsl(var(--border));
+        }
+        
+        .table tr:hover {
+            background-color: hsl(240 4% 12%);
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .badge-success {
+            background-color: hsl(142 71% 45% / 0.2);
+            color: hsl(142 71% 60%);
+        }
+        
+        .badge-warning {
+            background-color: hsl(45 93% 47% / 0.2);
+            color: hsl(45 93% 60%);
+        }
+        
+        .badge-info {
+            background-color: hsl(200 90% 50% / 0.2);
+            color: hsl(200 90% 60%);
+        }
+        
+        .badge-danger {
+            background-color: hsl(0 72% 51% / 0.2);
+            color: hsl(0 72% 65%);
+        }
+        
+        .badge-primary {
+            background-color: hsl(var(--primary) / 0.2);
+            color: hsl(var(--primary));
+        }
+        
+        input, select, textarea {
+            background-color: hsl(var(--secondary));
+            border: 1px solid hsl(var(--border));
+            color: hsl(var(--foreground));
+            padding: 10px 14px;
+            border-radius: 6px;
+            width: 100%;
+            font-size: 14px;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: hsl(var(--primary));
+            box-shadow: 0 0 0 3px hsl(var(--primary) / 0.1);
+        }
+        
+        input::placeholder {
+            color: hsl(var(--muted-foreground));
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+            color: hsl(var(--foreground));
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background-color: hsl(var(--card));
+            border-radius: 8px;
+            max-width: 900px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(240 4% 13%) 100%);
+            border: 1px solid hsl(var(--border));
+            border-radius: 8px;
+            padding: 20px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            padding-left: 40px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: hsl(var(--muted-foreground));
+        }
+
+        .patient-card {
+            background-color: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: 8px;
+            padding: 16px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .patient-card:hover {
+            border-color: hsl(var(--primary));
+            transform: translateY(-2px);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+        }
+
+        .form-section {
+            margin-bottom: 24px;
+        }
+
+        .form-section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid hsl(var(--border));
+            color: hsl(var(--primary));
+        }
+
+        .vital-signs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+        }
+
+        .vital-box {
+            background-color: hsl(var(--secondary));
+            border: 1px solid hsl(var(--border));
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .vital-label {
+            font-size: 12px;
+            color: hsl(var(--muted-foreground));
+            margin-bottom: 4px;
+        }
+
+        .vital-value {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .medication-item {
+            background-color: hsl(var(--secondary));
+            border: 1px solid hsl(var(--border));
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 8px;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 30px;
+            padding-bottom: 20px;
+            border-left: 2px solid hsl(var(--border));
+        }
+
+        .timeline-item:last-child {
+            border-left: none;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -6px;
+            top: 0;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: hsl(var(--primary));
+        }
+
+        .emr-section {
+            background-color: hsl(var(--secondary));
+            border: 1px solid hsl(var(--border));
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .emr-section-header {
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: hsl(var(--primary));
+        }
+    </style>
+</head>
+<body class="p-0 m-0">
+    <!-- Header -->
+    <header class="border-b" style="border-color: hsl(var(--border)); background-color: hsl(var(--card));">
+        <div class="flex items-center justify-between px-6 py-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background-color: hsl(var(--primary));">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-semibold">Doctor/EMR Module</h1>
+                    <p class="text-sm" style="color: hsl(var(--muted-foreground));">St. Andrew Hospital</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <span style="color: hsl(var(--muted-foreground));">Dr. <span id="currentUserName">Sarah Johnson</span></span>
+                <button class="btn-secondary" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside class="w-64 min-h-screen border-r p-4" style="border-color: hsl(var(--border)); background-color: hsl(var(--card));">
+            <nav class="space-y-2">
+                <div class="nav-item active" onclick="showSection('dashboard')">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                    </svg>
+                    Dashboard
+                </div>
+                <div class="nav-item" onclick="showSection('patients')">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                    </svg>
+                    My Patients
+                </div>
+                <div class="nav-item" onclick="showSection('emr')">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    Electronic Medical Records
+                </div>
+                <div class="nav-item" onclick="showSection('orders')">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+                    </svg>
+                    Order Entry
+                </div>
+                <div class="nav-item" onclick="showSection('prescriptions')">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                    </svg>
+                    Prescriptions
+                </div>
+                <div class="nav-item" onclick="showSection('progress-notes')">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                    </svg>
+                    Progress Notes
+                </div>
+                <div class="nav-item" onclick="showSection('diagnosis')">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                    </svg>
+                    Diagnosis & Treatment
+                </div>
+                <div class="nav-item" onclick="showSection('appointments')">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    My Schedule
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="content-section">
+                <h2 class="text-2xl font-semibold mb-6">Doctor Dashboard</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between mb-2">
+                            <span style="color: hsl(var(--muted-foreground));">Today's Patients</span>
+                            <svg class="w-5 h-5" style="color: hsl(var(--primary));" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                            </svg>
+                        </div>
+                        <div class="text-3xl font-bold">12</div>
+                        <div class="text-sm mt-1" style="color: hsl(var(--accent));">8 completed, 4 pending</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between mb-2">
+                            <span style="color: hsl(var(--muted-foreground));">Prescriptions Written</span>
+                            <svg class="w-5 h-5" style="color: hsl(var(--accent));" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                            </svg>
+                        </div>
+                        <div class="text-3xl font-bold">15</div>
+                        <div class="text-sm mt-1" style="color: hsl(var(--muted-foreground));">Today</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between mb-2">
+                            <span style="color: hsl(var(--muted-foreground));">Lab Orders</span>
+                            <svg class="w-5 h-5" style="color: hsl(45 93% 60%);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+                            </svg>
+                        </div>
+                        <div class="text-3xl font-bold">8</div>
+                        <div class="text-sm mt-1" style="color: hsl(45 93% 60%);">3 results pending</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between mb-2">
+                            <span style="color: hsl(var(--muted-foreground));">Active Patients</span>
+                            <svg class="w-5 h-5" style="color: hsl(200 90% 60%);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <div class="text-3xl font-bold">147</div>
+                        <div class="text-sm mt-1" style="color: hsl(var(--muted-foreground));">Under my care</div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="card p-6">
+                        <h3 class="text-lg font-semibold mb-4">Today's Appointments</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between p-3 rounded-lg" style="background-color: hsl(var(--secondary));">
+                                <div>
+                                    <div class="font-medium">John Smith</div>
+                                    <div class="text-sm" style="color: hsl(var(--muted-foreground));">9:00 AM - Follow-up Visit</div>
+                                </div>
+                                <span class="badge badge-success">Completed</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 rounded-lg" style="background-color: hsl(var(--secondary));">
+                                <div>
+                                    <div class="font-medium">Emma Davis</div>
+                                    <div class="text-sm" style="color: hsl(var(--muted-foreground));">10:30 AM - General Consultation</div>
+                                </div>
+                                <span class="badge badge-warning">In Progress</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 rounded-lg" style="background-color: hsl(var(--secondary));">
+                                <div>
+                                    <div class="font-medium">Robert Taylor</div>
+                                    <div class="text-sm" style="color: hsl(var(--muted-foreground));">2:00 PM - New Patient</div>
+                                </div>
+                                <span class="badge badge-info">Scheduled</span>
+                            </div>
+                        </div>
+                        <button class="btn-secondary w-full mt-4" onclick="showSection('appointments')">View Full Schedule</button>
+                    </div>
+
+                    <div class="card p-6">
+                        <h3 class="text-lg font-semibold mb-4">Pending Actions</h3>
+                        <div class="space-y-3">
+                            <div class="flex gap-3 p-3 rounded-lg" style="background-color: hsl(var(--secondary));">
+                                <div class="w-2 h-2 rounded-full mt-2" style="background-color: hsl(0 72% 51%);"></div>
+                                <div class="flex-1">
+                                    <div class="font-medium">Lab Results to Review</div>
+                                    <div class="text-sm" style="color: hsl(var(--muted-foreground));">3 patients - requires attention</div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex gap-3 p-3 rounded-lg" style="background-color: hsl(var(--secondary));">
+                                <div class="w-2 h-2 rounded-full mt-2" style="background-color: hsl(45 93% 60%);"></div>
+                                <div class="flex-1">
+                                    <div class="font-medium">Progress Notes</div>
+                                    <div class="text-sm" style="color: hsl(var(--muted-foreground));">2 patients - awaiting documentation</div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex gap-3 p-3 rounded-lg" style="background-color: hsl(var(--secondary));">
+                                <div class="w-2 h-2 rounded-full mt-2" style="background-color: hsl(var(--primary));"></div>
+                                <div class="flex-1">
+                                    <div class="font-medium">Prescription Renewals</div>
+                                    <div class="text-sm" style="color: hsl(var(--muted-foreground));">5 requests pending approval</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- My Patients Section -->
+            <section id="patients" class="content-section hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-semibold">My Patients</h2>
+                </div>
+
+                <div class="card p-6 mb-6">
+                    <div class="flex gap-4 flex-wrap">
+                        <div class="search-box flex-1 min-w-64">
+                            <svg class="search-icon w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                            <input type="text" id="patientSearch" placeholder="Search patients..." onkeyup="filterPatients()">
+                        </div>
+                        <select id="patientStatusFilter" onchange="filterPatients()" class="w-48">
+                            <option value="">All Status</option>
+                            <option value="Active">Active</option>
+                            <option value="Follow-up">Follow-up Required</option>
+                            <option value="Discharged">Discharged</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Patient ID</th>
+                                <th>Name</th>
+                                <th>Age/Gender</th>
+                                <th>Last Visit</th>
+                                <th>Diagnosis</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="patientsTableBody">
+                            <tr>
+                                <td>#PAT001</td>
+                                <td>John Smith</td>
+                                <td>39 / M</td>
+                                <td>Jan 02, 2025</td>
+                                <td>Hypertension</td>
+                                <td><span class="badge badge-success">Active</span></td>
+                                <td>
+                                    <div class="flex gap-2">
+                                        <button class="btn-primary text-sm" onclick="openPatientEMR(1)">View EMR</button>
+                                        <button class="btn-secondary text-sm" onclick="startConsultation(1)">Consult</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#PAT002</td>
+                                <td>Emma Davis</td>
+                                <td>32 / F</td>
+                                <td>Jan 02, 2025</td>
+                                <td>Diabetes Type 2</td>
+                                <td><span class="badge badge-warning">Follow-up</span></td>
+                                <td>
+                                    <div class="flex gap-2">
+                                        <button class="btn-primary text-sm" onclick="openPatientEMR(2)">View EMR</button>
+                                        <button class="btn-secondary text-sm" onclick="startConsultation(2)">Consult</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#PAT003</td>
+                                <td>Robert Taylor</td>
+                                <td>45 / M</td>
+                                <td>Dec 28, 2024</td>
+                                <td>Acute Bronchitis</td>
+                                <td><span class="badge badge-success">Active</span></td>
+                                <td>
+                                    <div class="flex gap-2">
+                                        <button class="btn-primary text-sm" onclick="openPatientEMR(3)">View EMR</button>
+                                        <button class="btn-secondary text-sm" onclick="startConsultation(3)">Consult</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- EMR Section -->
+            <section id="emr" class="content-section hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-semibold">Electronic Medical Record</h2>
+                    <button class="btn-secondary" onclick="showSection('patients')">Back to Patients</button>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                    <div class="card p-6">
+                        <h3 class="text-lg font-semibold mb-4">Patient Information</h3>
+                        <div class="space-y-3">
+                            <div>
+                                <div class="text-sm" style="color: hsl(var(--muted-foreground));">Name</div>
+                                <div class="font-medium">John Smith</div>
+                            </div>
+                            <div>
+                                <div class="text-sm" style="color: hsl(var(--muted-foreground));">Patient ID</div>
+                                <div class="font-medium">#PAT001</div>
+                            </div>
+                            <div>
+                                <div class="text-sm" style="color: hsl(var(--muted-foreground));">Age / Gender</div>
+                                <div class="font-medium">39 years / Male</div>
+                            </div>
+                            <div>
+                                <div class="text-sm" style="color: hsl(var(--muted-foreground));">Blood Type</div>
+                                <div class="font-medium">O+</div>
+                            </div>
+                            <div>
+                                <div class="text-sm" style="color: hsl(var(--muted-foreground));">Contact</div>
+                                <div class="font-medium">+63 912 345 6789</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card p-6">
+                        <h3 class="text-lg font-semibold mb-4">Allergies & Alerts</h3>
+                        <div class="space-y-2">
+                            <div class="p-3 rounded-lg" style="background-color: hsl(0 72% 51% / 0.1); border: 1px solid hsl(0 72% 51%);">
+                                <div class="font-medium text-red-400">Penicillin</div>
+                                <div class="text-sm" style="color: hsl(var(--muted-foreground));">Severe allergic reaction</div>
+                            </div>
+                            <div class="p-3 rounded-lg" style="background-color: hsl(45 93% 47% / 0.1); border: 1px solid hsl(45 93% 47%);">
+                                <div class="font-medium" style="color: hsl(45 93% 60%);">Latex</div>
+                                <div class="text-sm" style="color: hsl(var(--muted-foreground));">Mild skin reaction</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card p-6">
+                        <h3 class="text-lg font-semibold mb-4">Current Medications</h3>
+                        <div class="space-y-2">
+                            <div class="medication-item">
+                                <div class="font-medium">Amlodipine 5mg</div>
+                                <div class="text-sm" style="color: hsl(var(--muted-foreground));">Once daily, morning</div>
+                            </div>
+                            <div class="medication-item">
+                                <div class="font-medium">Metformin 500mg</div>
+                                <div class="text-sm" style="color: hsl(var(--muted-foreground));">Twice daily, with meals</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    <div class="card p-6">
+                        <h3 class="text-lg font-semibold mb-4">Latest Vital Signs</h3>
+                        <div class="vital-signs-grid">
+                            <div class="vital-box">
+                                <div class="vital-label">BP</div>
+                                <div class="vital-value">120/80</div>
+                                <div class="text-xs" style="color: hsl(var(--muted-foreground));">mmHg</div>
+                            </div>
+                            <div class="vital-box">
+                                <div class="vital-label">Pulse</div>
+                                <div class="vital-value">72</div>
+                                <div class="text-xs" style="color: hsl(var(--muted-foreground));">bpm</div>
+                            </div>
+                            <div class="vital-box">
+                                <div class="vital-label">Temp</div>
+                                <div class="vital-value">36.8</div>
+                                <div class="text-xs" style="color: hsl(var(--muted-foreground));">°C</div>
+                            </div>
+                            <div class="vital-box">
+                                <div class="vital-label">SpO2</div>
+                                <div class="vital-value">98</div>
+                                <div class="text-xs" style="color: hsl(var(--muted-foreground));">%</div>
+                            </div>
+                            <div class="vital-box">
+                                <div class="vital-label">RR</div>
+                                <div class="vital-value">16</div>
+                                <div class="text-xs" style="color: hsl(var(--muted-foreground));">/min</div>
+                            </div>
+                            <div class="vital-box">
+                                <div class="vital-label">Weight</div>
+                                <div class="vital-value">75</div>
+                                <div class="text-xs" style="color: hsl(var(--muted-foreground));">kg</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card p-6">
+                        <h3 class="text-lg font-semibold mb-4">Medical History</h3>
+                        <div class="space-y-2">
+                            <div class="emr-section">
+                                <div class="emr-section-header">Chronic Conditions</div>
+                                <ul class="list-disc list-inside text-sm space-y-1">
+                                    <li>Hypertension (diagnosed 2018)</li>
+                                    <li>Type 2 Diabetes (diagnosed 2020)</li>
+                                </ul>
+                            </div>
+                            <div class="emr-section">
+                                <div class="emr-section-header">Past Surgeries</div>
+                                <ul class="list-disc list-inside text-sm space-y-1">
+                                    <li>Appendectomy (2015)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card p-6">
+                    <h3 class="text-lg font-semibold mb-4">Visit History</h3>
+                    <div class="space-y-4">
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div>
+                                <div class="font-medium">Jan 02, 2025 - Follow-up Visit</div>
+                                <div class="text-sm" style="color: hsl(var(--muted-foreground));">
+                                    Routine check-up for hypertension management. Blood pressure controlled. Continue current medications.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div>
+                                <div class="font-medium">Dec 15, 2024 - Lab Results Review</div>
+                                <div class="text-sm" style="color: hsl(var(--muted-foreground));">
+                                    HbA1c: 6.8%, LDL: 110 mg/dL. Blood sugar control improving. Advised to continue diet modifications.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div>
+                                <div class="font-medium">Nov 20, 2024 - General Consultation</div>
+                                <div class="text-sm" style="color: hsl(var(--muted-foreground));">
+                                    Complaint of fatigue. Ordered complete blood count and metabolic panel. Adjusted metformin dosage.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Order Entry Section -->
+            <section id="orders" class="content-section hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-semibold">Order Entry</h2>
+                    <button class="btn-primary" onclick="openModal('newOrderModal')">+ New Order</button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <button class="card p-6 hover:bg-opacity-80 transition" onclick="openOrderForm('lab')">
+                        <div class="flex items-center gap-3 mb-2">
+                            <svg class="w-8 h-8" style="color: hsl(var(--primary));" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+                            </svg>
+                            <h3 class="text-lg font-semibold">Laboratory Orders</h3>
+                        </div>
+                        <p class="text-sm" style="color: hsl(var(--muted-foreground));">Request lab tests</p>
+                    </button>
+
+                    <button class="card p-6 hover:bg-opacity-80 transition" onclick="openOrderForm('medication')">
+                        <div class="flex items-center gap-3 mb-2">
+                            <svg class="w-8 h-8" style="color: hsl(var(--accent));" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                            </svg>
+                            <h3 class="text-lg font-semibold">Medication Orders</h3>
+                        </div>
+                        <p class="text-sm" style="color: hsl(var(--muted-foreground));">Prescribe medications</p>
+                    </button>
+
+                    <button class="card p-6 hover:bg-opacity-80 transition" onclick="openOrderForm('procedure')">
+                        <div class="flex items-center gap-3 mb-2">
+                            <svg class="w-8 h-8" style="color: hsl(45 93% 60%);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                            </svg>
+                            <h3 class="text-lg font-semibold">Procedure Orders</h3>
+                        </div>
+                        <p class="text-sm" style="color: hsl(var(--muted-foreground));">Request procedures</p>
+                    </button>
+                </div>
+
+                <div class="card">
+                    <div class="p-6 border-b" style="border-color: hsl(var(--border));">
+                        <h3 class="text-lg font-semibold">Recent Orders</h3>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Patient</th>
+                                <th>Type</th>
+                                <th>Details</th>
+                                <th>Date Ordered</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#ORD001</td>
+                                <td>John Smith</td>
+                                <td><span class="badge badge-primary">Laboratory</span></td>
+                                <td>CBC, Lipid Panel, HbA1c</td>
+                                <td>Jan 02, 2025</td>
+                                <td><span class="badge badge-warning">Pending</span></td>
+                                <td>
+                                    <button class="btn-secondary text-sm" onclick="viewOrder(1)">View</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#ORD002</td>
+                                <td>Emma Davis</td>
+                                <td><span class="badge badge-success">Medication</span></td>
+                                <td>Metformin 500mg, Insulin</td>
+                                <td>Jan 02, 2025</td>
+                                <td><span class="badge badge-info">Dispensed</span></td>
+                                <td>
+                                    <button class="btn-secondary text-sm" onclick="viewOrder(2)">View</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#ORD003</td>
+                                <td>Robert Taylor</td>
+                                <td><span class="badge badge-warning">Procedure</span></td>
+                                <td>Chest X-Ray</td>
+                                <td>Jan 01, 2025</td>
+                                <td><span class="badge badge-success">Completed</span></td>
+                                <td>
+                                    <button class="btn-secondary text-sm" onclick="viewOrder(3)">View</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Prescriptions Section -->
+            <section id="prescriptions" class="content-section hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-semibold">Prescriptions</h2>
+                    <button class="btn-primary" onclick="openModal('newPrescriptionModal')">+ New Prescription</button>
+                </div>
+
+                <div class="card p-6 mb-6">
+                    <div class="flex gap-4 flex-wrap">
+                        <div class="search-box flex-1 min-w-64">
+                            <svg class="search-icon w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                            <input type="text" id="prescriptionSearch" placeholder="Search prescriptions..." onkeyup="filterPrescriptions()">
+                        </div>
+                        <select id="prescriptionStatus" onchange="filterPrescriptions()" class="w-48">
+                            <option value="">All Status</option>
+                            <option value="Active">Active</option>
+                            <option value="Dispensed">Dispensed</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Rx ID</th>
+                                <th>Patient</th>
+                                <th>Medications</th>
+                                <th>Date Prescribed</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="prescriptionsTableBody">
+                            <tr>
+                                <td>#RX001</td>
+                                <td>John Smith</td>
+                                <td>Amlodipine 5mg, Metformin 500mg</td>
+                                <td>Jan 02, 2025</td>
+                                <td><span class="badge badge-success">Dispensed</span></td>
+                                <td>
+                                    <div class="flex gap-2">
+                                        <button class="btn-secondary text-sm" onclick="viewPrescription(1)">View</button>
+                                        <button class="btn-primary text-sm" onclick="printPrescription(1)">Print</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#RX002</td>
+                                <td>Emma Davis</td>
+                                <td>Insulin Glargine, Test Strips</td>
+                                <td>Jan 02, 2025</td>
+                                <td><span class="badge badge-warning">Pending</span></td>
+                                <td>
+                                    <div class="flex gap-2">
+                                        <button class="btn-secondary text-sm" onclick="viewPrescription(2)">View</button>
+                                        <button class="btn-primary text-sm" onclick="printPrescription(2)">Print</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Progress Notes Section -->
+            <section id="progress-notes" class="content-section hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-semibold">Progress Notes</h2>
+                    <button class="btn-primary" onclick="openModal('newProgressNoteModal')">+ Add Progress Note</button>
+                </div>
+
+                <div class="card p-6 mb-6">
+                    <div class="search-box">
+                        <svg class="search-icon w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                        <input type="text" id="progressNoteSearch" placeholder="Search by patient name or ID...">
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 class="text-lg font-semibold">John Smith (#PAT001)</h3>
+                                <p class="text-sm" style="color: hsl(var(--muted-foreground));">Jan 02, 2025 - 9:30 AM</p>
+                            </div>
+                            <button class="btn-secondary text-sm" onclick="editProgressNote(1)">Edit</button>
+                        </div>
+                        <div class="emr-section">
+                            <div class="emr-section-header">Subjective</div>
+                            <p class="text-sm">Patient reports feeling well. Blood pressure medication is effective with no side effects. Occasional fatigue in the afternoon.</p>
+                        </div>
+                        <div class="emr-section">
+                            <div class="emr-section-header">Objective</div>
+                            <p class="text-sm">BP: 120/80 mmHg, HR: 72 bpm, Temp: 36.8°C. Physical examination unremarkable. No edema noted.</p>
+                        </div>
+                        <div class="emr-section">
+                            <div class="emr-section-header">Assessment</div>
+                            <p class="text-sm">Hypertension well-controlled on current regimen. Type 2 Diabetes with improving glycemic control.</p>
+                        </div>
+                        <div class="emr-section">
+                            <div class="emr-section-header">Plan</div>
+                            <p class="text-sm">Continue current medications. Follow-up in 3 months. Ordered HbA1c and lipid panel. Advised on lifestyle modifications.</p>
+                        </div>
+                    </div>
+
+                    <div class="card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 class="text-lg font-semibold">Emma Davis (#PAT002)</h3>
+                                <p class="text-sm" style="color: hsl(var(--muted-foreground));">Jan 02, 2025 - 11:00 AM</p>
+                            </div>
+                            <button class="btn-secondary text-sm" onclick="editProgressNote(2)">Edit</button>
+                        </div>
+                        <div class="emr-section">
+                            <div class="emr-section-header">Subjective</div>
+                            <p class="text-sm">Patient complains of increased thirst and frequent urination. Reports good compliance with insulin regimen.</p>
+                        </div>
+                        <div class="emr-section">
+                            <div class="emr-section-header">Objective</div>
+                            <p class="text-sm">BP: 128/82 mmHg, Fasting glucose: 145 mg/dL. Weight stable. No diabetic foot complications observed.</p>
+                        </div>
+                        <div class="emr-section">
+                            <div class="emr-section-header">Assessment</div>
+                            <p class="text-sm">Type 2 Diabetes with suboptimal control. Possible insulin dose adjustment needed.</p>
+                        </div>
+                        <div class="emr-section">
+                            <div class="emr-section-header">Plan</div>
+                            <p class="text-sm">Increase insulin glargine to 20 units at bedtime. Ordered HbA1c. Follow-up in 2 weeks. Reinforced dietary counseling.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Diagnosis & Treatment Section -->
+            <section id="diagnosis" class="content-section hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-semibold">Diagnosis & Treatment Plans</h2>
+                    <button class="btn-primary" onclick="openModal('newDiagnosisModal')">+ New Diagnosis</button>
+                </div>
+
+                <div class="card p-6 mb-6">
+                    <div class="search-box">
+                        <svg class="search-icon w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                        <input type="text" placeholder="Search by patient or diagnosis...">
+                    </div>
+                </div>
+
+                <div class="card">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Patient</th>
+                                <th>Diagnosis (ICD-10)</th>
+                                <th>Date Diagnosed</th>
+                                <th>Status</th>
+                                <th>Treatment Plan</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>John Smith</td>
+                                <td>Essential Hypertension (I10)</td>
+                                <td>Jan 15, 2018</td>
+                                <td><span class="badge badge-warning">Ongoing</span></td>
+                                <td>Pharmacological management</td>
+                                <td>
+                                    <div class="flex gap-2">
+                                        <button class="btn-secondary text-sm" onclick="viewTreatmentPlan(1)">View Plan</button>
+                                        <button class="btn-primary text-sm" onclick="updateDiagnosis(1)">Update</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Emma Davis</td>
+                                <td>Type 2 Diabetes (E11.9)</td>
+                                <td>Mar 10, 2020</td>
+                                <td><span class="badge badge-warning">Ongoing</span></td>
+                                <td>Insulin therapy + lifestyle</td>
+                                <td>
+                                    <div class="flex gap-2">
+                                        <button class="btn-secondary text-sm" onclick="viewTreatmentPlan(2)">View Plan</button>
+                                        <button class="btn-primary text-sm" onclick="updateDiagnosis(2)">Update</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Robert Taylor</td>
+                                <td>Acute Bronchitis (J20.9)</td>
+                                <td>Dec 28, 2024</td>
+                                <td><span class="badge badge-success">Resolved</span></td>
+                                <td>Antibiotics + rest</td>
+                                <td>
+                                    <div class="flex gap-2">
+                                        <button class="btn-secondary text-sm" onclick="viewTreatmentPlan(3)">View Plan</button>
+                                        <button class="btn-primary text-sm" onclick="updateDiagnosis(3)">Update</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- My Schedule Section -->
+            <section id="appointments" class="content-section hidden">
+                <h2 class="text-2xl font-semibold mb-6">My Schedule</h2>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                    <div class="card p-6">
+                        <h3 class="text-lg font-semibold mb-4">Today's Summary</h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span style="color: hsl(var(--muted-foreground));">Total Appointments</span>
+                                <span class="text-2xl font-bold">12</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span style="color: hsl(var(--muted-foreground));">Completed</span>
+                                <span class="text-xl font-semibold" style="color: hsl(var(--accent));">8</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span style="color: hsl(var(--muted-foreground));">Remaining</span>
+                                <span class="text-xl font-semibold" style="color: hsl(45 93% 60%);">4</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card p-6 col-span-2">
+                        <h3 class="text-lg font-semibold mb-4">Quick Actions</h3>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button class="btn-secondary" onclick="viewDaySchedule()">View Today</button>
+                            <button class="btn-secondary" onclick="viewWeekSchedule()">View Week</button>
+                            <button class="btn-primary" onclick="openModal('blockTimeModal')">Block Time</button>
+                            <button class="btn-primary" onclick="manageAvailability()">Manage Availability</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="p-6 border-b" style="border-color: hsl(var(--border));">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-lg font-semibold">Today's Appointments - January 02, 2025</h3>
+                            <input type="date" value="2025-01-02" class="w-48">
+                        </div>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Patient</th>
+                                <th>Type</th>
+                                <th>Reason</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>9:00 AM</td>
+                                <td>John Smith (#PAT001)</td>
+                                <td><span class="badge badge-info">Follow-up</span></td>
+                                <td>Hypertension check</td>
+                                <td><span class="badge badge-success">Completed</span></td>
+                                <td>
+                                    <button class="btn-secondary text-sm" onclick="viewConsultationNotes(1)">View Notes</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>10:30 AM</td>
+                                <td>Emma Davis (#PAT002)</td>
+                                <td><span class="badge badge-primary">Consultation</span></td>
+                                <td>Diabetes management</td>
+                                <td><span class="badge badge-warning">In Progress</span></td>
+                                <td>
+                                    <button class="btn-primary text-sm" onclick="startConsultation(2)">Continue</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2:00 PM</td>
+                                <td>Robert Taylor (#PAT003)</td>
+                                <td><span class="badge badge-success">New Patient</span></td>
+                                <td>General consultation</td>
+                                <td><span class="badge badge-info">Scheduled</span></td>
+                                <td>
+                                    <button class="btn-primary text-sm" onclick="startConsultation(3)">Start</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>3:30 PM</td>
+                                <td>Linda Martinez (#PAT004)</td>
+                                <td><span class="badge badge-info">Follow-up</span></td>
+                                <td>Post-operative check</td>
+                                <td><span class="badge badge-info">Scheduled</span></td>
+                                <td>
+                                    <button class="btn-primary text-sm" onclick="startConsultation(4)">Start</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- New Order Modal -->
+    <div id="newOrderModal" class="modal">
+        <div class="modal-content p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-semibold">New Order</h3>
+                <button onclick="closeModal('newOrderModal')" class="text-2xl">&times;</button>
+            </div>
+            <form onsubmit="submitOrder(event)" class="space-y-4">
+                <div>
+                    <label>Patient</label>
+                    <input type="text" id="orderPatient" required placeholder="Search patient name or ID">
+                </div>
+                <div>
+                    <label>Order Type</label>
+                    <select id="orderType" required>
+                        <option value="">Select type</option>
+                        <option value="Laboratory">Laboratory</option>
+                        <option value="Medication">Medication</option>
+                        <option value="Procedure">Procedure</option>
+                        <option value="Imaging">Imaging</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Order Details</label>
+                    <textarea id="orderDetails" rows="4" required placeholder="Enter order details..."></textarea>
+                </div>
+                <div>
+                    <label>Priority</label>
+                    <select id="orderPriority" required>
+                        <option value="Routine">Routine</option>
+                        <option value="Urgent">Urgent</option>
+                        <option value="STAT">STAT</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Notes</label>
+                    <textarea id="orderNotes" rows="2" placeholder="Additional notes or instructions..."></textarea>
+                </div>
+                <div class="flex gap-3 mt-6">
+                    <button type="submit" class="btn-primary flex-1">Submit Order</button>
+                    <button type="button" class="btn-secondary flex-1" onclick="closeModal('newOrderModal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- New Prescription Modal -->
+    <div id="newPrescriptionModal" class="modal">
+        <div class="modal-content p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-semibold">New Prescription</h3>
+                <button onclick="closeModal('newPrescriptionModal')" class="text-2xl">&times;</button>
+            </div>
+            <form onsubmit="submitPrescription(event)" class="space-y-4">
+                <div>
+                    <label>Patient</label>
+                    <input type="text" id="rxPatient" required placeholder="Search patient name or ID">
+                </div>
+                <div class="form-section">
+                    <h3 class="form-section-title">Medication 1</h3>
+                    <div class="form-grid">
+                        <div>
+                            <label>Medication Name</label>
+                            <input type="text" id="rxMed1" required placeholder="Generic or brand name">
+                        </div>
+                        <div>
+                            <label>Strength</label>
+                            <input type="text" id="rxStrength1" required placeholder="e.g., 500mg">
+                        </div>
+                        <div>
+                            <label>Form</label>
+                            <select id="rxForm1" required>
+                                <option value="">Select form</option>
+                                <option value="Tablet">Tablet</option>
+                                <option value="Capsule">Capsule</option>
+                                <option value="Syrup">Syrup</option>
+                                <option value="Injection">Injection</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Quantity</label>
+                            <input type="number" id="rxQty1" required placeholder="Number of units">
+                        </div>
+                        <div class="col-span-2">
+                            <label>Directions (Sig)</label>
+                            <input type="text" id="rxSig1" required placeholder="e.g., Take 1 tablet twice daily with meals">
+                        </div>
+                        <div>
+                            <label>Duration</label>
+                            <input type="text" id="rxDuration1" placeholder="e.g., 30 days">
+                        </div>
+                        <div>
+                            <label>Refills</label>
+                            <input type="number" id="rxRefills1" value="0" min="0">
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn-secondary w-full" onclick="addAnotherMedication()">+ Add Another Medication</button>
+                <div>
+                    <label>Additional Instructions</label>
+                    <textarea id="rxInstructions" rows="2" placeholder="Any additional notes for the patient or pharmacist..."></textarea>
+                </div>
+                <div class="flex gap-3 mt-6">
+                    <button type="submit" class="btn-primary flex-1">Generate Prescription</button>
+                    <button type="button" class="btn-secondary flex-1" onclick="closeModal('newPrescriptionModal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- New Progress Note Modal -->
+    <div id="newProgressNoteModal" class="modal">
+        <div class="modal-content p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-semibold">Add Progress Note</h3>
+                <button onclick="closeModal('newProgressNoteModal')" class="text-2xl">&times;</button>
+            </div>
+            <form onsubmit="submitProgressNote(event)" class="space-y-4">
+                <div>
+                    <label>Patient</label>
+                    <input type="text" id="notePatient" required placeholder="Search patient name or ID">
+                </div>
+                <div>
+                    <label>Date & Time</label>
+                    <input type="datetime-local" id="noteDateTime" required>
+                </div>
+                <div class="form-section">
+                    <h3 class="form-section-title">SOAP Note</h3>
+                    <div>
+                        <label>Subjective</label>
+                        <textarea id="noteSubjective" rows="3" required placeholder="Patient's complaints and symptoms..."></textarea>
+                    </div>
+                    <div>
+                        <label>Objective</label>
+                        <textarea id="noteObjective" rows="3" required placeholder="Physical examination findings, vital signs, test results..."></textarea>
+                    </div>
+                    <div>
+                        <label>Assessment</label>
+                        <textarea id="noteAssessment" rows="3" required placeholder="Clinical impressions and diagnoses..."></textarea>
+                    </div>
+                    <div>
+                        <label>Plan</label>
+                        <textarea id="notePlan" rows="3" required placeholder="Treatment plan, orders, follow-up..."></textarea>
+                    </div>
+                </div>
+                <div class="flex gap-3 mt-6">
+                    <button type="submit" class="btn-primary flex-1">Save Progress Note</button>
+                    <button type="button" class="btn-secondary flex-1" onclick="closeModal('newProgressNoteModal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- New Diagnosis Modal -->
+    <div id="newDiagnosisModal" class="modal">
+        <div class="modal-content p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-semibold">New Diagnosis</h3>
+                <button onclick="closeModal('newDiagnosisModal')" class="text-2xl">&times;</button>
+            </div>
+            <form onsubmit="submitDiagnosis(event)" class="space-y-4">
+                <div>
+                    <label>Patient</label>
+                    <input type="text" id="diagPatient" required placeholder="Search patient name or ID">
+                </div>
+                <div>
+                    <label>Diagnosis</label>
+                    <input type="text" id="diagName" required placeholder="Enter diagnosis">
+                </div>
+                <div>
+                    <label>ICD-10 Code</label>
+                    <input type="text" id="diagICD10" placeholder="e.g., I10, E11.9">
+                </div>
+                <div>
+                    <label>Type</label>
+                    <select id="diagType" required>
+                        <option value="">Select type</option>
+                        <option value="Primary">Primary</option>
+                        <option value="Secondary">Secondary</option>
+                        <option value="Differential">Differential</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Status</label>
+                    <select id="diagStatus" required>
+                        <option value="Active">Active</option>
+                        <option value="Ongoing">Ongoing</option>
+                        <option value="Resolved">Resolved</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Treatment Plan</label>
+                    <textarea id="diagTreatment" rows="4" required placeholder="Describe the treatment approach..."></textarea>
+                </div>
+                <div>
+                    <label>Notes</label>
+                    <textarea id="diagNotes" rows="2" placeholder="Additional notes..."></textarea>
+                </div>
+                <div class="flex gap-3 mt-6">
+                    <button type="submit" class="btn-primary flex-1">Save Diagnosis</button>
+                    <button type="button" class="btn-secondary flex-1" onclick="closeModal('newDiagnosisModal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let currentPatient = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            setupEventListeners();
+            loadData();
+        });
+
+        function setupEventListeners() {
+            window.onclick = function(event) {
+                if (event.target.classList.contains('modal')) {
+                    event.target.classList.remove('active');
+                }
+            }
+        }
+
+        function loadData() {
+            // Load initial data here
+        }
+
+        // Navigation
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.classList.remove('hidden');
+            }
+            
+            event.target.closest('.nav-item').classList.add('active');
+        }
+
+        // Modal functions
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('active');
+            }
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('active');
+                const form = modal.querySelector('form');
+                if (form) form.reset();
+            }
+        }
+
+        // Patient functions
+        function filterPatients() {
+            const searchTerm = document.getElementById('patientSearch').value.toLowerCase();
+            const statusFilter = document.getElementById('patientStatusFilter').value.toLowerCase();
+            
+            const rows = document.querySelectorAll('#patientsTableBody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                const matchesSearch = text.includes(searchTerm);
+                const matchesStatus = !statusFilter || text.includes(statusFilter);
+                
+                row.style.display = (matchesSearch && matchesStatus) ? '' : 'none';
+            });
+        }
+
+        function openPatientEMR(patientId) {
+            showSection('emr');
+            // Load patient EMR data
+        }
+
+        function startConsultation(patientId) {
+            showAlert('info', 'Starting Consultation', 'Opening patient record...');
+            openPatientEMR(patientId);
+        }
+
+        // Order functions
+        function openOrderForm(type) {
+            openModal('newOrderModal');
+            document.getElementById('orderType').value = type.charAt(0).toUpperCase() + type.slice(1);
+        }
+
+        function submitOrder(event) {
+            event.preventDefault();
+            showAlert('success', 'Success', 'Order submitted successfully!');
+            closeModal('newOrderModal');
+        }
+
+        function viewOrder(id) {
+            showAlert('info', 'Coming Soon', 'View order details');
+        }
+
+        // Prescription functions
+        function filterPrescriptions() {
+            const searchTerm = document.getElementById('prescriptionSearch').value.toLowerCase();
+            const statusFilter = document.getElementById('prescriptionStatus').value.toLowerCase();
+            
+            const rows = document.querySelectorAll('#prescriptionsTableBody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                const matchesSearch = text.includes(searchTerm);
+                const matchesStatus = !statusFilter || text.includes(statusFilter);
+                
+                row.style.display = (matchesSearch && matchesStatus) ? '' : 'none';
+            });
+        }
+
+        function submitPrescription(event) {
+            event.preventDefault();
+            showAlert('success', 'Success', 'Prescription generated successfully!');
+            closeModal('newPrescriptionModal');
+        }
+
+        function viewPrescription(id) {
+            showAlert('info', 'Coming Soon', 'View prescription details');
+        }
+
+        function printPrescription(id) {
+            showAlert('info', 'Coming Soon', 'Print prescription');
+        }
+
+        function addAnotherMedication() {
+            showAlert('info', 'Coming Soon', 'Add another medication form');
+        }
+
+        // Progress Note functions
+        function submitProgressNote(event) {
+            event.preventDefault();
+            showAlert('success', 'Success', 'Progress note saved successfully!');
+            closeModal('newProgressNoteModal');
+        }
+
+        function editProgressNote(id) {
+            showAlert('info', 'Coming Soon', 'Edit progress note');
+        }
+
+        // Diagnosis functions
+        function submitDiagnosis(event) {
+            event.preventDefault();
+            showAlert('success', 'Success', 'Diagnosis saved successfully!');
+            closeModal('newDiagnosisModal');
+        }
+
+        function viewTreatmentPlan(id) {
+            showAlert('info', 'Coming Soon', 'View treatment plan');
+        }
+
+        function updateDiagnosis(id) {
+            showAlert('info', 'Coming Soon', 'Update diagnosis');
+        }
+
+        // Schedule functions
+        function viewDaySchedule() {
+            showAlert('info', 'Day View', 'Viewing today\'s schedule');
+        }
+
+        function viewWeekSchedule() {
+            showAlert('info', 'Week View', 'Viewing this week\'s schedule');
+        }
+
+        function manageAvailability() {
+            showAlert('info', 'Coming Soon', 'Manage availability settings');
+        }
+
+        function viewConsultationNotes(id) {
+            showAlert('info', 'Coming Soon', 'View consultation notes');
+        }
+
+        // Logout
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                window.location.href = '/';
+            }
+        }
+
+        // Alert System
+        function showAlert(type, title, message) {
+            const alert = document.createElement('div');
+            alert.className = `custom-alert ${type}`;
+            alert.innerHTML = `
+                <div class="alert-content">
+                    <div class="alert-icon">
+                        ${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'}
+                    </div>
+                    <div class="alert-text">
+                        <strong>${title}</strong>
+                        <p>${message}</p>
+                    </div>
+                </div>
+            `;
+            
+            alert.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
+                color: white;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+                z-index: 10000;
+                min-width: 300px;
+                animation: slideIn 0.3s ease;
+            `;
+            
+            document.body.appendChild(alert);
+            
+            setTimeout(() => {
+                alert.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => alert.remove(), 300);
+            }, 3000);
+        }
+
+        // Add animation keyframes
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            
+            @keyframes slideOut {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

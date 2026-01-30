@@ -2,6 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
+import os
 
 db = SQLAlchemy()
 
@@ -222,6 +223,9 @@ def init_db(app):
         # Create all tables
         db.create_all()
         
+        # Only print messages in the reloader process to avoid duplicates
+        should_print = os.environ.get('WERKZEUG_RUN_MAIN') == 'true'
+        
         # Check if default admin exists
         default_admin = AdminAccount.query.filter_by(username='admin').first()
         
@@ -236,11 +240,11 @@ def init_db(app):
             db.session.add(admin)
             db.session.commit()
             
-            print('✅ Default admin account created')
-            print('   Username: admin')
-            print('   Password: admin123')
-            print('   Role: Head of Hospital')
+            if should_print:
+                print('✅ Default admin account created')
+                print('   Username: admin')
+                print('   Password: admin123')
+                print('   Role: Head of Hospital')
         else:
-            print('✅ Default admin account already exists')
-
-
+            if should_print:
+                print('✅ Default admin account already exists')
