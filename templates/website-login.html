@@ -8,6 +8,7 @@
     
 </head>
 <body>
+    
     <!-- Login Page -->
     <div id="loginPage" class="auth-page">
         <div class="auth-container">
@@ -32,10 +33,10 @@
                     
                     <form id="loginForm">
                         <div class="form-group">
-                            <label for="loginEmail">Email Address</label>
+                            <label for="loginUsername">Username</label>
                             <div class="input-wrapper">
-                                <span class="input-icon">📧</span>
-                                <input type="email" id="loginEmail" placeholder="Enter your email" required>
+                                <span class="input-icon">👤</span>
+                                <input type="text" id="loginUsername" placeholder="Enter your username" required>
                             </div>
                         </div>
                         <div class="form-group">
@@ -51,16 +52,6 @@
                     <div class="divider">
                         <span>OR</span>
                     </div>
-
-                    <div class="social-login">
-                        <button class="social-btn">
-                            <span>📘</span> Facebook
-                        </button>
-                        <button class="social-btn">
-                            <span>🔍</span> Google
-                        </button>
-                    </div>
-
                     <div class="auth-footer">
                         Don't have an account? <a onclick="showSignup()">Sign Up</a>
                     </div>
@@ -100,10 +91,10 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="signupEmail">Email Address</label>
+                            <label for="signupUsername">Username</label>
                             <div class="input-wrapper">
-                                <span class="input-icon">📧</span>
-                                <input type="email" id="signupEmail" placeholder="Enter your email" required>
+                                <span class="input-icon">📝</span>
+                                <input type="text" id="signupUsername" placeholder="Choose a username" required>
                             </div>
                         </div>
                         <div class="form-group">
@@ -126,16 +117,6 @@
                     <div class="divider">
                         <span>OR</span>
                     </div>
-
-                    <div class="social-login">
-                        <button class="social-btn">
-                            <span>📘</span> Facebook
-                        </button>
-                        <button class="social-btn">
-                            <span>🔍</span> Google
-                        </button>
-                    </div>
-
                     <div class="auth-footer">
                         Already have an account? <a onclick="showLogin()">Login</a>
                     </div>
@@ -145,88 +126,95 @@
     </div>
 
     <script>
-        // -------------------------------
+    
         // PAGE TOGGLE
-        // -------------------------------
         function showLogin() {
             document.getElementById('loginPage').classList.remove('hidden');
             document.getElementById('signupPage').classList.add('hidden');
         }
-    
+
         function showSignup() {
             document.getElementById('loginPage').classList.add('hidden');
             document.getElementById('signupPage').classList.remove('hidden');
         }
-    
+
         window.addEventListener('DOMContentLoaded', showLogin);
-    
-        // -------------------------------
-        // LOGIN
-        // -------------------------------
+
+        // LOGIN - Modified to use username
         document.getElementById('loginForm').addEventListener('submit', async function (e) {
             e.preventDefault();
-    
-            const email = document.getElementById('loginEmail').value.trim();
+
+            const username = document.getElementById('loginUsername').value.trim();
             const password = document.getElementById('loginPassword').value;
-    
+
             try {
-                const response = await fetch('/api/login', {
+                const response = await fetch('/api/website-login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ email, password })
+                    body: JSON.stringify({ username, password })
                 });
-    
+
                 const data = await response.json();
-    
+
                 if (response.ok && data.status === 'success') {
                     window.location.href = data.redirect;
                 } else {
                     alert(data.message || 'Login failed');
                 }
-    
+
             } catch (error) {
                 console.error('Login error:', error);
                 alert('Server error. Please try again.');
             }
         });
-    
-        // -------------------------------
-        // SIGNUP
-        // -------------------------------
+
+        // SIGNUP - Modified to use username
         document.getElementById('signupForm').addEventListener('submit', async function (e) {
             e.preventDefault();
-    
+
             const name = document.getElementById('signupName').value.trim();
-            const email = document.getElementById('signupEmail').value.trim();
+            const username = document.getElementById('signupUsername').value.trim();
             const phone = document.getElementById('signupPhone').value.trim();
             const password = document.getElementById('signupPassword').value;
-    
+
+            // Basic validation
+            if (username.length < 3) {
+                alert('Username must be at least 3 characters long');
+                return;
+            }
+
+            if (password.length < 6) {
+                alert('Password must be at least 6 characters long');
+                return;
+            }
+
             try {
                 const response = await fetch('/api/signup', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ name, email, phone, password })
+                    body: JSON.stringify({ name, username, phone, password })
                 });
-    
+
                 const data = await response.json();
-    
+
                 if (response.ok && data.status === 'success') {
-                    alert('Account created successfully');
+                    alert('Account created successfully! You can now log in.');
                     this.reset();
                     showLogin();
                 } else {
                     alert(data.message || 'Signup failed');
                 }
-    
+
             } catch (error) {
                 console.error('Signup error:', error);
                 alert('Server error. Please try again.');
             }
         });
+    
     </script>
     
     

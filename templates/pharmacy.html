@@ -73,6 +73,21 @@
             color: hsl(var(--muted-foreground));
         }
 
+        .btn-secondary {
+            background-color: hsl(var(--secondary));
+            color: hsl(var(--secondary-foreground));
+            border: 1px solid hsl(var(--border));
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        
+        .btn-secondary:hover {
+            background-color: hsl(240 4% 20%);
+        }
+
         .nav-menu {
             display: flex;
             gap: 8px;
@@ -970,7 +985,7 @@
                     <span class="user-role">{{ user_info.role }}</span>
                 </div>
                 <div class="user-avatar">👨‍⚕️</div>
-                <button class="btn-secondary" onclick="logout()" style="margin-left: 12px;">Logout</button>
+                <button class="btn-secondary" onclick="logout()" >Logout</button>
             </div>
         </div>
     </nav>
@@ -988,12 +1003,12 @@
                     <div class="search-filters">
                         <select id="categoryFilter" onchange="filterByCategory()">
                             <option value="all">All Categories</option>
-                            <option value="antibiotics">Antibiotics</option>
-                            <option value="analgesics">Analgesics</option>
+                            <option value="medicines">Medicines</option>
                             <option value="vitamins">Vitamins</option>
                             <option value="supplements">Supplements</option>
-                            <option value="otc">Over-the-Counter</option>
-                        </select>
+                            <option value="personal_care">Personal Care</option>
+                            <option value="supplies">Medical Supplies</option>
+                        </select>                        
                     </div>
                 </div>
 
@@ -1228,315 +1243,121 @@
     </div>
 
     <script>
-        // Global State Management
-        let medicines = [
-            {
-                id: 1,
-                name: 'Amoxicillin 500mg',
-                generic: 'Amoxicillin',
-                price: 15.50,
-                cost: 8.00,
-                stock: 150,
-                reorderLevel: 50,
-                category: 'antibiotics',
-                barcode: '1234567890'
-            },
-            {
-                id: 2,
-                name: 'Paracetamol 500mg',
-                generic: 'Paracetamol',
-                price: 5.00,
-                cost: 2.50,
-                stock: 300,
-                reorderLevel: 100,
-                category: 'analgesics',
-                barcode: '1234567891'
-            },
-            {
-                id: 3,
-                name: 'Ibuprofen 400mg',
-                generic: 'Ibuprofen',
-                price: 8.50,
-                cost: 4.00,
-                stock: 200,
-                reorderLevel: 75,
-                category: 'analgesics',
-                barcode: '1234567892'
-            },
-            {
-                id: 4,
-                name: 'Vitamin C 1000mg',
-                generic: 'Ascorbic Acid',
-                price: 12.00,
-                cost: 6.00,
-                stock: 180,
-                reorderLevel: 60,
-                category: 'vitamins',
-                barcode: '1234567893'
-            },
-            {
-                id: 5,
-                name: 'Cetirizine 10mg',
-                generic: 'Cetirizine HCl',
-                price: 6.50,
-                cost: 3.00,
-                stock: 25,
-                reorderLevel: 50,
-                category: 'otc',
-                barcode: '1234567894'
-            },
-            {
-                id: 6,
-                name: 'Metformin 500mg',
-                generic: 'Metformin',
-                price: 10.00,
-                cost: 5.00,
-                stock: 120,
-                reorderLevel: 40,
-                category: 'otc',
-                barcode: '1234567895'
-            },
-            {
-                id: 7,
-                name: 'Losartan 50mg',
-                generic: 'Losartan Potassium',
-                price: 18.00,
-                cost: 9.00,
-                stock: 45,
-                reorderLevel: 50,
-                category: 'otc',
-                barcode: '1234567896'
-            },
-            {
-                id: 8,
-                name: 'Omeprazole 20mg',
-                generic: 'Omeprazole',
-                price: 14.50,
-                cost: 7.00,
-                stock: 90,
-                reorderLevel: 30,
-                category: 'otc',
-                barcode: '1234567897'
-            },
-            {
-                id: 9,
-                name: 'Multivitamins',
-                generic: 'Mixed Vitamins',
-                price: 20.00,
-                cost: 10.00,
-                stock: 15,
-                reorderLevel: 40,
-                category: 'vitamins',
-                barcode: '1234567898'
-            },
-            {
-                id: 10,
-                name: 'Azithromycin 500mg',
-                generic: 'Azithromycin',
-                price: 25.00,
-                cost: 12.00,
-                stock: 8,
-                reorderLevel: 30,
-                category: 'antibiotics',
-                barcode: '1234567899'
-            }
-        ];
 
+        let medicines = [];
         let cart = [];
-        let transactions = [];
+        let activeCategory = 'all';
+        let activeSearch = '';
+
 
         // Initialization
-        document.addEventListener('DOMContentLoaded', async function() {
+        document.addEventListener('DOMContentLoaded', async () => {
             try {
-                const response = await fetch('/api/check-session');
-                const data = await response.json();
-                
-                if (!data.authenticated) {
-                    window.location.href = '/IMS';
-                    return;
-                }
-                
-                // Update user info in navbar
-                const userNameElement = document.getElementById('currentUserName');
-                if (userNameElement) {
-                    userNameElement.textContent = data.full_name;
-                }
-                
-                // Continue with existing initialization
-                loadMedicines();
-                loadSavedData();
-                updateReports();
+                const sessionResp = await fetch('/api/check-session');
+                const sessionData = await sessionResp.json();
+                if (!sessionData.authenticated) return window.location.href = '/IMS';
+
+                const userNameEl = document.getElementById('currentUserName');
+                if (userNameEl) userNameEl.textContent = sessionData.full_name;
+
+                await fetchMedicines();
                 updateLowStockTable();
-            } catch (error) {
-                console.error('Session check error:', error);
+            } catch (err) {
+                console.error(err);
                 window.location.href = '/IMS';
             }
         });
 
-        // Data Persistence
-        function saveData() {
-            localStorage.setItem('pharmacyMedicines', JSON.stringify(medicines));
-            localStorage.setItem('pharmacyTransactions', JSON.stringify(transactions));
-        }
-
-        function loadSavedData() {
-            const savedMedicines = localStorage.getItem('pharmacyMedicines');
-            const savedTransactions = localStorage.getItem('pharmacyTransactions');
-            
-            if (savedMedicines) {
-                medicines = JSON.parse(savedMedicines);
-            }
-            
-            if (savedTransactions) {
-                transactions = JSON.parse(savedTransactions);
-            } else {
-                generateSampleTransactions();
-            }
-        }
-
-        function generateSampleTransactions() {
-            const today = new Date();
-            
-            for (let i = 0; i < 50; i++) {
-                const daysAgo = Math.floor(Math.random() * 30);
-                const transactionDate = new Date(today);
-                transactionDate.setDate(transactionDate.getDate() - daysAgo);
-                
-                const itemCount = Math.floor(Math.random() * 5) + 1;
-                const items = [];
-                let subtotal = 0;
-                let totalCost = 0;
-                
-                for (let j = 0; j < itemCount; j++) {
-                    const medicine = medicines[Math.floor(Math.random() * medicines.length)];
-                    const quantity = Math.floor(Math.random() * 3) + 1;
-                    const itemTotal = medicine.price * quantity;
-                    const itemCost = medicine.cost * quantity;
-                    
-                    items.push({
-                        id: medicine.id,
-                        name: medicine.name,
-                        price: medicine.price,
-                        cost: medicine.cost,
-                        quantity: quantity,
-                        total: itemTotal
-                    });
-                    
-                    subtotal += itemTotal;
-                    totalCost += itemCost;
+        // Fetch medicines from backend
+        async function fetchMedicines() {
+            try {
+                showLoading();
+                const resp = await fetch('/api/pharmacy/medicines');
+                const data = await resp.json();
+                if (data.status === 'success') {
+                    medicines = data.data;
+                    loadMedicines();
+                    hideLoading();
+                } else {
+                    hideLoading();
+                    showNotification('Failed to load medicines', 'error');
                 }
-                
-                const discount = Math.random() > 0.7 ? Math.floor(Math.random() * 20) : 0;
-                const discountAmount = subtotal * (discount / 100);
-                const taxableAmount = subtotal - discountAmount;
-                const tax = taxableAmount * 0.12;
-                const total = taxableAmount + tax;
-                const profit = total - totalCost;
-                
-                transactions.push({
-                    id: `RCP${String(Date.now() + i).slice(-8)}`,
-                    date: transactionDate,
-                    items: items,
-                    subtotal: subtotal,
-                    discount: discount,
-                    discountAmount: discountAmount,
-                    tax: tax,
-                    total: total,
-                    profit: profit,
-                    paymentMethod: ['cash', 'card', 'gcash', 'paymaya'][Math.floor(Math.random() * 4)],
-                    amountReceived: total + Math.floor(Math.random() * 100),
-                    change: Math.floor(Math.random() * 100)
-                });
-            }
-            saveData();
-        }
-
-        // Section Navigation
-        function showSection(section) {
-            document.querySelectorAll('.section').forEach(sec => {
-                sec.classList.remove('active');
-            });
-            
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            if (section === 'pos') {
-                document.getElementById('posSection').classList.add('active');
-                document.getElementById('navPOS').classList.add('active');
-            } else if (section === 'reports') {
-                document.getElementById('reportsSection').classList.add('active');
-                document.getElementById('navReports').classList.add('active');
-                updateReports();
+            } catch (err) {
+                hideLoading();
+                console.error(err);
+                showNotification('Error fetching medicines', 'error');
             }
         }
 
-        // Load Medicines
-        function loadMedicines() {
+        // Display medicines
+        function loadMedicines(filteredList = null) {
+            const list = filteredList || medicines;
             const grid = document.getElementById('medicineGrid');
             grid.innerHTML = '';
-            
-            medicines.forEach(medicine => {
-                const isLowStock = medicine.stock <= medicine.reorderLevel;
+
+            if (list.length === 0) {
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: hsl(var(--muted-foreground));">No medicines found</div>';
+                return;
+            }
+
+            list.forEach(m => {
+                const lowStock = m.stock <= m.reorderLevel;
                 const card = document.createElement('div');
-                card.className = `medicine-card ${isLowStock ? 'low-stock' : ''}`;
-                card.onclick = () => addToCart(medicine);
-                
+                card.className = `medicine-card ${lowStock ? 'low-stock' : ''}`;
+                card.onclick = () => addToCart(m);
+
                 card.innerHTML = `
-                    <div class="medicine-name">${medicine.name}</div>
-                    <div class="medicine-generic">${medicine.generic}</div>
+                    <div class="medicine-name">${m.name}</div>
+                    <div class="medicine-generic">${m.generic}</div>
                     <div class="medicine-footer">
-                        <div class="medicine-price">₱${medicine.price.toFixed(2)}</div>
-                        <div class="medicine-stock ${isLowStock ? 'low' : ''}">
-                            Stock: ${medicine.stock}
-                        </div>
+                        <div class="medicine-price">₱${m.price.toFixed(2)}</div>
+                        <div class="medicine-stock ${lowStock ? 'low' : ''}">Stock: ${m.stock}</div>
                     </div>
                 `;
-                
                 grid.appendChild(card);
             });
         }
 
-        // Search Medicine
+        // Search and Filter
         function searchMedicine() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const category = document.getElementById('categoryFilter').value;
-            
-            const filtered = medicines.filter(medicine => {
-                const matchesSearch = medicine.name.toLowerCase().includes(searchTerm) ||
-                                    medicine.generic.toLowerCase().includes(searchTerm) ||
-                                    medicine.barcode.includes(searchTerm);
-                const matchesCategory = category === 'all' || medicine.category === category;
-                return matchesSearch && matchesCategory;
+            activeSearch = document.getElementById('searchInput').value.toLowerCase();
+            activeCategory = document.getElementById('categoryFilter').value;
+
+            const filtered = medicines.filter(m => {
+                const matchSearch =
+                    m.name.toLowerCase().includes(activeSearch) ||
+                    m.generic.toLowerCase().includes(activeSearch) ||
+                    (m.barcode && m.barcode.includes(activeSearch));
+
+                const matchCategory =
+                    activeCategory === 'all' || m.category === activeCategory;
+
+                return matchSearch && matchCategory;
             });
-            
-            const grid = document.getElementById('medicineGrid');
-            grid.innerHTML = '';
-            
-            filtered.forEach(medicine => {
-                const isLowStock = medicine.stock <= medicine.reorderLevel;
-                const card = document.createElement('div');
-                card.className = `medicine-card ${isLowStock ? 'low-stock' : ''}`;
-                card.onclick = () => addToCart(medicine);
-                
-                card.innerHTML = `
-                    <div class="medicine-name">${medicine.name}</div>
-                    <div class="medicine-generic">${medicine.generic}</div>
-                    <div class="medicine-footer">
-                        <div class="medicine-price">₱${medicine.price.toFixed(2)}</div>
-                        <div class="medicine-stock ${isLowStock ? 'low' : ''}">
-                            Stock: ${medicine.stock}
-                        </div>
-                    </div>
-                `;
-                
-                grid.appendChild(card);
-            });
+
+            loadMedicines(filtered);
         }
 
         function filterByCategory() {
             searchMedicine();
         }
+
+        function refreshMedicineView() {
+            const filtered = medicines.filter(m => {
+                const matchSearch =
+                    m.name.toLowerCase().includes(activeSearch) ||
+                    m.generic.toLowerCase().includes(activeSearch) ||
+                    (m.barcode && m.barcode.includes(activeSearch));
+
+                const matchCategory =
+                    activeCategory === 'all' || m.category === activeCategory;
+
+                return matchSearch && matchCategory;
+            });
+
+            loadMedicines(filtered);
+        }
+
 
         // Cart Management
         function addToCart(medicine) {
@@ -1544,12 +1365,12 @@
                 showNotification('Out of stock!', 'error');
                 return;
             }
-            
-            const existingItem = cart.find(item => item.id === medicine.id);
-            
-            if (existingItem) {
-                if (existingItem.quantity < medicine.stock) {
-                    existingItem.quantity++;
+
+            const item = cart.find(i => i.id === medicine.id);
+            if (item) {
+                if (item.quantity < medicine.stock) {
+                    item.quantity++;
+                    medicine.stock--;
                 } else {
                     showNotification('Not enough stock!', 'error');
                     return;
@@ -1563,22 +1384,79 @@
                     quantity: 1,
                     maxStock: medicine.stock
                 });
+                medicine.stock--;
             }
-            
+
+            // addToCart
             updateCart();
+            refreshMedicineView();
+
+        }
+
+        function increaseQuantity(id) {
+            const item = cart.find(i => i.id === id);
+            const med = medicines.find(m => m.id === id);
+            if (item && med && item.quantity < item.maxStock) {
+                item.quantity++;
+                med.stock--;
+                updateCart();
+                refreshMedicineView();
+
+            } else {
+                showNotification('Not enough stock!', 'error');
+            }
+        }
+
+        function decreaseQuantity(id) {
+            const item = cart.find(i => i.id === id);
+            const med = medicines.find(m => m.id === id);
+            if (!item) return;
+
+            if (item.quantity > 1) {
+                item.quantity--;
+                med.stock++;
+            } else {
+                cart = cart.filter(i => i.id !== id);
+                med.stock += item.quantity;
+            }
+            updateCart();
+            refreshMedicineView();
+
+        }
+
+        function removeFromCart(id) {
+            const item = cart.find(i => i.id === id);
+            const med = medicines.find(m => m.id === id);
+            if (item && med) {
+                med.stock += item.quantity;
+            }
+            cart = cart.filter(i => i.id !== id);
+            updateCart();
+            refreshMedicineView();
+
+        }
+
+        function clearCart() {
+            if (cart.length === 0) return;
+            if (!confirm('Clear cart?')) return;
+
+            cart.forEach(item => {
+                const medicine = medicines.find(m => m.id === item.id);
+                if (medicine) medicine.stock += item.quantity;
+            });
+
+            cart = [];
+            updateCart();
+            refreshMedicineView();
+
+            document.getElementById('amountReceived').value = '';
+            document.getElementById('change').value = '₱0.00';
         }
 
         function updateCart() {
             const cartItems = document.getElementById('cartItems');
-            
             if (cart.length === 0) {
-                cartItems.innerHTML = `
-                    <div class="empty-cart">
-                        <div class="empty-icon">🛒</div>
-                        <p>No items in cart</p>
-                        <span>Search and add medicines to start</span>
-                    </div>
-                `;
+                cartItems.innerHTML = '<div class="empty-cart"><div class="empty-icon">🛒</div><p>No items in cart</p></div>';
                 document.getElementById('checkoutBtn').disabled = true;
             } else {
                 cartItems.innerHTML = cart.map(item => `
@@ -1599,42 +1477,7 @@
                 `).join('');
                 document.getElementById('checkoutBtn').disabled = false;
             }
-            
             updateTotals();
-        }
-
-        function increaseQuantity(medicineId) {
-            const item = cart.find(i => i.id === medicineId);
-            if (item && item.quantity < item.maxStock) {
-                item.quantity++;
-                updateCart();
-            } else {
-                showNotification('Not enough stock!', 'error');
-            }
-        }
-
-        function decreaseQuantity(medicineId) {
-            const item = cart.find(i => i.id === medicineId);
-            if (item && item.quantity > 1) {
-                item.quantity--;
-                updateCart();
-            }
-        }
-
-        function removeFromCart(medicineId) {
-            cart = cart.filter(item => item.id !== medicineId);
-            updateCart();
-        }
-
-        function clearCart() {
-            if (cart.length === 0) return;
-            
-            if (confirm('Are you sure you want to clear the cart?')) {
-                cart = [];
-                updateCart();
-                document.getElementById('amountReceived').value = '';
-                document.getElementById('change').value = '₱0.00';
-            }
         }
 
         function updateTotals() {
@@ -1644,7 +1487,7 @@
             const taxableAmount = subtotal - discountAmount;
             const tax = taxableAmount * 0.12;
             const total = taxableAmount + tax;
-            
+
             document.getElementById('subtotal').textContent = `₱${subtotal.toFixed(2)}`;
             document.getElementById('tax').textContent = `₱${tax.toFixed(2)}`;
             document.getElementById('total').textContent = `₱${total.toFixed(2)}`;
@@ -1654,137 +1497,105 @@
             const total = parseFloat(document.getElementById('total').textContent.replace('₱', ''));
             const received = parseFloat(document.getElementById('amountReceived').value) || 0;
             const change = received - total;
-            
             document.getElementById('change').value = change >= 0 ? `₱${change.toFixed(2)}` : '₱0.00';
         }
 
         // Checkout
-        function processCheckout() {
+        async function processCheckout() {
             if (cart.length === 0) return;
-            
+
             const total = parseFloat(document.getElementById('total').textContent.replace('₱', ''));
             const received = parseFloat(document.getElementById('amountReceived').value) || 0;
-            
+
             if (received < total) {
-                showNotification('Insufficient payment amount!', 'error');
+                showNotification('Insufficient payment!', 'error');
                 return;
             }
-            
+
             showLoading();
-            
-            setTimeout(() => {
-                // Update stock
-                cart.forEach(cartItem => {
-                    const medicine = medicines.find(m => m.id === cartItem.id);
-                    if (medicine) {
-                        medicine.stock -= cartItem.quantity;
-                    }
-                });
-                
-                // Create transaction
-                const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+            try {
+                const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
                 const discount = parseFloat(document.getElementById('discountInput').value) || 0;
                 const discountAmount = subtotal * (discount / 100);
                 const taxableAmount = subtotal - discountAmount;
                 const tax = taxableAmount * 0.12;
-                const totalCost = cart.reduce((sum, item) => sum + (item.cost * item.quantity), 0);
-                const profit = total - totalCost;
-                
-                const transaction = {
-                    id: `RCP${Date.now()}`,
-                    date: new Date(),
-                    items: [...cart],
-                    subtotal: subtotal,
-                    discount: discount,
-                    discountAmount: discountAmount,
-                    tax: tax,
-                    total: total,
-                    profit: profit,
-                    paymentMethod: document.getElementById('paymentMethod').value,
-                    amountReceived: received,
-                    change: received - total
-                };
-                
-                transactions.unshift(transaction);
-                saveData();
-                
+                const totalAmount = taxableAmount + tax;
+
+                const response = await fetch('/api/pharmacy/complete-sale', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        items: cart,
+                        subtotal,
+                        discount_percentage: discount,
+                        discount_amount: discountAmount,
+                        tax_amount: tax,
+                        total_amount: totalAmount,
+                        amount_received: received,
+                        change_amount: received - totalAmount,
+                        payment_method: document.getElementById('paymentMethod').value
+                    })
+                });
+
+                const result = await response.json();
                 hideLoading();
-                showReceipt(transaction);
-                
-                // Reset
-                cart = [];
-                updateCart();
-                loadMedicines();
-                document.getElementById('discountInput').value = '0';
-                document.getElementById('amountReceived').value = '';
-                document.getElementById('change').value = '₱0.00';
-                
-                showNotification('Transaction completed successfully!', 'success');
-            }, 1000);
+
+                if (result.status === 'success') {
+                    showReceipt(result.data);
+                    cart = [];
+                    updateCart();
+                    await fetchMedicines();
+                    document.getElementById('discountInput').value = '0';
+                    document.getElementById('amountReceived').value = '';
+                    document.getElementById('change').value = '₱0.00';
+                    showNotification('Transaction completed!', 'success');
+                } else {
+                    showNotification(result.message || 'Failed', 'error');
+                }
+            } catch (err) {
+                hideLoading();
+                console.error(err);
+                showNotification('Transaction failed', 'error');
+            }
         }
 
         // Receipt
         function showReceipt(transaction) {
-            const receiptContent = document.getElementById('receiptContent');
-            const date = new Date(transaction.date);
-            
-            receiptContent.innerHTML = `
+            const content = document.getElementById('receiptContent');
+            const date = new Date(transaction.sale_date || transaction.date);
+            const receiptId = transaction.receipt_number || transaction.id;
+
+            content.innerHTML = `
                 <div class="receipt-header">
                     <h2>⚕️ St. Andrew Hospital</h2>
                     <div class="receipt-info">Pharmacy Department</div>
-                    <div class="receipt-info">Receipt #: ${transaction.id}</div>
+                    <div class="receipt-info">Receipt #: ${receiptId}</div>
                     <div class="receipt-info">${date.toLocaleString()}</div>
                 </div>
-                
                 <div class="receipt-items">
                     ${transaction.items.map(item => `
                         <div class="receipt-item">
                             <div>
-                                <div>${item.name}</div>
+                                <div>${item.product_name || item.name}</div>
                                 <div style="font-size: 11px; color: hsl(var(--muted-foreground));">
-                                    ${item.quantity} x ₱${item.price.toFixed(2)}
+                                    ${item.quantity} x ₱${(item.unit_price || item.price).toFixed(2)}
                                 </div>
                             </div>
-                            <div>₱${(item.quantity * item.price).toFixed(2)}</div>
+                            <div>₱${(item.item_total || (item.quantity * item.price)).toFixed(2)}</div>
                         </div>
                     `).join('')}
                 </div>
-                
                 <div class="receipt-totals">
-                    <div class="receipt-total-row">
-                        <span>Subtotal:</span>
-                        <span>₱${transaction.subtotal.toFixed(2)}</span>
-                    </div>
-                    ${transaction.discount > 0 ? `
-                        <div class="receipt-total-row">
-                            <span>Discount (${transaction.discount}%):</span>
-                            <span>-₱${transaction.discountAmount.toFixed(2)}</span>
-                        </div>
-                    ` : ''}
-                    <div class="receipt-total-row">
-                        <span>Tax (12%):</span>
-                        <span>₱${transaction.tax.toFixed(2)}</span>
-                    </div>
-                    <div class="receipt-total-row final">
-                        <span>Total:</span>
-                        <span>₱${transaction.total.toFixed(2)}</span>
-                    </div>
-                    <div class="receipt-total-row">
-                        <span>Payment (${transaction.paymentMethod}):</span>
-                        <span>₱${transaction.amountReceived.toFixed(2)}</span>
-                    </div>
-                    <div class="receipt-total-row">
-                        <span>Change:</span>
-                        <span>₱${transaction.change.toFixed(2)}</span>
-                    </div>
+                    <div class="receipt-total-row"><span>Subtotal:</span><span>₱${transaction.subtotal.toFixed(2)}</span></div>
+                    ${transaction.discount_percentage > 0 ? `<div class="receipt-total-row"><span>Discount (${transaction.discount_percentage}%):</span><span>-₱${transaction.discount_amount.toFixed(2)}</span></div>` : ''}
+                    <div class="receipt-total-row"><span>Tax (12%):</span><span>₱${transaction.tax_amount.toFixed(2)}</span></div>
+                    <div class="receipt-total-row final"><span>Total:</span><span>₱${transaction.total_amount.toFixed(2)}</span></div>
+                    <div class="receipt-total-row"><span>Payment:</span><span>₱${transaction.amount_received.toFixed(2)}</span></div>
+                    <div class="receipt-total-row"><span>Change:</span><span>₱${transaction.change_amount.toFixed(2)}</span></div>
                 </div>
-                
-                <div class="receipt-footer">
-                    <p>Thank you for your purchase!</p>
-                    <p>Get well soon!</p>
-                </div>
+                <div class="receipt-footer"><p>Thank you!</p></div>
             `;
-            
             document.getElementById('receiptModal').classList.add('active');
         }
 
@@ -1797,103 +1608,45 @@
         }
 
         // Reports
-        function setReportPeriod(period) {
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            
-            updateReports(period);
-        }
+        async function loadSalesReports(period = 'today', startDate = null, endDate = null) {
+            try {
+                showLoading();
+                let url = `/api/pharmacy/sales/reports?period=${period}`;
+                if (period === 'custom' && startDate && endDate) {
+                    url += `&start_date=${startDate}&end_date=${endDate}`;
+                }
 
-        function applyCustomDate() {
-            const startDate = document.getElementById('startDate').value;
-            const endDate = document.getElementById('endDate').value;
-            
-            if (!startDate || !endDate) {
-                showNotification('Please select both dates', 'error');
-                return;
+                const response = await fetch(url);
+                const result = await response.json();
+                hideLoading();
+
+                if (result.status === 'success') {
+                    const data = result.data;
+                    document.getElementById('reportTotalSales').textContent = `₱${data.summary.total_sales.toFixed(2)}`;
+                    document.getElementById('reportTotalProfit').textContent = `₱${data.summary.total_profit.toFixed(2)}`;
+                    document.getElementById('reportTransactions').textContent = data.summary.total_transactions;
+                    document.getElementById('reportItemsSold').textContent = data.summary.total_items_sold;
+
+                    updateTopSellingTableFromAPI(data.top_selling);
+                    updateSalesHistoryTableFromAPI(data.transactions);
+                } else {
+                    showNotification('Failed to load reports', 'error');
+                }
+            } catch (err) {
+                hideLoading();
+                console.error(err);
+                showNotification('Error loading reports', 'error');
             }
-            
-            updateReports('custom', new Date(startDate), new Date(endDate));
         }
 
-        function updateReports(period = 'today', customStart = null, customEnd = null) {
-            const now = new Date();
-            let filteredTransactions = [];
-            
-            if (period === 'custom' && customStart && customEnd) {
-                filteredTransactions = transactions.filter(t => {
-                    const tDate = new Date(t.date);
-                    return tDate >= customStart && tDate <= customEnd;
-                });
-            } else {
-                filteredTransactions = transactions.filter(t => {
-                    const tDate = new Date(t.date);
-                    
-                    switch(period) {
-                        case 'today':
-                            return tDate.toDateString() === now.toDateString();
-                        case 'week':
-                            const weekAgo = new Date(now);
-                            weekAgo.setDate(weekAgo.getDate() - 7);
-                            return tDate >= weekAgo;
-                        case 'month':
-                            return tDate.getMonth() === now.getMonth() && 
-                                   tDate.getFullYear() === now.getFullYear();
-                        case 'year':
-                            return tDate.getFullYear() === now.getFullYear();
-                        default:
-                            return true;
-                    }
-                });
-            }
-            
-            // Calculate totals
-            const totalSales = filteredTransactions.reduce((sum, t) => sum + t.total, 0);
-            const totalProfit = filteredTransactions.reduce((sum, t) => sum + t.profit, 0);
-            const totalItems = filteredTransactions.reduce((sum, t) => 
-                sum + t.items.reduce((iSum, item) => iSum + item.quantity, 0), 0);
-            
-            document.getElementById('reportTotalSales').textContent = `₱${totalSales.toFixed(2)}`;
-            document.getElementById('reportTotalProfit').textContent = `₱${totalProfit.toFixed(2)}`;
-            document.getElementById('reportTransactions').textContent = filteredTransactions.length;
-            document.getElementById('reportItemsSold').textContent = totalItems;
-            
-            // Update tables
-            updateTopSellingTable(filteredTransactions);
-            updateSalesHistoryTable(filteredTransactions);
-        }
-
-        function updateTopSellingTable(filteredTransactions) {
-            const medicineStats = {};
-            
-            filteredTransactions.forEach(t => {
-                t.items.forEach(item => {
-                    if (!medicineStats[item.id]) {
-                        medicineStats[item.id] = {
-                            name: item.name,
-                            quantity: 0,
-                            revenue: 0
-                        };
-                    }
-                    medicineStats[item.id].quantity += item.quantity;
-                    medicineStats[item.id].revenue += item.total;
-                });
-            });
-            
-            const sorted = Object.values(medicineStats)
-                .sort((a, b) => b.quantity - a.quantity)
-                .slice(0, 10);
-            
+        function updateTopSellingTableFromAPI(topSelling) {
             const tbody = document.getElementById('topSellingTable');
-            
-            if (sorted.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: hsl(var(--muted-foreground));">No data available</td></tr>';
+            if (topSelling.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">No data</td></tr>';
             } else {
-                tbody.innerHTML = sorted.map((item, index) => `
+                tbody.innerHTML = topSelling.map((item, i) => `
                     <tr>
-                        <td>${index + 1}</td>
+                        <td>${i + 1}</td>
                         <td>${item.name}</td>
                         <td>${item.quantity}</td>
                         <td>₱${item.revenue.toFixed(2)}</td>
@@ -1902,76 +1655,107 @@
             }
         }
 
+        function updateSalesHistoryTableFromAPI(transactions) {
+            const tbody = document.getElementById('salesHistoryTable');
+            if (transactions.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">No transactions</td></tr>';
+            } else {
+                tbody.innerHTML = transactions.map(t => `
+                    <tr>
+                        <td>${t.receipt_number}</td>
+                        <td>${new Date(t.sale_date).toLocaleString()}</td>
+                        <td>${t.items.length} items</td>
+                        <td><span class="badge badge-success">${t.payment_method}</span></td>
+                        <td>₱${t.total_amount.toFixed(2)}</td>
+                        <td style="color: hsl(var(--accent));">₱${t.total_profit.toFixed(2)}</td>
+                        <td><button class="btn-export" onclick="viewSaleReceipt(${t.id})">View</button></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        async function viewSaleReceipt(saleId) {
+            try {
+                showLoading();
+                const response = await fetch(`/api/pharmacy/sales/${saleId}`);
+                const result = await response.json();
+                hideLoading();
+
+                if (result.status === 'success') {
+                    showReceipt(result.data);
+                } else {
+                    showNotification('Failed to load receipt', 'error');
+                }
+            } catch (err) {
+                hideLoading();
+                console.error(err);
+                showNotification('Error', 'error');
+            }
+        }
+
+        function setReportPeriod(period) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            loadSalesReports(period);
+        }
+
+        function applyCustomDate() {
+            const start = document.getElementById('startDate').value;
+            const end = document.getElementById('endDate').value;
+            if (!start || !end) {
+                showNotification('Select both dates', 'error');
+                return;
+            }
+            loadSalesReports('custom', start, end);
+        }
+
+        function showSection(section) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+
+            if (section === 'pos') {
+                document.getElementById('posSection').classList.add('active');
+                document.getElementById('navPOS').classList.add('active');
+            } else if (section === 'reports') {
+                document.getElementById('reportsSection').classList.add('active');
+                document.getElementById('navReports').classList.add('active');
+                loadSalesReports('today');
+            }
+        }
+
         function updateLowStockTable() {
-            const lowStock = medicines.filter(m => m.stock <= m.reorderLevel)
-                .sort((a, b) => a.stock - b.stock);
-            
+            const lowStock = medicines.filter(m => m.stock <= m.reorderLevel).sort((a, b) => a.stock - b.stock);
             const tbody = document.getElementById('lowStockTable');
-            
+
             if (lowStock.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: hsl(var(--muted-foreground));">All items well stocked</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">All items well stocked</td></tr>';
             } else {
                 tbody.innerHTML = lowStock.map(item => {
-                    const isCritical = item.stock <= item.reorderLevel * 0.3;
+                    const critical = item.stock <= item.reorderLevel * 0.3;
                     return `
                         <tr>
                             <td>${item.name}</td>
                             <td>${item.stock}</td>
                             <td>${item.reorderLevel}</td>
-                            <td>
-                                <span class="badge ${isCritical ? 'badge-critical' : 'badge-warning'}">
-                                    ${isCritical ? 'Critical' : 'Low Stock'}
-                                </span>
-                            </td>
+                            <td><span class="badge ${critical ? 'badge-critical' : 'badge-warning'}">${critical ? 'Critical' : 'Low Stock'}</span></td>
                         </tr>
                     `;
                 }).join('');
             }
         }
 
-        function updateSalesHistoryTable(filteredTransactions) {
-            const tbody = document.getElementById('salesHistoryTable');
-            
-            if (filteredTransactions.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: hsl(var(--muted-foreground));">No transactions found</td></tr>';
-            } else {
-                tbody.innerHTML = filteredTransactions.slice(0, 20).map(t => {
-                    const date = new Date(t.date);
-                    return `
-                        <tr>
-                            <td>${t.id}</td>
-                            <td>${date.toLocaleString()}</td>
-                            <td>${t.items.length} items</td>
-                            <td>
-                                <span class="badge badge-success">${t.paymentMethod}</span>
-                            </td>
-                            <td>₱${t.total.toFixed(2)}</td>
-                            <td style="color: hsl(var(--accent));">₱${t.profit.toFixed(2)}</td>
-                            <td>
-                                <button class="btn-export" onclick='showReceipt(${JSON.stringify(t)})'>
-                                    View
-                                </button>
-                            </td>
-                        </tr>
-                    `;
-                }).join('');
-            }
-        }
-
-        // Export Functions
         function exportTopSelling() {
-            showNotification('Export feature would download CSV file', 'success');
+            showNotification('Export feature coming soon', 'success');
         }
 
         function exportLowStock() {
-            showNotification('Export feature would download CSV file', 'success');
+            showNotification('Export feature coming soon', 'success');
         }
 
         function exportSalesHistory() {
-            showNotification('Export feature would download CSV file', 'success');
+            showNotification('Export feature coming soon', 'success');
         }
 
-        // UI Helpers
         function showLoading() {
             document.getElementById('loadingOverlay').classList.add('active');
         }
@@ -1983,38 +1767,34 @@
         function showNotification(message, type = 'success') {
             const notification = document.getElementById('notification');
             const messageEl = document.getElementById('notificationMessage');
-            
+
             messageEl.textContent = message;
             notification.className = `notification ${type}`;
             notification.classList.add('show');
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000);
+
+            setTimeout(() => notification.classList.remove('show'), 3000);
         }
 
         async function logout() {
-            if (!confirm('Are you sure you want to logout?')) {
-                return;
-            }
-            
+            if (!confirm('Logout?')) return;
+
             try {
                 const response = await fetch('/api/logout', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' }
                 });
-                
+
                 const data = await response.json();
-                
                 if (data.status === 'success') {
                     window.location.href = data.redirect;
                 }
             } catch (err) {
-                console.error('Logout error:', err);
+                console.error(err);
                 window.location.href = '/IMS';
             }
         }
 
+        
     </script>
 </body>
 </html>

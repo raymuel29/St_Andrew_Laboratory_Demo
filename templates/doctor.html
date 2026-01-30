@@ -3,46 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doctor/EMR Module - St. Andrew Hospital</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Doctor/Nurse Module - St. Andrew Hospital</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         :root {
-            --primary: 168 85% 60%;
-            --primary-foreground: 0 0% 100%;
-            --secondary: 240 4% 16%;
-            --secondary-foreground: 0 0% 100%;
-            --accent: 142 71% 45%;
-            --accent-foreground: 0 0% 100%;
-            --background: 0 0% 7%;
-            --foreground: 0 0% 98%;
-            --card: 240 4% 10%;
-            --card-foreground: 0 0% 98%;
-            --border: 240 4% 16%;
-            --muted: 240 4% 16%;
-            --muted-foreground: 240 5% 65%;
+            --primary: hsl(168, 85%, 60%);
+            --primary-foreground: hsl(0, 0%, 100%);
+            --secondary: hsl(240, 4%, 16%);
+            --secondary-foreground: hsl(0, 0%, 100%);
+            --accent: hsl(142, 71%, 45%);
+            --accent-foreground: hsl(0, 0%, 100%);
+            --background: hsl(0, 0%, 7%);
+            --foreground: hsl(0, 0%, 98%);
+            --card: hsl(240, 4%, 10%);
+            --card-foreground: hsl(0, 0%, 98%);
+            --border: hsl(240, 4%, 16%);
+            --muted: hsl(240, 4%, 16%);
+            --muted-foreground: hsl(240, 5%, 65%);
         }
         
         body {
-            background-color: hsl(var(--background));
-            color: hsl(var(--foreground));
+            background-color: var(--background);
+            color: var(--foreground);
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
         
         .card {
-            background-color: hsl(var(--card));
-            border: 1px solid hsl(var(--border));
+            background-color: var(--card);
+            border: 1px solid var(--border);
             border-radius: 8px;
         }
         
         .btn-primary {
-            background-color: hsl(var(--primary));
-            color: hsl(var(--primary-foreground));
+            background-color: var(--primary);
+            color: var(--primary-foreground);
             border: none;
             padding: 10px 20px;
             border-radius: 6px;
             cursor: pointer;
             font-weight: 500;
             transition: opacity 0.2s;
+            font-size: 14px;
         }
         
         .btn-primary:hover {
@@ -50,48 +56,35 @@
         }
         
         .btn-secondary {
-            background-color: hsl(var(--secondary));
-            color: hsl(var(--secondary-foreground));
-            border: 1px solid hsl(var(--border));
+            background-color: var(--secondary);
+            color: var(--secondary-foreground);
+            border: 1px solid var(--border);
             padding: 10px 20px;
             border-radius: 6px;
             cursor: pointer;
             font-weight: 500;
             transition: background-color 0.2s;
+            font-size: 14px;
         }
         
         .btn-secondary:hover {
-            background-color: hsl(240 4% 20%);
+            background-color: hsl(240, 4%, 20%);
         }
         
         .btn-success {
-            background-color: hsl(var(--accent));
-            color: hsl(var(--accent-foreground));
+            background-color: var(--accent);
+            color: var(--accent-foreground);
             border: none;
             padding: 10px 20px;
             border-radius: 6px;
             cursor: pointer;
             font-weight: 500;
+            font-size: 14px;
         }
-        
-        .btn-danger {
-            background-color: hsl(0 72% 51%);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 500;
-        }
-        
-        .btn-warning {
-            background-color: hsl(45 93% 47%);
-            color: hsl(0 0% 7%);
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 500;
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 13px;
         }
         
         .nav-item {
@@ -102,15 +95,21 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            color: var(--foreground);
         }
         
         .nav-item:hover {
-            background-color: hsl(var(--secondary));
+            background-color: var(--secondary);
         }
         
         .nav-item.active {
-            background-color: hsl(var(--secondary));
-            color: hsl(var(--primary));
+            background-color: var(--secondary);
+            color: var(--primary);
+        }
+
+        .nav-item svg {
+            width: 20px;
+            height: 20px;
         }
         
         .table {
@@ -121,19 +120,20 @@
         .table th {
             text-align: left;
             padding: 12px;
-            border-bottom: 1px solid hsl(var(--border));
-            color: hsl(var(--muted-foreground));
+            border-bottom: 1px solid var(--border);
+            color: var(--muted-foreground);
             font-size: 14px;
             font-weight: 500;
         }
         
         .table td {
             padding: 12px;
-            border-bottom: 1px solid hsl(var(--border));
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
         }
         
         .table tr:hover {
-            background-color: hsl(240 4% 12%);
+            background-color: hsl(240, 4%, 12%);
         }
         
         .badge {
@@ -143,50 +143,30 @@
             font-size: 12px;
             font-weight: 500;
         }
-        
-        .badge-success {
-            background-color: hsl(142 71% 45% / 0.2);
-            color: hsl(142 71% 60%);
-        }
-        
-        .badge-warning {
-            background-color: hsl(45 93% 47% / 0.2);
-            color: hsl(45 93% 60%);
-        }
-        
-        .badge-info {
-            background-color: hsl(200 90% 50% / 0.2);
-            color: hsl(200 90% 60%);
-        }
-        
-        .badge-danger {
-            background-color: hsl(0 72% 51% / 0.2);
-            color: hsl(0 72% 65%);
-        }
-        
-        .badge-primary {
-            background-color: hsl(var(--primary) / 0.2);
-            color: hsl(var(--primary));
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
         }
         
         input, select, textarea {
-            background-color: hsl(var(--secondary));
-            border: 1px solid hsl(var(--border));
-            color: hsl(var(--foreground));
+            background-color: var(--secondary);
+            border: 1px solid var(--border);
+            color: var(--foreground);
             padding: 10px 14px;
             border-radius: 6px;
             width: 100%;
             font-size: 14px;
+            font-family: inherit;
         }
         
         input:focus, select:focus, textarea:focus {
             outline: none;
-            border-color: hsl(var(--primary));
-            box-shadow: 0 0 0 3px hsl(var(--primary) / 0.1);
-        }
-        
-        input::placeholder {
-            color: hsl(var(--muted-foreground));
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px hsla(168, 85%, 60%, 0.1);
         }
         
         label {
@@ -194,9 +174,350 @@
             margin-bottom: 8px;
             font-weight: 500;
             font-size: 14px;
-            color: hsl(var(--foreground));
+            color: var(--foreground);
         }
-        
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Header styles */
+        header {
+            border-bottom: 1px solid var(--border);
+            background-color: var(--card);
+        }
+
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 24px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--accent);
+        }
+
+        .header-title h1 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .header-title p {
+            font-size: 14px;
+            color: var(--muted-foreground);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header-user {
+            color: var(--muted-foreground);
+        }
+
+        /* Layout */
+        .main-layout {
+            display: flex;
+        }
+
+        aside {
+            width: 256px;
+            min-height: calc(100vh - 72px);
+            border-right: 1px solid var(--border);
+            padding: 16px;
+            background-color: var(--card);
+        }
+
+        main {
+            flex: 1;
+            padding: 24px;
+            min-height: calc(100vh - 72px);
+        }
+
+        nav {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* Content sections */
+        .content-section {
+            width: 100%;
+        }
+
+        .page-content {
+            width: 100%;
+        }
+
+        /* Dashboard styles */
+        .dashboard-filters {
+            margin-bottom: 24px;
+        }
+
+        .dashboard-filters h2 {
+            font-size: 24px;
+            color: var(--primary);
+            margin: 0;
+        }
+
+        .dashboard-table-container {
+            background-color: var(--card);
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .table-container {
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .table-container table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table-container thead {
+            background-color: var(--secondary);
+        }
+
+        .table-container th {
+            padding: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            border-bottom: 1px solid var(--border);
+            color: var(--muted-foreground);
+            text-align: left;
+        }
+
+        .table-container td {
+            padding: 12px;
+            font-size: 14px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .table-container tbody tr:hover {
+            background-color: hsl(240, 4%, 12%);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Messages Section Styles */
+        .flex {
+            display: flex;
+        }
+
+        .justify-between {
+            justify-content: space-between;
+        }
+
+        .items-center {
+            align-items: center;
+        }
+
+        .mb-6 {
+            margin-bottom: 24px;
+        }
+
+        .grid {
+            display: grid;
+        }
+
+        .grid-cols-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .col-span-1 {
+            grid-column: span 1;
+        }
+
+        .col-span-2 {
+            grid-column: span 2;
+        }
+
+        .gap-6 {
+            gap: 24px;
+        }
+
+        .flex-col {
+            flex-direction: column;
+        }
+
+        .flex-1 {
+            flex: 1;
+        }
+
+        .p-4 {
+            padding: 16px;
+        }
+
+        .pt-2 {
+            padding-top: 8px;
+        }
+
+        .border-b {
+            border-bottom: 1px solid var(--border);
+        }
+
+        .border-t {
+            border-top: 1px solid var(--border);
+        }
+
+        .mx-auto {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .mb-4 {
+            margin-bottom: 16px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .conversation-item {
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-bottom: 8px;
+            border: 1px solid transparent;
+        }
+
+        .conversation-item:hover {
+            background-color: var(--secondary);
+            border-color: var(--border);
+        }
+
+        .conversation-item.active {
+            background-color: var(--secondary);
+            border-color: var(--primary);
+        }
+
+        .conversation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .conversation-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .conversation-time {
+            font-size: 12px;
+            color: var(--muted-foreground);
+        }
+
+        .conversation-preview {
+            font-size: 13px;
+            color: var(--muted-foreground);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .unread-badge {
+            background-color: var(--primary);
+            color: var(--primary-foreground);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .message-bubble {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            word-wrap: break-word;
+        }
+
+        .message-sent {
+            background-color: var(--primary);
+            color: var(--primary-foreground);
+            margin-left: auto;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message-received {
+            background-color: var(--secondary);
+            color: var(--foreground);
+            margin-right: auto;
+            border-bottom-left-radius: 4px;
+        }
+
+        .message-time {
+            font-size: 11px;
+            opacity: 0.7;
+            margin-top: 4px;
+        }
+
+        /* Utilities */
+        .w-5 { width: 20px; }
+        .h-5 { height: 20px; }
+        .w-6 { width: 24px; }
+        .h-6 { height: 24px; }
+        .w-10 { width: 40px; }
+        .h-10 { height: 40px; }
+        .w-16 { width: 64px; }
+        .h-16 { height: 64px; }
+
+        .ml-auto {
+            margin-left: auto;
+        }
+
+        .badge-danger {
+            background-color: hsl(0, 72%, 51%, 0.2);
+            color: hsl(0, 72%, 65%);
+        }
+
+        .rounded-full {
+            border-radius: 9999px;
+        }
+
+        .font-semibold {
+            font-weight: 600;
+        }
+
+        .text-sm {
+            font-size: 14px;
+        }
+
+        .gap-2 {
+            gap: 8px;
+        }
+
+        .gap-3 {
+            gap: 12px;
+        }
+
+        .items-center {
+            align-items: center;
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -215,23 +536,12 @@
         }
         
         .modal-content {
-            background-color: hsl(var(--card));
+            background-color: var(--card);
             border-radius: 8px;
-            max-width: 900px;
+            max-width: 700px;
             width: 90%;
             max-height: 90vh;
             overflow-y: auto;
-        }
-        
-        .stat-card {
-            background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(240 4% 13%) 100%);
-            border: 1px solid hsl(var(--border));
-            border-radius: 8px;
-            padding: 20px;
-        }
-        
-        .hidden {
-            display: none;
         }
 
         .search-box {
@@ -247,1397 +557,1626 @@
             left: 12px;
             top: 50%;
             transform: translateY(-50%);
-            color: hsl(var(--muted-foreground));
+            color: var(--muted-foreground);
         }
 
-        .patient-card {
-            background-color: hsl(var(--card));
-            border: 1px solid hsl(var(--border));
-            border-radius: 8px;
-            padding: 16px;
-            transition: all 0.2s;
-            cursor: pointer;
+        .space-y-4 > * + * {
+            margin-top: 16px;
         }
 
-        .patient-card:hover {
-            border-color: hsl(var(--primary));
-            transform: translateY(-2px);
-        }
+        
 
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 16px;
-        }
-
-        .form-section {
-            margin-bottom: 24px;
-        }
-
-        .form-section-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 16px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid hsl(var(--border));
-            color: hsl(var(--primary));
-        }
-
-        .vital-signs-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 12px;
-        }
-
-        .vital-box {
-            background-color: hsl(var(--secondary));
-            border: 1px solid hsl(var(--border));
-            border-radius: 6px;
-            padding: 12px;
-            text-align: center;
-        }
-
-        .vital-label {
-            font-size: 12px;
-            color: hsl(var(--muted-foreground));
-            margin-bottom: 4px;
-        }
-
-        .vital-value {
-            font-size: 20px;
-            font-weight: 600;
-        }
-
-        .medication-item {
-            background-color: hsl(var(--secondary));
-            border: 1px solid hsl(var(--border));
-            border-radius: 6px;
-            padding: 12px;
-            margin-bottom: 8px;
-        }
-
-        .timeline-item {
-            position: relative;
-            padding-left: 30px;
-            padding-bottom: 20px;
-            border-left: 2px solid hsl(var(--border));
-        }
-
-        .timeline-item:last-child {
-            border-left: none;
-        }
-
-        .timeline-dot {
-            position: absolute;
-            left: -6px;
-            top: 0;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background-color: hsl(var(--primary));
-        }
-
-        .emr-section {
-            background-color: hsl(var(--secondary));
-            border: 1px solid hsl(var(--border));
-            border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 16px;
-        }
-
-        .emr-section-header {
-            font-weight: 600;
-            margin-bottom: 12px;
-            color: hsl(var(--primary));
-        }
     </style>
 </head>
-<body class="p-0 m-0">
-    <!-- Header -->
-    <header class="border-b" style="border-color: hsl(var(--border)); background-color: hsl(var(--card));">
-        <div class="flex items-center justify-between px-6 py-4">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background-color: hsl(var(--primary));">
+<body>
+    
+    <header>
+        <div class="header-container">
+            <div class="header-left">
+                <div class="header-icon">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                     </svg>
                 </div>
-                <div>
-                    <h1 class="text-xl font-semibold">Doctor/EMR Module</h1>
-                    <p class="text-sm" style="color: hsl(var(--muted-foreground));">St. Andrew Hospital</p>
+                <div class="header-title">
+                    <h1>Doctor/Nurse System</h1>
+                    <p>St. Andrew Hospital</p>
                 </div>
             </div>
-            <div class="flex items-center gap-4">
-                <span style="color: hsl(var(--muted-foreground));">Dr. <span id="currentUserName">Sarah Johnson</span></span>
+            <div class="header-right">
+                <span class="header-user">Staff: <span id="currentUserName">Dr. Maria Santos</span></span>
                 <button class="btn-secondary" onclick="logout()">Logout</button>
             </div>
         </div>
     </header>
 
-    <div class="flex">
-        <!-- Sidebar -->
-        <aside class="w-64 min-h-screen border-r p-4" style="border-color: hsl(var(--border)); background-color: hsl(var(--card));">
-            <nav class="space-y-2">
-                <div class="nav-item active" onclick="showSection('dashboard')">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+    <!-- Main Container -->
+    <div class="main-layout">
+        <!-- Sidebar with main navigation -->
+        <aside>
+            <nav>
+                <div class="nav-item active" onclick="showSection('my-schedule')">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
-                    Dashboard
-                </div>
-                <div class="nav-item" onclick="showSection('patients')">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-                    </svg>
-                    My Patients
-                </div>
-                <div class="nav-item" onclick="showSection('emr')">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                    </svg>
-                    Electronic Medical Records
-                </div>
-                <div class="nav-item" onclick="showSection('orders')">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
-                    </svg>
-                    Order Entry
-                </div>
-                <div class="nav-item" onclick="showSection('prescriptions')">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
-                    </svg>
-                    Prescriptions
-                </div>
-                <div class="nav-item" onclick="showSection('progress-notes')">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                    </svg>
-                    Progress Notes
-                </div>
-                <div class="nav-item" onclick="showSection('diagnosis')">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
-                    </svg>
-                    Diagnosis & Treatment
+                    <span>My Schedule</span>
                 </div>
                 <div class="nav-item" onclick="showSection('appointments')">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                     </svg>
-                    My Schedule
+                    <span>Appointments</span>
+                </div>
+                <div class="nav-item" onclick="showSection('patients', event)">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                    </svg>
+                    <span>In Patient</span>
+                </div>
+                <div class="nav-item" onclick="showSection('messages')">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                    <span>Messages</span>
+                    <span class="badge badge-danger ml-auto" id="unreadCount">3</span>
                 </div>
             </nav>
         </aside>
+        
 
         <!-- Main Content -->
-        <main class="flex-1 p-6">
-            <!-- Dashboard Section -->
-            <section id="dashboard" class="content-section">
-                <h2 class="text-2xl font-semibold mb-6">Doctor Dashboard</h2>
+        <main>
+            
+            <!-- My Schedule Page-->
+            <section id="my-schedule" class="content-section">
+                <!-- Today & Upcoming Schedule -->
+                <div class="dashboard-filters">
+                    <h2>My Schedule - Today & Upcoming</h2>
+                </div>
+
+                <div class="dashboard-table-container">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Patient</th>
+                                    <th>Date & Time</th>
+                                    <th>Service Type</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="scheduleAppointmentsTableBody">
+                                <tr>
+                                    <td colspan="5" style="text-align: center; color: #888; padding: 40px;">
+                                        No upcoming appointments
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Past Appointments Section -->
+                <div class="dashboard-filters" style="margin-top: 40px;">
+                    <h2>Past Appointments</h2>
+                </div>
+
+                <div class="dashboard-table-container">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Patient</th>
+                                    <th>Date & Time</th>
+                                    <th>Service Type</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pastAppointmentsTableBody">
+                                <tr>
+                                    <td colspan="5" style="text-align: center; color: #888; padding: 40px;">
+                                        No past appointments
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                    <div class="stat-card">
-                        <div class="flex items-center justify-between mb-2">
-                            <span style="color: hsl(var(--muted-foreground));">Today's Patients</span>
-                            <svg class="w-5 h-5" style="color: hsl(var(--primary));" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-                            </svg>
-                        </div>
-                        <div class="text-3xl font-bold">12</div>
-                        <div class="text-sm mt-1" style="color: hsl(var(--accent));">8 completed, 4 pending</div>
-                    </div>
-                    
-                    <div class="stat-card">
-                        <div class="flex items-center justify-between mb-2">
-                            <span style="color: hsl(var(--muted-foreground));">Prescriptions Written</span>
-                            <svg class="w-5 h-5" style="color: hsl(var(--accent));" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
-                            </svg>
-                        </div>
-                        <div class="text-3xl font-bold">15</div>
-                        <div class="text-sm mt-1" style="color: hsl(var(--muted-foreground));">Today</div>
-                    </div>
-                    
-                    <div class="stat-card">
-                        <div class="flex items-center justify-between mb-2">
-                            <span style="color: hsl(var(--muted-foreground));">Lab Orders</span>
-                            <svg class="w-5 h-5" style="color: hsl(45 93% 60%);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
-                            </svg>
-                        </div>
-                        <div class="text-3xl font-bold">8</div>
-                        <div class="text-sm mt-1" style="color: hsl(45 93% 60%);">3 results pending</div>
-                    </div>
-                    
-                    <div class="stat-card">
-                        <div class="flex items-center justify-between mb-2">
-                            <span style="color: hsl(var(--muted-foreground));">Active Patients</span>
-                            <svg class="w-5 h-5" style="color: hsl(200 90% 60%);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                        </div>
-                        <div class="text-3xl font-bold">147</div>
-                        <div class="text-sm mt-1" style="color: hsl(var(--muted-foreground));">Under my care</div>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div class="card p-6">
-                        <h3 class="text-lg font-semibold mb-4">Today's Appointments</h3>
-                        <div class="space-y-3">
-                            <div class="flex items-center justify-between p-3 rounded-lg" style="background-color: hsl(var(--secondary));">
-                                <div>
-                                    <div class="font-medium">John Smith</div>
-                                    <div class="text-sm" style="color: hsl(var(--muted-foreground));">9:00 AM - Follow-up Visit</div>
-                                </div>
-                                <span class="badge badge-success">Completed</span>
-                            </div>
-                            <div class="flex items-center justify-between p-3 rounded-lg" style="background-color: hsl(var(--secondary));">
-                                <div>
-                                    <div class="font-medium">Emma Davis</div>
-                                    <div class="text-sm" style="color: hsl(var(--muted-foreground));">10:30 AM - General Consultation</div>
-                                </div>
-                                <span class="badge badge-warning">In Progress</span>
-                            </div>
-                            <div class="flex items-center justify-between p-3 rounded-lg" style="background-color: hsl(var(--secondary));">
-                                <div>
-                                    <div class="font-medium">Robert Taylor</div>
-                                    <div class="text-sm" style="color: hsl(var(--muted-foreground));">2:00 PM - New Patient</div>
-                                </div>
-                                <span class="badge badge-info">Scheduled</span>
-                            </div>
-                        </div>
-                        <button class="btn-secondary w-full mt-4" onclick="showSection('appointments')">View Full Schedule</button>
-                    </div>
-
-                    <div class="card p-6">
-                        <h3 class="text-lg font-semibold mb-4">Pending Actions</h3>
-                        <div class="space-y-3">
-                            <div class="flex gap-3 p-3 rounded-lg" style="background-color: hsl(var(--secondary));">
-                                <div class="w-2 h-2 rounded-full mt-2" style="background-color: hsl(0 72% 51%);"></div>
-                                <div class="flex-1">
-                                    <div class="font-medium">Lab Results to Review</div>
-                                    <div class="text-sm" style="color: hsl(var(--muted-foreground));">3 patients - requires attention</div>
-                                </div>
-                            </div>
-                            
-                            <div class="flex gap-3 p-3 rounded-lg" style="background-color: hsl(var(--secondary));">
-                                <div class="w-2 h-2 rounded-full mt-2" style="background-color: hsl(45 93% 60%);"></div>
-                                <div class="flex-1">
-                                    <div class="font-medium">Progress Notes</div>
-                                    <div class="text-sm" style="color: hsl(var(--muted-foreground));">2 patients - awaiting documentation</div>
-                                </div>
-                            </div>
-                            
-                            <div class="flex gap-3 p-3 rounded-lg" style="background-color: hsl(var(--secondary));">
-                                <div class="w-2 h-2 rounded-full mt-2" style="background-color: hsl(var(--primary));"></div>
-                                <div class="flex-1">
-                                    <div class="font-medium">Prescription Renewals</div>
-                                    <div class="text-sm" style="color: hsl(var(--muted-foreground));">5 requests pending approval</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- My Patients Section -->
-            <section id="patients" class="content-section hidden">
-                <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-2xl font-semibold">My Patients</h2>
-                </div>
-
-                <div class="card p-6 mb-6">
-                    <div class="flex gap-4 flex-wrap">
-                        <div class="search-box flex-1 min-w-64">
-                            <svg class="search-icon w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                            </svg>
-                            <input type="text" id="patientSearch" placeholder="Search patients..." onkeyup="filterPatients()">
-                        </div>
-                        <select id="patientStatusFilter" onchange="filterPatients()" class="w-48">
-                            <option value="">All Status</option>
-                            <option value="Active">Active</option>
-                            <option value="Follow-up">Follow-up Required</option>
-                            <option value="Discharged">Discharged</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Patient ID</th>
-                                <th>Name</th>
-                                <th>Age/Gender</th>
-                                <th>Last Visit</th>
-                                <th>Diagnosis</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="patientsTableBody">
-                            <tr>
-                                <td>#PAT001</td>
-                                <td>John Smith</td>
-                                <td>39 / M</td>
-                                <td>Jan 02, 2025</td>
-                                <td>Hypertension</td>
-                                <td><span class="badge badge-success">Active</span></td>
-                                <td>
-                                    <div class="flex gap-2">
-                                        <button class="btn-primary text-sm" onclick="openPatientEMR(1)">View EMR</button>
-                                        <button class="btn-secondary text-sm" onclick="startConsultation(1)">Consult</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>#PAT002</td>
-                                <td>Emma Davis</td>
-                                <td>32 / F</td>
-                                <td>Jan 02, 2025</td>
-                                <td>Diabetes Type 2</td>
-                                <td><span class="badge badge-warning">Follow-up</span></td>
-                                <td>
-                                    <div class="flex gap-2">
-                                        <button class="btn-primary text-sm" onclick="openPatientEMR(2)">View EMR</button>
-                                        <button class="btn-secondary text-sm" onclick="startConsultation(2)">Consult</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>#PAT003</td>
-                                <td>Robert Taylor</td>
-                                <td>45 / M</td>
-                                <td>Dec 28, 2024</td>
-                                <td>Acute Bronchitis</td>
-                                <td><span class="badge badge-success">Active</span></td>
-                                <td>
-                                    <div class="flex gap-2">
-                                        <button class="btn-primary text-sm" onclick="openPatientEMR(3)">View EMR</button>
-                                        <button class="btn-secondary text-sm" onclick="startConsultation(3)">Consult</button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- EMR Section -->
-            <section id="emr" class="content-section hidden">
-                <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-2xl font-semibold">Electronic Medical Record</h2>
-                    <button class="btn-secondary" onclick="showSection('patients')">Back to Patients</button>
-                </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-                    <div class="card p-6">
-                        <h3 class="text-lg font-semibold mb-4">Patient Information</h3>
-                        <div class="space-y-3">
-                            <div>
-                                <div class="text-sm" style="color: hsl(var(--muted-foreground));">Name</div>
-                                <div class="font-medium">John Smith</div>
-                            </div>
-                            <div>
-                                <div class="text-sm" style="color: hsl(var(--muted-foreground));">Patient ID</div>
-                                <div class="font-medium">#PAT001</div>
-                            </div>
-                            <div>
-                                <div class="text-sm" style="color: hsl(var(--muted-foreground));">Age / Gender</div>
-                                <div class="font-medium">39 years / Male</div>
-                            </div>
-                            <div>
-                                <div class="text-sm" style="color: hsl(var(--muted-foreground));">Blood Type</div>
-                                <div class="font-medium">O+</div>
-                            </div>
-                            <div>
-                                <div class="text-sm" style="color: hsl(var(--muted-foreground));">Contact</div>
-                                <div class="font-medium">+63 912 345 6789</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card p-6">
-                        <h3 class="text-lg font-semibold mb-4">Allergies & Alerts</h3>
-                        <div class="space-y-2">
-                            <div class="p-3 rounded-lg" style="background-color: hsl(0 72% 51% / 0.1); border: 1px solid hsl(0 72% 51%);">
-                                <div class="font-medium text-red-400">Penicillin</div>
-                                <div class="text-sm" style="color: hsl(var(--muted-foreground));">Severe allergic reaction</div>
-                            </div>
-                            <div class="p-3 rounded-lg" style="background-color: hsl(45 93% 47% / 0.1); border: 1px solid hsl(45 93% 47%);">
-                                <div class="font-medium" style="color: hsl(45 93% 60%);">Latex</div>
-                                <div class="text-sm" style="color: hsl(var(--muted-foreground));">Mild skin reaction</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card p-6">
-                        <h3 class="text-lg font-semibold mb-4">Current Medications</h3>
-                        <div class="space-y-2">
-                            <div class="medication-item">
-                                <div class="font-medium">Amlodipine 5mg</div>
-                                <div class="text-sm" style="color: hsl(var(--muted-foreground));">Once daily, morning</div>
-                            </div>
-                            <div class="medication-item">
-                                <div class="font-medium">Metformin 500mg</div>
-                                <div class="text-sm" style="color: hsl(var(--muted-foreground));">Twice daily, with meals</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                    <div class="card p-6">
-                        <h3 class="text-lg font-semibold mb-4">Latest Vital Signs</h3>
-                        <div class="vital-signs-grid">
-                            <div class="vital-box">
-                                <div class="vital-label">BP</div>
-                                <div class="vital-value">120/80</div>
-                                <div class="text-xs" style="color: hsl(var(--muted-foreground));">mmHg</div>
-                            </div>
-                            <div class="vital-box">
-                                <div class="vital-label">Pulse</div>
-                                <div class="vital-value">72</div>
-                                <div class="text-xs" style="color: hsl(var(--muted-foreground));">bpm</div>
-                            </div>
-                            <div class="vital-box">
-                                <div class="vital-label">Temp</div>
-                                <div class="vital-value">36.8</div>
-                                <div class="text-xs" style="color: hsl(var(--muted-foreground));">°C</div>
-                            </div>
-                            <div class="vital-box">
-                                <div class="vital-label">SpO2</div>
-                                <div class="vital-value">98</div>
-                                <div class="text-xs" style="color: hsl(var(--muted-foreground));">%</div>
-                            </div>
-                            <div class="vital-box">
-                                <div class="vital-label">RR</div>
-                                <div class="vital-value">16</div>
-                                <div class="text-xs" style="color: hsl(var(--muted-foreground));">/min</div>
-                            </div>
-                            <div class="vital-box">
-                                <div class="vital-label">Weight</div>
-                                <div class="vital-value">75</div>
-                                <div class="text-xs" style="color: hsl(var(--muted-foreground));">kg</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card p-6">
-                        <h3 class="text-lg font-semibold mb-4">Medical History</h3>
-                        <div class="space-y-2">
-                            <div class="emr-section">
-                                <div class="emr-section-header">Chronic Conditions</div>
-                                <ul class="list-disc list-inside text-sm space-y-1">
-                                    <li>Hypertension (diagnosed 2018)</li>
-                                    <li>Type 2 Diabetes (diagnosed 2020)</li>
-                                </ul>
-                            </div>
-                            <div class="emr-section">
-                                <div class="emr-section-header">Past Surgeries</div>
-                                <ul class="list-disc list-inside text-sm space-y-1">
-                                    <li>Appendectomy (2015)</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card p-6">
-                    <h3 class="text-lg font-semibold mb-4">Visit History</h3>
-                    <div class="space-y-4">
-                        <div class="timeline-item">
-                            <div class="timeline-dot"></div>
-                            <div>
-                                <div class="font-medium">Jan 02, 2025 - Follow-up Visit</div>
-                                <div class="text-sm" style="color: hsl(var(--muted-foreground));">
-                                    Routine check-up for hypertension management. Blood pressure controlled. Continue current medications.
-                                </div>
-                            </div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-dot"></div>
-                            <div>
-                                <div class="font-medium">Dec 15, 2024 - Lab Results Review</div>
-                                <div class="text-sm" style="color: hsl(var(--muted-foreground));">
-                                    HbA1c: 6.8%, LDL: 110 mg/dL. Blood sugar control improving. Advised to continue diet modifications.
-                                </div>
-                            </div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-dot"></div>
-                            <div>
-                                <div class="font-medium">Nov 20, 2024 - General Consultation</div>
-                                <div class="text-sm" style="color: hsl(var(--muted-foreground));">
-                                    Complaint of fatigue. Ordered complete blood count and metabolic panel. Adjusted metformin dosage.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Order Entry Section -->
-            <section id="orders" class="content-section hidden">
-                <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-2xl font-semibold">Order Entry</h2>
-                    <button class="btn-primary" onclick="openModal('newOrderModal')">+ New Order</button>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                    <button class="card p-6 hover:bg-opacity-80 transition" onclick="openOrderForm('lab')">
-                        <div class="flex items-center gap-3 mb-2">
-                            <svg class="w-8 h-8" style="color: hsl(var(--primary));" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
-                            </svg>
-                            <h3 class="text-lg font-semibold">Laboratory Orders</h3>
-                        </div>
-                        <p class="text-sm" style="color: hsl(var(--muted-foreground));">Request lab tests</p>
-                    </button>
-
-                    <button class="card p-6 hover:bg-opacity-80 transition" onclick="openOrderForm('medication')">
-                        <div class="flex items-center gap-3 mb-2">
-                            <svg class="w-8 h-8" style="color: hsl(var(--accent));" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
-                            </svg>
-                            <h3 class="text-lg font-semibold">Medication Orders</h3>
-                        </div>
-                        <p class="text-sm" style="color: hsl(var(--muted-foreground));">Prescribe medications</p>
-                    </button>
-
-                    <button class="card p-6 hover:bg-opacity-80 transition" onclick="openOrderForm('procedure')">
-                        <div class="flex items-center gap-3 mb-2">
-                            <svg class="w-8 h-8" style="color: hsl(45 93% 60%);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                            </svg>
-                            <h3 class="text-lg font-semibold">Procedure Orders</h3>
-                        </div>
-                        <p class="text-sm" style="color: hsl(var(--muted-foreground));">Request procedures</p>
-                    </button>
-                </div>
-
-                <div class="card">
-                    <div class="p-6 border-b" style="border-color: hsl(var(--border));">
-                        <h3 class="text-lg font-semibold">Recent Orders</h3>
-                    </div>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Order ID</th>
-                                <th>Patient</th>
-                                <th>Type</th>
-                                <th>Details</th>
-                                <th>Date Ordered</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>#ORD001</td>
-                                <td>John Smith</td>
-                                <td><span class="badge badge-primary">Laboratory</span></td>
-                                <td>CBC, Lipid Panel, HbA1c</td>
-                                <td>Jan 02, 2025</td>
-                                <td><span class="badge badge-warning">Pending</span></td>
-                                <td>
-                                    <button class="btn-secondary text-sm" onclick="viewOrder(1)">View</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>#ORD002</td>
-                                <td>Emma Davis</td>
-                                <td><span class="badge badge-success">Medication</span></td>
-                                <td>Metformin 500mg, Insulin</td>
-                                <td>Jan 02, 2025</td>
-                                <td><span class="badge badge-info">Dispensed</span></td>
-                                <td>
-                                    <button class="btn-secondary text-sm" onclick="viewOrder(2)">View</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>#ORD003</td>
-                                <td>Robert Taylor</td>
-                                <td><span class="badge badge-warning">Procedure</span></td>
-                                <td>Chest X-Ray</td>
-                                <td>Jan 01, 2025</td>
-                                <td><span class="badge badge-success">Completed</span></td>
-                                <td>
-                                    <button class="btn-secondary text-sm" onclick="viewOrder(3)">View</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- Prescriptions Section -->
-            <section id="prescriptions" class="content-section hidden">
-                <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-2xl font-semibold">Prescriptions</h2>
-                    <button class="btn-primary" onclick="openModal('newPrescriptionModal')">+ New Prescription</button>
-                </div>
-
-                <div class="card p-6 mb-6">
-                    <div class="flex gap-4 flex-wrap">
-                        <div class="search-box flex-1 min-w-64">
-                            <svg class="search-icon w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                            </svg>
-                            <input type="text" id="prescriptionSearch" placeholder="Search prescriptions..." onkeyup="filterPrescriptions()">
-                        </div>
-                        <select id="prescriptionStatus" onchange="filterPrescriptions()" class="w-48">
-                            <option value="">All Status</option>
-                            <option value="Active">Active</option>
-                            <option value="Dispensed">Dispensed</option>
-                            <option value="Completed">Completed</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Rx ID</th>
-                                <th>Patient</th>
-                                <th>Medications</th>
-                                <th>Date Prescribed</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="prescriptionsTableBody">
-                            <tr>
-                                <td>#RX001</td>
-                                <td>John Smith</td>
-                                <td>Amlodipine 5mg, Metformin 500mg</td>
-                                <td>Jan 02, 2025</td>
-                                <td><span class="badge badge-success">Dispensed</span></td>
-                                <td>
-                                    <div class="flex gap-2">
-                                        <button class="btn-secondary text-sm" onclick="viewPrescription(1)">View</button>
-                                        <button class="btn-primary text-sm" onclick="printPrescription(1)">Print</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>#RX002</td>
-                                <td>Emma Davis</td>
-                                <td>Insulin Glargine, Test Strips</td>
-                                <td>Jan 02, 2025</td>
-                                <td><span class="badge badge-warning">Pending</span></td>
-                                <td>
-                                    <div class="flex gap-2">
-                                        <button class="btn-secondary text-sm" onclick="viewPrescription(2)">View</button>
-                                        <button class="btn-primary text-sm" onclick="printPrescription(2)">Print</button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- Progress Notes Section -->
-            <section id="progress-notes" class="content-section hidden">
-                <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-2xl font-semibold">Progress Notes</h2>
-                    <button class="btn-primary" onclick="openModal('newProgressNoteModal')">+ Add Progress Note</button>
-                </div>
-
-                <div class="card p-6 mb-6">
-                    <div class="search-box">
-                        <svg class="search-icon w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                        </svg>
-                        <input type="text" id="progressNoteSearch" placeholder="Search by patient name or ID...">
-                    </div>
-                </div>
-
-                <div class="space-y-4">
-                    <div class="card p-6">
-                        <div class="flex items-center justify-between mb-4">
-                            <div>
-                                <h3 class="text-lg font-semibold">John Smith (#PAT001)</h3>
-                                <p class="text-sm" style="color: hsl(var(--muted-foreground));">Jan 02, 2025 - 9:30 AM</p>
-                            </div>
-                            <button class="btn-secondary text-sm" onclick="editProgressNote(1)">Edit</button>
-                        </div>
-                        <div class="emr-section">
-                            <div class="emr-section-header">Subjective</div>
-                            <p class="text-sm">Patient reports feeling well. Blood pressure medication is effective with no side effects. Occasional fatigue in the afternoon.</p>
-                        </div>
-                        <div class="emr-section">
-                            <div class="emr-section-header">Objective</div>
-                            <p class="text-sm">BP: 120/80 mmHg, HR: 72 bpm, Temp: 36.8°C. Physical examination unremarkable. No edema noted.</p>
-                        </div>
-                        <div class="emr-section">
-                            <div class="emr-section-header">Assessment</div>
-                            <p class="text-sm">Hypertension well-controlled on current regimen. Type 2 Diabetes with improving glycemic control.</p>
-                        </div>
-                        <div class="emr-section">
-                            <div class="emr-section-header">Plan</div>
-                            <p class="text-sm">Continue current medications. Follow-up in 3 months. Ordered HbA1c and lipid panel. Advised on lifestyle modifications.</p>
-                        </div>
-                    </div>
-
-                    <div class="card p-6">
-                        <div class="flex items-center justify-between mb-4">
-                            <div>
-                                <h3 class="text-lg font-semibold">Emma Davis (#PAT002)</h3>
-                                <p class="text-sm" style="color: hsl(var(--muted-foreground));">Jan 02, 2025 - 11:00 AM</p>
-                            </div>
-                            <button class="btn-secondary text-sm" onclick="editProgressNote(2)">Edit</button>
-                        </div>
-                        <div class="emr-section">
-                            <div class="emr-section-header">Subjective</div>
-                            <p class="text-sm">Patient complains of increased thirst and frequent urination. Reports good compliance with insulin regimen.</p>
-                        </div>
-                        <div class="emr-section">
-                            <div class="emr-section-header">Objective</div>
-                            <p class="text-sm">BP: 128/82 mmHg, Fasting glucose: 145 mg/dL. Weight stable. No diabetic foot complications observed.</p>
-                        </div>
-                        <div class="emr-section">
-                            <div class="emr-section-header">Assessment</div>
-                            <p class="text-sm">Type 2 Diabetes with suboptimal control. Possible insulin dose adjustment needed.</p>
-                        </div>
-                        <div class="emr-section">
-                            <div class="emr-section-header">Plan</div>
-                            <p class="text-sm">Increase insulin glargine to 20 units at bedtime. Ordered HbA1c. Follow-up in 2 weeks. Reinforced dietary counseling.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Diagnosis & Treatment Section -->
-            <section id="diagnosis" class="content-section hidden">
-                <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-2xl font-semibold">Diagnosis & Treatment Plans</h2>
-                    <button class="btn-primary" onclick="openModal('newDiagnosisModal')">+ New Diagnosis</button>
-                </div>
-
-                <div class="card p-6 mb-6">
-                    <div class="search-box">
-                        <svg class="search-icon w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                        </svg>
-                        <input type="text" placeholder="Search by patient or diagnosis...">
-                    </div>
-                </div>
-
-                <div class="card">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Patient</th>
-                                <th>Diagnosis (ICD-10)</th>
-                                <th>Date Diagnosed</th>
-                                <th>Status</th>
-                                <th>Treatment Plan</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>John Smith</td>
-                                <td>Essential Hypertension (I10)</td>
-                                <td>Jan 15, 2018</td>
-                                <td><span class="badge badge-warning">Ongoing</span></td>
-                                <td>Pharmacological management</td>
-                                <td>
-                                    <div class="flex gap-2">
-                                        <button class="btn-secondary text-sm" onclick="viewTreatmentPlan(1)">View Plan</button>
-                                        <button class="btn-primary text-sm" onclick="updateDiagnosis(1)">Update</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Emma Davis</td>
-                                <td>Type 2 Diabetes (E11.9)</td>
-                                <td>Mar 10, 2020</td>
-                                <td><span class="badge badge-warning">Ongoing</span></td>
-                                <td>Insulin therapy + lifestyle</td>
-                                <td>
-                                    <div class="flex gap-2">
-                                        <button class="btn-secondary text-sm" onclick="viewTreatmentPlan(2)">View Plan</button>
-                                        <button class="btn-primary text-sm" onclick="updateDiagnosis(2)">Update</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Robert Taylor</td>
-                                <td>Acute Bronchitis (J20.9)</td>
-                                <td>Dec 28, 2024</td>
-                                <td><span class="badge badge-success">Resolved</span></td>
-                                <td>Antibiotics + rest</td>
-                                <td>
-                                    <div class="flex gap-2">
-                                        <button class="btn-secondary text-sm" onclick="viewTreatmentPlan(3)">View Plan</button>
-                                        <button class="btn-primary text-sm" onclick="updateDiagnosis(3)">Update</button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- My Schedule Section -->
+                
+            <!-- APPOINTMENTS -->
             <section id="appointments" class="content-section hidden">
-                <h2 class="text-2xl font-semibold mb-6">My Schedule</h2>
-
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-                    <div class="card p-6">
-                        <h3 class="text-lg font-semibold mb-4">Today's Summary</h3>
-                        <div class="space-y-3">
-                            <div class="flex justify-between items-center">
-                                <span style="color: hsl(var(--muted-foreground));">Total Appointments</span>
-                                <span class="text-2xl font-bold">12</span>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span style="color: hsl(var(--muted-foreground));">Completed</span>
-                                <span class="text-xl font-semibold" style="color: hsl(var(--accent));">8</span>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span style="color: hsl(var(--muted-foreground));">Remaining</span>
-                                <span class="text-xl font-semibold" style="color: hsl(45 93% 60%);">4</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card p-6 col-span-2">
-                        <h3 class="text-lg font-semibold mb-4">Quick Actions</h3>
-                        <div class="grid grid-cols-2 gap-3">
-                            <button class="btn-secondary" onclick="viewDaySchedule()">View Today</button>
-                            <button class="btn-secondary" onclick="viewWeekSchedule()">View Week</button>
-                            <button class="btn-primary" onclick="openModal('blockTimeModal')">Block Time</button>
-                            <button class="btn-primary" onclick="manageAvailability()">Manage Availability</button>
-                        </div>
-                    </div>
+                <!-- Page Header matching Visit Dashboard style -->
+                <div class="dashboard-filters">
+                    <h2>My Appointments</h2>
                 </div>
 
-                <div class="card">
-                    <div class="p-6 border-b" style="border-color: hsl(var(--border));">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-lg font-semibold">Today's Appointments - January 02, 2025</h3>
-                            <input type="date" value="2025-01-02" class="w-48">
-                        </div>
+                <!-- Table Container matching Visit Dashboard style -->
+                <div class="dashboard-table-container">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Patient</th>
+                                    <th>Date & Time</th>
+                                    <th>Service Type</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pendingAppointmentsTableBody">
+                                <tr>
+                                    <td colspan="5" style="text-align: center; color: #888; padding: 40px;">
+                                        No pending appointments
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Time</th>
-                                <th>Patient</th>
-                                <th>Type</th>
-                                <th>Reason</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>9:00 AM</td>
-                                <td>John Smith (#PAT001)</td>
-                                <td><span class="badge badge-info">Follow-up</span></td>
-                                <td>Hypertension check</td>
-                                <td><span class="badge badge-success">Completed</span></td>
-                                <td>
-                                    <button class="btn-secondary text-sm" onclick="viewConsultationNotes(1)">View Notes</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>10:30 AM</td>
-                                <td>Emma Davis (#PAT002)</td>
-                                <td><span class="badge badge-primary">Consultation</span></td>
-                                <td>Diabetes management</td>
-                                <td><span class="badge badge-warning">In Progress</span></td>
-                                <td>
-                                    <button class="btn-primary text-sm" onclick="startConsultation(2)">Continue</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>2:00 PM</td>
-                                <td>Robert Taylor (#PAT003)</td>
-                                <td><span class="badge badge-success">New Patient</span></td>
-                                <td>General consultation</td>
-                                <td><span class="badge badge-info">Scheduled</span></td>
-                                <td>
-                                    <button class="btn-primary text-sm" onclick="startConsultation(3)">Start</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>3:30 PM</td>
-                                <td>Linda Martinez (#PAT004)</td>
-                                <td><span class="badge badge-info">Follow-up</span></td>
-                                <td>Post-operative check</td>
-                                <td><span class="badge badge-info">Scheduled</span></td>
-                                <td>
-                                    <button class="btn-primary text-sm" onclick="startConsultation(4)">Start</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
                 </div>
             </section>
+                
+                
+            <!-- In Patient Page -->
+            <section id="patients" class="content-section hidden">
+                <div class="dashboard-filters">
+                    <h2>In Patient List</h2>
+                </div>                    
+                <div class="dashboard-table-container">
+                    <h3 style="margin-bottom: 20px;">Admitted Patients</h3>
+                    <div class="table-container">
+                        <table id="patientsTable">
+                            <thead>
+                                <tr>
+                                    <th>Patient Name</th>
+                                    <th>Room</th>
+                                    <th>Doctor</th>
+                                    <th>Days</th>
+                                    <th>Visit Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="patientsTableBody">
+                                <tr>
+                                    <td>
+                                        <div style="display: flex; flex-direction: column;">
+                                            <strong>Raymuel Propeta Villamor</strong>
+                                            <span style="color: #888; font-size: 12px;">PHID-24-001234</span>
+                                        </div>
+                                    </td>
+                                    <td>General Ward</td>
+                                    <td>Dr. Maria Santos</td>
+                                    <td>1</td>
+                                    <td><span class="status-badge" style="background-color: #d1fae5; color: #065f46;">Admitted</span></td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn-success btn-small" onclick="showSection('medicalRecordsPage')">
+                                                Medical Records
+                                            </button>
+                                            
+                                            <button class="btn-primary btn-small" onclick="showSection('patientOrdersPage')">
+                                                Orders
+                                            </button>   
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div style="display: flex; flex-direction: column;">
+                                            <strong>John Michael Cruz</strong>
+                                            <span style="color: #888; font-size: 12px;">PHID-24-001235</span>
+                                        </div>
+                                    </td>
+                                    <td>Private Room 205</td>
+                                    <td>Dr. Sarah Johnson</td>
+                                    <td>3</td>
+                                    <td><span class="status-badge" style="background-color: #d1fae5; color: #065f46;">Admitted</span></td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn-success btn-small" onclick="showSection('medicalRecordsPage')">
+                                                Medical Records
+                                            </button>
+                                            
+                                            <button class="btn-primary btn-small" onclick="showSection('patientOrdersPage')">
+                                                Orders
+                                            </button>   
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div style="display: flex; flex-direction: column;">
+                                            <strong>Maria Elena Reyes</strong>
+                                            <span style="color: #888; font-size: 12px;">PHID-24-001236</span>
+                                        </div>
+                                    </td>
+                                    <td>Semi-Private 310</td>
+                                    <td>Dr. Michael Chen</td>
+                                    <td>5</td>
+                                    <td><span class="status-badge" style="background-color: #d1fae5; color: #065f46;">Admitted</span></td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn-success btn-small" onclick="showSection('medicalRecordsPage')">
+                                                Medical Records
+                                            </button>
+                                            
+                                            <button class="btn-primary btn-small" onclick="showSection('patientOrdersPage')">
+                                                Orders
+                                            </button>                                            
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+                
+            <!-- Messages Section -->
+            <section id="messages" class="content-section hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-semibold">Messages</h2>
+                    <button class="btn-primary" onclick="openCompose()">+ New Message</button>
+                </div>
+
+                <div class="grid grid-cols-3 gap-6" style="height: calc(100vh - 200px);">
+                    <!-- Conversation List -->
+                    <div class="card col-span-1 flex flex-col" style="height: 100%;">
+                        <div class="p-4 border-b" style="border-color: var(--border);">
+                            <div class="search-box">
+                                <svg class="search-icon w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                                </svg>
+                                <input type="text" placeholder="Search conversations..." >
+                            </div>
+                            <div id="conversationList" class="flex-1 pt-2" style="overflow-y: auto;">
+                                <!--message list appear here-->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chat Window -->
+                    <div class="card col-span-2" style="height: 100%; display: flex; flex-direction: column;">
+                        <!-- Chat Header -->
+                        <div id="chatHeader" class="p-4 border-b" style="border-color: var(--border); display: none;">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background-color: var(--primary);">
+                                    <span id="chatContactInitial" class="font-semibold"></span>
+                                </div>
+                                <div class="flex-1">
+                                    <div id="chatContactName" class="font-semibold"></div>
+                                    <div id="chatContactRole" class="text-sm" style="color: var(--muted-foreground);"></div>
+                                </div>
+                                <button class="btn-secondary text-sm" onclick="closeConversation()">Close</button>
+                            </div>
+                        </div>
+
+                        <!-- Messages Container -->
+                        <div id="messagesContainer" class="p-4" style="flex: 1; overflow-y: auto; background-color: var(--background); display: none;"></div>
+
+                        <!-- Empty State -->
+                        <div id="noConversationText" style="flex: 1; display: flex; align-items: center; justify-content: center; color: var(--muted-foreground);">
+                            <div class="text-center">
+                                <svg class="w-16 h-16 mx-auto mb-4" style="color: var(--muted-foreground);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                                </svg>
+                                <p>Select a conversation to start messaging</p>
+                            </div>
+                        </div>
+
+                        <!-- Message Input -->
+                        <div id="messageInputContainer" class="p-4 border-t" style="border-color: var(--border); display: none;">
+                            <div class="flex gap-2">
+                                <input type="text" id="messageInput" placeholder="Type a message..." class="flex-1" onkeypress="handleMessageKeyPress(event)">
+                                <button class="btn-primary" onclick="sendChatMessage()">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Compose Modal -->
+                <div class="modal" id="composeModal">
+                    <div class="modal-content p-6">
+                        <h3 class="text-lg font-semibold mb-4">New Message</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label>To</label>
+                                <select id="composeTo">
+                                    <option value="">Select recipient</option>
+                                    <option value="Dr. Sarah Johnson">Dr. Sarah Johnson</option>
+                                    <option value="Dr. Michael Chen">Dr. Michael Chen</option>
+                                    <option value="Billing Department">Billing Department</option>
+                                    <option value="Pharmacy">Pharmacy</option>
+                                    <option value="Laboratory">Laboratory</option>
+                                    <option value="Nursing Station">Nursing Station</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>Subject</label>
+                                <input type="text" id="composeSubject" placeholder="Message subject">
+                            </div>
+                            <div>
+                                <label>Message</label>
+                                <textarea id="composeBody" rows="5" placeholder="Type your message here..."></textarea>
+                            </div>
+                            <div class="flex gap-2">
+                                <button class="btn-primary flex-1" onclick="sendNewMessage()">Send</button>
+                                <button class="btn-secondary flex-1" onclick="closeCompose()">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Patient Orders SECTION -->
+            <section id="patientOrdersPage" class="content-section hidden">
+                <div class="page-section">
+                    <div class="page-header">
+                        <h1 id="ordersPageTitle">Patient Orders</h1>
+                        <button class="btn btn-secondary" onclick="showSection('patients')">← Back to List</button>
+                    </div>
+    
+                    <div class="card">
+                        <div class="tabs">
+                            <button class="tab active" onclick="switchOrdersTab('addOrders')">Add Orders</button>
+                            <button class="tab" onclick="switchOrdersTab('runningBill')">Running Bill</button>
+                        </div>
+    
+                        <!-- Add Orders Tab -->
+                        <div id="addOrders" class="tab-content active">
+                            <div class="info-box">
+                                <p>Orders will automatically be added to the patient's running bill</p>
+                            </div>
+    
+                            <div class="form-group">
+                                <label>Order Type</label>
+                                <div class="order-type-btns">
+                                    <button class="btn btn-primary" onclick="selectOrderType('laboratory')">Laboratory</button>
+                                    <button class="btn btn-primary" onclick="selectOrderType('pharmacy')">Pharmacy</button>
+                                    <button class="btn btn-primary" onclick="selectOrderType('procedures')">Procedures</button>
+                                </div>
+                            </div>
+    
+                            <div class="form-group">
+                                <label>Select Service</label>
+                                <select id="serviceSelect">
+                                    <option value="">-- Select Order Type First --</option>
+                                </select>
+                            </div>
+    
+                            <button class="btn btn-primary" onclick="addOrderToBill()">Add Order to Bill</button>
+    
+                            <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #eee;">
+                                <button class="btn btn-warning" onclick="addHospitalDay()">Add Hospital Day</button>
+                                <p style="margin-top: 10px; font-size: 12px; color: #7f8c8d;">Adds room charge for the next day</p>
+                            </div>
+                        </div>
+    
+                        <!-- Running Bill Tab -->
+                        <div id="runningBill" class="tab-content">
+                            <div class="info-box">
+                                <p>This bill updates automatically as new orders are added</p>
+                            </div>
+                            <div id="billItemsList"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Medical Records SECTION -->
+            <section id="medicalRecordsPage" class="content-section hidden">
+                <div class="page-section">
+                    <div class="page-header">
+                        <h1 id="medicalRecordsTitle">Patient Medical Records</h1>
+                        <button class="btn btn-secondary" onclick="showSection('patients')">← Back to List</button>
+                    </div>
+    
+                    <div class="card">
+                        <div class="tabs">
+                            <button class="tab active" onclick="switchMainTab('patientInfo')">Patient Info</button>
+                            <button class="tab" onclick="switchMainTab('vitals')">Vital Signs</button>
+                            <button class="tab" onclick="switchMainTab('allergies')">Allergies</button>
+                            <button class="tab" onclick="switchMainTab('currentMedication')">Current Medication</button>
+                            <button class="tab" onclick="switchMainTab('complaint')">Presenting Complaint</button>
+                            <button class="tab" onclick="switchMainTab('history')">History & Examination</button>
+                            <button class="tab" onclick="switchMainTab('diagnosis')">Diagnosis</button>
+                            <button class="tab" onclick="switchMainTab('investigation')">Investigation</button>
+                            <button class="tab" onclick="switchMainTab('prescription')">Prescription</button>
+                            <button class="tab" onclick="switchMainTab('advice')">Advice</button>
+                            <button class="tab" onclick="switchMainTab('certificate')">Medical Certificate</button>
+                            <button class="tab" onclick="switchMainTab('referral')">Refer to Doctor</button>
+                            <button class="tab" onclick="switchMainTab('billingTab')">Billing</button>
+                        </div>
+    
+                        <!-- Patient Info Tab -->
+                        <div id="patientInfo" class="tab-content active">
+                            <div class="treatment-section">
+                                <h3>📋 Patient Information</h3>
+                                <div class="detail-row">
+                                    <span class="detail-label">Name:</span>
+                                    <span class="detail-value" id="mr-name">-</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Admission Date:</span>
+                                    <span class="detail-value" id="mr-admission">-</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Days Admitted:</span>
+                                    <span class="detail-value" id="mr-days">-</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Room Type:</span>
+                                    <span class="detail-value" id="mr-room">-</span>
+                                </div>
+                            </div>
+    
+                            <div class="treatment-section">
+                                <h3>👨‍⚕️ Attending Physician</h3>
+                                <div class="detail-row">
+                                    <span class="detail-label">Doctor:</span>
+                                    <span class="detail-value" id="mr-doctor">-</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Specialty:</span>
+                                    <span class="detail-value" id="mr-specialty">-</span>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <!-- Vital Signs Tab -->
+                        <div id="vitals" class="tab-content">
+                            <div class="treatment-section">
+                                <div class="treatment-header">
+                                    <h3 class="treatment-title">💓 Vital Signs</h3>
+                                    <button class="btn btn-success" onclick="saveVitalSigns()">
+                                        <span>💾</span> Save Vital Signs
+                                    </button>
+                                </div>
+                                <div class="vital-signs-grid">
+                                    <div class="vital-item">
+                                        <label>Temperature</label>
+                                        <input type="text" id="mr-temp" placeholder="36.5°C">
+                                    </div>
+                                    <div class="vital-item">
+                                        <label>Blood Pressure</label>
+                                        <input type="text" id="mr-bp" placeholder="120/80">
+                                    </div>
+                                    <div class="vital-item">
+                                        <label>Heart Rate</label>
+                                        <input type="text" id="mr-hr" placeholder="72 bpm">
+                                    </div>
+                                    <div class="vital-item">
+                                        <label>Respiratory Rate</label>
+                                        <input type="text" id="mr-rr" placeholder="16/min">
+                                    </div>
+                                    <div class="vital-item">
+                                        <label>Oxygen Saturation</label>
+                                        <input type="text" id="mr-o2" placeholder="98%">
+                                    </div>
+                                    <div class="vital-item">
+                                        <label>Weight</label>
+                                        <input type="text" id="mr-weight" placeholder="70 kg">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <!-- Allergies Tab -->
+                        <div id="allergies" class="tab-content">
+                            <div class="treatment-section">
+                                <div class="treatment-header">
+                                    <h3 class="treatment-title">🚨 Allergies</h3>
+                                    <button class="btn btn-primary" onclick="addAllergy()">
+                                        <span>+</span> Add Allergy
+                                    </button>
+                                </div>
+    
+                                <div class="form-row-3">
+                                    <div class="form-group">
+                                        <label class="required">Allergy Type</label>
+                                        <select id="allergyType">
+                                            <option>Select</option>
+                                            <option>Drug Allergy</option>
+                                            <option>Food Allergy</option>
+                                            <option>Environmental</option>
+                                            <option>Other</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="required">Allergen</label>
+                                        <input type="text" id="allergen" placeholder="Enter allergen">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="required">Reaction</label>
+                                        <input type="text" id="allergyReaction" placeholder="Describe reaction">
+                                    </div>
+                                </div>
+    
+                                <div class="table-container">
+                                    <table id="allergiesTable">
+                                        <thead>
+                                            <tr>
+                                                <th>SN</th>
+                                                <th>Allergy Type</th>
+                                                <th>Allergen</th>
+                                                <th>Reaction</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="allergiesTableBody">
+                                            <tr>
+                                                <td colspan="5" style="text-align: center; color: #7f8c8d;">No allergies recorded</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <!-- Current Medication Tab -->
+                        <div id="currentMedication" class="tab-content">
+                            <div class="treatment-section">
+                                <h3>💊 Current Medication</h3>
+                                <div class="info-box">
+                                    <p><strong>Note:</strong> List all medications the patient is currently taking from outside, including dosage and frequency.</p>
+                                </div>
+    
+                                <div class="form-row-3">
+                                    <div class="form-group">
+                                        <label class="required">Medicine Name</label>
+                                        <input type="text" id="currentMedName" placeholder="Enter medicine name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="required">Dosage</label>
+                                        <input type="text" id="currentMedDosage" placeholder="e.g., 500mg">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="required">Frequency</label>
+                                        <input type="text" id="currentMedFrequency" placeholder="e.g., Twice daily">
+                                    </div>
+                                </div>
+    
+                                <button class="btn btn-primary" onclick="addCurrentMedication()">
+                                    <span>+</span> Add Medication
+                                </button>
+    
+                                <div class="table-container">
+                                    <table id="currentMedicationTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Medicine Name</th>
+                                                <th>Dosage</th>
+                                                <th>Frequency</th>
+                                                <th>Prescribed By</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="currentMedicationTableBody">
+                                            <tr>
+                                                <td colspan="5" style="text-align: center; color: #7f8c8d;">No current medications recorded</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <!-- Presenting Complaint Tab -->
+                        <div id="complaint" class="tab-content">
+                            <div class="treatment-section">
+                                <div class="treatment-header">
+                                    <h3 class="treatment-title">📝 Presenting Complaint</h3>
+                                    <button class="btn btn-success" onclick="saveComplaint()">
+                                        <span>💾</span> Save
+                                    </button>
+                                </div>
+    
+                                <div class="form-group">
+                                    <label class="required">Chief Complaint</label>
+                                    <textarea id="chiefComplaint" placeholder="What brought the patient to the hospital? Describe the main symptoms..."></textarea>
+                                </div>
+    
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Duration</label>
+                                        <input type="text" id="complaintDuration" placeholder="e.g., 3 days, 2 weeks">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Severity</label>
+                                        <select id="complaintSeverity">
+                                            <option>Select severity</option>
+                                            <option>Mild</option>
+                                            <option>Moderate</option>
+                                            <option>Severe</option>
+                                        </select>
+                                    </div>
+                                </div>
+    
+                                <div class="form-group">
+                                    <label>Associated Symptoms</label>
+                                    <textarea id="associatedSymptoms" placeholder="Any other symptoms related to the chief complaint..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <!-- History & Examination Tab -->
+                        <div id="history" class="tab-content">
+                            <div class="treatment-section">
+                                <div class="treatment-header">
+                                    <h3 class="treatment-title">📚 History and Examination</h3>
+                                    <button class="btn btn-success" onclick="saveHistory()">
+                                        <span>💾</span> Save
+                                    </button>
+                                </div>
+    
+                                <div class="form-group">
+                                    <label>History of Present Illness (HPI)</label>
+                                    <textarea id="hpi" placeholder="Detailed description of the current illness..."></textarea>
+                                </div>
+    
+                                <div class="form-group">
+                                    <label>Past Medical History</label>
+                                    <textarea id="pastHistory" placeholder="Previous illnesses, surgeries, hospitalizations..."></textarea>
+                                </div>
+    
+                                <div class="form-group">
+                                    <label>Family History</label>
+                                    <textarea id="familyHistory" placeholder="Relevant family medical history..."></textarea>
+                                </div>
+    
+                                <div class="form-group">
+                                    <label>Social History</label>
+                                    <textarea id="socialHistory" placeholder="Smoking, alcohol, occupation, living situation..."></textarea>
+                                </div>
+    
+                                <div class="form-group">
+                                    <label>Physical Examination</label>
+                                    <textarea id="physicalExam" placeholder="General appearance, system examination findings..."></textarea>
+                                </div>
+    
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Cardiovascular System</label>
+                                        <textarea id="cardiovascular" placeholder="Heart sounds, murmurs, etc..."></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Respiratory System</label>
+                                        <textarea id="respiratory" placeholder="Breath sounds, respiratory pattern..."></textarea>
+                                    </div>
+                                </div>
+    
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Abdomen</label>
+                                        <textarea id="abdomen" placeholder="Inspection, palpation, bowel sounds..."></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Neurological</label>
+                                        <textarea id="neurological" placeholder="Mental status, reflexes, motor/sensory..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <!-- Diagnosis Tab -->
+                        <div id="diagnosis" class="tab-content">
+                            <div class="treatment-section">
+                                <div class="treatment-header">
+                                    <h3 class="treatment-title">🩺 Diagnosis</h3>
+                                    <button class="btn btn-primary" onclick="addDiagnosis()">
+                                        <span>+</span> Add Diagnosis
+                                    </button>
+                                </div>
+    
+                                <div class="form-row-3">
+                                    <div class="form-group">
+                                        <label>Attendance</label>
+                                        <select id="diagAttendance">
+                                            <option>Emergency/Acute</option>
+                                            <option>Routine/Scheduled</option>
+                                            <option>Follow-up</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Type</label>
+                                        <select id="diagType">
+                                            <option>Provisional</option>
+                                            <option>Confirmed</option>
+                                            <option>Differential</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Category</label>
+                                        <select id="diagCategory">
+                                            <option>Primary</option>
+                                            <option>Secondary</option>
+                                            <option>Tertiary</option>
+                                        </select>
+                                    </div>
+                                </div>
+    
+                                <div class="form-row-3">
+                                    <div class="form-group">
+                                        <label class="required">Diagnosis</label>
+                                        <input type="text" id="diagnosisName" placeholder="Search diagnosis name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>ICD-10 Code</label>
+                                        <input type="text" id="icd10Code" placeholder="ICD-10 code">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Country Code</label>
+                                        <input type="text" id="countryCode" placeholder="Country code">
+                                    </div>
+                                </div>
+    
+                                <div class="form-group">
+                                    <label>Remarks</label>
+                                    <textarea id="diagRemarks" placeholder="Additional notes about the diagnosis..."></textarea>
+                                </div>
+    
+                                <div class="table-container">
+                                    <table id="diagnosisTable">
+                                        <thead>
+                                            <tr>
+                                                <th>SN</th>
+                                                <th>Attendance</th>
+                                                <th>Type</th>
+                                                <th>Category</th>
+                                                <th>Diagnosis</th>
+                                                <th>ICD-10</th>
+                                                <th>Remarks</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="diagnosisTableBody">
+                                            <tr>
+                                                <td colspan="8" style="text-align: center; color: #7f8c8d;">No diagnosis recorded</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <!-- Investigation Tab -->
+                        <div id="investigation" class="tab-content">
+                            <div class="treatment-section">
+                                <div class="treatment-header">
+                                    <h3 class="treatment-title">🔬 Investigation/Procedure</h3>
+                                    <button class="btn btn-primary" onclick="addInvestigation()">
+                                        <span>+</span> Order Investigation
+                                    </button>
+                                </div>
+    
+                                <div class="form-group">
+                                    <label class="required">Investigation/Procedure</label>
+                                    <select id="investigationSelect">
+                                        <option value="">-- Select Service --</option>
+                                    </select>
+                                </div>
+    
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Units</label>
+                                        <input type="number" id="investigationUnits" value="1" min="1">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>STAT (Urgent)</label>
+                                        <select id="investigationStat">
+                                            <option>No</option>
+                                            <option>Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+    
+                                <div class="form-group">
+                                    <label>Remarks</label>
+                                    <textarea id="investigationRemarks" placeholder="Special instructions..."></textarea>
+                                </div>
+    
+                                <div class="table-container">
+                                    <table id="investigationTable">
+                                        <thead>
+                                            <tr>
+                                                <th>SN</th>
+                                                <th>Order Date</th>
+                                                <th>Investigation</th>
+                                                <th>Units</th>
+                                                <th>Amount</th>
+                                                <th>Status</th>
+                                                <th>STAT</th>
+                                                <th>Remarks</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="investigationTableBody">
+                                            <tr>
+                                                <td colspan="9" style="text-align: center; color: #7f8c8d;">No investigations ordered</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <!-- Prescription Tab -->
+                        <div id="prescription" class="tab-content">
+                            <div class="treatment-section">
+                                <div class="treatment-header">
+                                    <h3 class="treatment-title">💊 Prescription Medicine</h3>
+                                    <button class="btn btn-primary" onclick="addPrescription()">
+                                        <span>+</span> Add Prescription
+                                    </button>
+                                </div>
+    
+                                <div class="form-row-3">
+                                    <div class="form-group">
+                                        <label class="required">Medicine</label>
+                                        <select id="medicineSelect">
+                                            <option value="">-- Select Medicine --</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="required">Dosage</label>
+                                        <input type="text" id="medicineDosage" placeholder="e.g., 500mg">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="required">Frequency</label>
+                                        <select id="medicineFrequency">
+                                            <option>Once daily</option>
+                                            <option>Twice daily</option>
+                                            <option>Three times daily</option>
+                                            <option>Four times daily</option>
+                                            <option>Every 4 hours</option>
+                                            <option>Every 6 hours</option>
+                                            <option>As needed</option>
+                                        </select>
+                                    </div>
+                                </div>
+    
+                                <div class="form-row-3">
+                                    <div class="form-group">
+                                        <label class="required">No. of Days</label>
+                                        <input type="number" id="medicineDays" value="7" min="1">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Food Relation</label>
+                                        <select id="medicineFoodRelation">
+                                            <option>Not specified</option>
+                                            <option>Before meals</option>
+                                            <option>After meals</option>
+                                            <option>With food</option>
+                                            <option>On empty stomach</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="required">Route</label>
+                                        <select id="medicineRoute">
+                                            <option>Oral</option>
+                                            <option>Intravenous (IV)</option>
+                                            <option>Intramuscular (IM)</option>
+                                            <option>Subcutaneous (SC)</option>
+                                            <option>Topical</option>
+                                            <option>Inhalation</option>
+                                        </select>
+                                    </div>
+                                </div>
+    
+                                <div class="form-group">
+                                    <label>Special Instructions</label>
+                                    <textarea id="medicineInstructions" placeholder="Special instructions for the patient..."></textarea>
+                                </div>
+    
+                                <div class="table-container">
+                                    <table id="prescriptionTable">
+                                        <thead>
+                                            <tr>
+                                                <th>SN</th>
+                                                <th>Order Date</th>
+                                                <th>Medicine</th>
+                                                <th>Dosage</th>
+                                                <th>Frequency</th>
+                                                <th>Duration</th>
+                                                <th>Route</th>
+                                                <th>Instructions</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="prescriptionTableBody">
+                                            <tr>
+                                                <td colspan="9" style="text-align: center; color: #7f8c8d;">No prescriptions ordered</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <!-- Advice Tab -->
+                        <div id="advice" class="tab-content">
+                            <div class="treatment-section">
+                                <div class="treatment-header">
+                                    <h3 class="treatment-title">📋 Advice</h3>
+                                    <button class="btn btn-success" onclick="saveAdvice()">
+                                        <span>💾</span> Save
+                                    </button>
+                                </div>
+    
+                                <div class="form-group">
+                                    <label>Advice</label>
+                                    <textarea id="patientAdvice" placeholder="Enter advice for the patient..."></textarea>
+                                </div>
+    
+                                <div class="form-group">
+                                    <label>Follow-up Date</label>
+                                    <input type="date" id="followUpDate">
+                                </div>
+    
+                                <div class="checkbox-group">
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="referEmergency">
+                                        <label for="referEmergency">Refer to Emergency</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="referAdmission">
+                                        <label for="referAdmission">Refer to Admission</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="surgeryRequest">
+                                        <label for="surgeryRequest">Surgery Request</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="referOutside">
+                                        <label for="referOutside">Refer to Outside Hospital</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <!-- Medical Certificate Tab -->
+                        <div id="certificate" class="tab-content">
+                            <div class="treatment-section">
+                                <div class="treatment-header">
+                                    <h3 class="treatment-title">📄 Medical Certificate</h3>
+                                    <button class="btn btn-success" onclick="generateCertificate()">
+                                        <span>📥</span> Generate Certificate
+                                    </button>
+                                </div>
+    
+                                <div class="form-row-3">
+                                    <div class="form-group">
+                                        <label class="required">Certificate Type</label>
+                                        <select id="certificateType">
+                                            <option>Medical Leave Certificate</option>
+                                            <option>Fitness Certificate</option>
+                                            <option>General Medical Certificate</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="required">From Date</label>
+                                        <input type="date" id="certificateFromDate">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="required">To Date</label>
+                                        <input type="date" id="certificateToDate">
+                                    </div>
+                                </div>
+    
+                                <div class="form-group">
+                                    <label class="required">Reason</label>
+                                    <textarea id="certificateReason" placeholder="Reason for medical certificate..."></textarea>
+                                </div>
+    
+                                <div class="form-group">
+                                    <label>Additional Notes</label>
+                                    <textarea id="certificateNotes" placeholder="Any additional information..."></textarea>
+                                </div>
+    
+                                <div class="table-container">
+                                    <table id="certificateTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Date Issued</th>
+                                                <th>Certificate Type</th>
+                                                <th>From Date</th>
+                                                <th>To Date</th>
+                                                <th>Issued By</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="certificateTableBody">
+                                            <tr>
+                                                <td colspan="6" style="text-align: center; color: #7f8c8d;">No certificates issued</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <!-- Referral Tab -->
+                        <div id="referral" class="tab-content">
+                            <div class="treatment-section">
+                                <div class="treatment-header">
+                                    <h3 class="treatment-title">👨‍⚕️ Refer to Doctor</h3>
+                                    <button class="btn btn-success" onclick="saveReferral()">
+                                        <span>💾</span> Save Referral
+                                    </button>
+                                </div>
+    
+                                <div class="form-row-3">
+                                    <div class="form-group">
+                                        <label class="required">Refer To</label>
+                                        <select id="referToDoctor">
+                                            <option>Select Doctor/Specialist</option>
+                                            <option>Dr. John Smith - Cardiology</option>
+                                            <option>Dr. Sarah Johnson - Neurology</option>
+                                            <option>Dr. Michael Brown - Orthopedics</option>
+                                            <option>External Specialist</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="required">Specialty</label>
+                                        <select id="referSpecialty">
+                                            <option>Select Specialty</option>
+                                            <option>Cardiology</option>
+                                            <option>Neurology</option>
+                                            <option>Orthopedics</option>
+                                            <option>Gastroenterology</option>
+                                            <option>Endocrinology</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Urgency</label>
+                                        <select id="referUrgency">
+                                            <option>Routine</option>
+                                            <option>Urgent</option>
+                                            <option>Emergency</option>
+                                        </select>
+                                    </div>
+                                </div>
+    
+                                <div class="form-group">
+                                    <label class="required">Reason for Referral</label>
+                                    <textarea id="referReason" placeholder="Explain why the patient needs to see a specialist..."></textarea>
+                                </div>
+    
+                                <div class="form-group">
+                                    <label>Clinical Summary</label>
+                                    <textarea id="referSummary" placeholder="Brief summary of patient's condition, relevant findings, and current treatment..."></textarea>
+                                </div>
+    
+                                <div class="table-container">
+                                    <table id="referralTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Referred To</th>
+                                                <th>Specialty</th>
+                                                <th>Urgency</th>
+                                                <th>Reason</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="referralTableBody">
+                                            <tr>
+                                                <td colspan="7" style="text-align: center; color: #7f8c8d;">No referrals made</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <!-- Billing Tab in Medical Records -->
+                        <div id="billingTab" class="tab-content">
+                            <div class="treatment-section">
+                                <div class="treatment-header">
+                                    <h3 class="treatment-title">💵 Running Bill</h3>
+                                    <button class="btn btn-warning" onclick="addHospitalDayFromTreatment()">
+                                        <span>+</span> Add Hospital Day
+                                    </button>
+                                </div>
+    
+                                <div class="info-box">
+                                    <p>This bill updates automatically as new orders are added</p>
+                                </div>
+                                <div id="treatmentBillItemsList"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Bill Records SECTION -->
+            <section id="billRecordsPage" class="content-section hidden">
+                <div id="dischargePage" class="page-section">
+                    <div class="page-header">
+                        <h1 id="dischargePageTitle">Patient Discharge</h1>
+                        <button class="btn btn-secondary" onclick="showPage('billing')">← Back to List</button>
+                    </div>
+    
+                    <div class="card">
+                        <div id="dischargeSummary"></div>
+    
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Insurance Coverage</label>
+                                <input type="number" id="insuranceAmount" value="0" oninput="updateFinalBalance()">
+                            </div>
+    
+                            <div class="form-group">
+                                <label>Additional Payment</label>
+                                <input type="number" id="additionalPayment" value="0" oninput="updateFinalBalance()">
+                            </div>
+                        </div>
+    
+                        <div id="finalBalance" class="bill-total"></div>
+    
+                        <div style="margin-top: 20px; display: flex; gap: 10px;">
+                            <button class="btn btn-success" onclick="processDischarge()">Process Discharge</button>
+                            <button class="btn btn-secondary" onclick="showPage('billing')">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+
         </main>
     </div>
 
-    <!-- New Order Modal -->
-    <div id="newOrderModal" class="modal">
-        <div class="modal-content p-6">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="text-xl font-semibold">New Order</h3>
-                <button onclick="closeModal('newOrderModal')" class="text-2xl">&times;</button>
-            </div>
-            <form onsubmit="submitOrder(event)" class="space-y-4">
-                <div>
-                    <label>Patient</label>
-                    <input type="text" id="orderPatient" required placeholder="Search patient name or ID">
-                </div>
-                <div>
-                    <label>Order Type</label>
-                    <select id="orderType" required>
-                        <option value="">Select type</option>
-                        <option value="Laboratory">Laboratory</option>
-                        <option value="Medication">Medication</option>
-                        <option value="Procedure">Procedure</option>
-                        <option value="Imaging">Imaging</option>
-                    </select>
-                </div>
-                <div>
-                    <label>Order Details</label>
-                    <textarea id="orderDetails" rows="4" required placeholder="Enter order details..."></textarea>
-                </div>
-                <div>
-                    <label>Priority</label>
-                    <select id="orderPriority" required>
-                        <option value="Routine">Routine</option>
-                        <option value="Urgent">Urgent</option>
-                        <option value="STAT">STAT</option>
-                    </select>
-                </div>
-                <div>
-                    <label>Notes</label>
-                    <textarea id="orderNotes" rows="2" placeholder="Additional notes or instructions..."></textarea>
-                </div>
-                <div class="flex gap-3 mt-6">
-                    <button type="submit" class="btn-primary flex-1">Submit Order</button>
-                    <button type="button" class="btn-secondary flex-1" onclick="closeModal('newOrderModal')">Cancel</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- New Prescription Modal -->
-    <div id="newPrescriptionModal" class="modal">
-        <div class="modal-content p-6">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="text-xl font-semibold">New Prescription</h3>
-                <button onclick="closeModal('newPrescriptionModal')" class="text-2xl">&times;</button>
-            </div>
-            <form onsubmit="submitPrescription(event)" class="space-y-4">
-                <div>
-                    <label>Patient</label>
-                    <input type="text" id="rxPatient" required placeholder="Search patient name or ID">
-                </div>
-                <div class="form-section">
-                    <h3 class="form-section-title">Medication 1</h3>
-                    <div class="form-grid">
-                        <div>
-                            <label>Medication Name</label>
-                            <input type="text" id="rxMed1" required placeholder="Generic or brand name">
-                        </div>
-                        <div>
-                            <label>Strength</label>
-                            <input type="text" id="rxStrength1" required placeholder="e.g., 500mg">
-                        </div>
-                        <div>
-                            <label>Form</label>
-                            <select id="rxForm1" required>
-                                <option value="">Select form</option>
-                                <option value="Tablet">Tablet</option>
-                                <option value="Capsule">Capsule</option>
-                                <option value="Syrup">Syrup</option>
-                                <option value="Injection">Injection</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label>Quantity</label>
-                            <input type="number" id="rxQty1" required placeholder="Number of units">
-                        </div>
-                        <div class="col-span-2">
-                            <label>Directions (Sig)</label>
-                            <input type="text" id="rxSig1" required placeholder="e.g., Take 1 tablet twice daily with meals">
-                        </div>
-                        <div>
-                            <label>Duration</label>
-                            <input type="text" id="rxDuration1" placeholder="e.g., 30 days">
-                        </div>
-                        <div>
-                            <label>Refills</label>
-                            <input type="number" id="rxRefills1" value="0" min="0">
-                        </div>
-                    </div>
-                </div>
-                <button type="button" class="btn-secondary w-full" onclick="addAnotherMedication()">+ Add Another Medication</button>
-                <div>
-                    <label>Additional Instructions</label>
-                    <textarea id="rxInstructions" rows="2" placeholder="Any additional notes for the patient or pharmacist..."></textarea>
-                </div>
-                <div class="flex gap-3 mt-6">
-                    <button type="submit" class="btn-primary flex-1">Generate Prescription</button>
-                    <button type="button" class="btn-secondary flex-1" onclick="closeModal('newPrescriptionModal')">Cancel</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- New Progress Note Modal -->
-    <div id="newProgressNoteModal" class="modal">
-        <div class="modal-content p-6">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="text-xl font-semibold">Add Progress Note</h3>
-                <button onclick="closeModal('newProgressNoteModal')" class="text-2xl">&times;</button>
-            </div>
-            <form onsubmit="submitProgressNote(event)" class="space-y-4">
-                <div>
-                    <label>Patient</label>
-                    <input type="text" id="notePatient" required placeholder="Search patient name or ID">
-                </div>
-                <div>
-                    <label>Date & Time</label>
-                    <input type="datetime-local" id="noteDateTime" required>
-                </div>
-                <div class="form-section">
-                    <h3 class="form-section-title">SOAP Note</h3>
-                    <div>
-                        <label>Subjective</label>
-                        <textarea id="noteSubjective" rows="3" required placeholder="Patient's complaints and symptoms..."></textarea>
-                    </div>
-                    <div>
-                        <label>Objective</label>
-                        <textarea id="noteObjective" rows="3" required placeholder="Physical examination findings, vital signs, test results..."></textarea>
-                    </div>
-                    <div>
-                        <label>Assessment</label>
-                        <textarea id="noteAssessment" rows="3" required placeholder="Clinical impressions and diagnoses..."></textarea>
-                    </div>
-                    <div>
-                        <label>Plan</label>
-                        <textarea id="notePlan" rows="3" required placeholder="Treatment plan, orders, follow-up..."></textarea>
-                    </div>
-                </div>
-                <div class="flex gap-3 mt-6">
-                    <button type="submit" class="btn-primary flex-1">Save Progress Note</button>
-                    <button type="button" class="btn-secondary flex-1" onclick="closeModal('newProgressNoteModal')">Cancel</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- New Diagnosis Modal -->
-    <div id="newDiagnosisModal" class="modal">
-        <div class="modal-content p-6">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="text-xl font-semibold">New Diagnosis</h3>
-                <button onclick="closeModal('newDiagnosisModal')" class="text-2xl">&times;</button>
-            </div>
-            <form onsubmit="submitDiagnosis(event)" class="space-y-4">
-                <div>
-                    <label>Patient</label>
-                    <input type="text" id="diagPatient" required placeholder="Search patient name or ID">
-                </div>
-                <div>
-                    <label>Diagnosis</label>
-                    <input type="text" id="diagName" required placeholder="Enter diagnosis">
-                </div>
-                <div>
-                    <label>ICD-10 Code</label>
-                    <input type="text" id="diagICD10" placeholder="e.g., I10, E11.9">
-                </div>
-                <div>
-                    <label>Type</label>
-                    <select id="diagType" required>
-                        <option value="">Select type</option>
-                        <option value="Primary">Primary</option>
-                        <option value="Secondary">Secondary</option>
-                        <option value="Differential">Differential</option>
-                    </select>
-                </div>
-                <div>
-                    <label>Status</label>
-                    <select id="diagStatus" required>
-                        <option value="Active">Active</option>
-                        <option value="Ongoing">Ongoing</option>
-                        <option value="Resolved">Resolved</option>
-                    </select>
-                </div>
-                <div>
-                    <label>Treatment Plan</label>
-                    <textarea id="diagTreatment" rows="4" required placeholder="Describe the treatment approach..."></textarea>
-                </div>
-                <div>
-                    <label>Notes</label>
-                    <textarea id="diagNotes" rows="2" placeholder="Additional notes..."></textarea>
-                </div>
-                <div class="flex gap-3 mt-6">
-                    <button type="submit" class="btn-primary flex-1">Save Diagnosis</button>
-                    <button type="button" class="btn-secondary flex-1" onclick="closeModal('newDiagnosisModal')">Cancel</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
     <script>
-        // Global state
-        let currentPatient = null;
+        // Page navigation
+        function showSection(sectionId, event = null) {
+            console.log('Showing section:', sectionId);
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            setupEventListeners();
-            loadData();
-        });
-
-        function setupEventListeners() {
-            window.onclick = function(event) {
-                if (event.target.classList.contains('modal')) {
-                    event.target.classList.remove('active');
-                }
-            }
-        }
-
-        function loadData() {
-            // Load initial data here
-        }
-
-        // Navigation
-        function showSection(sectionId) {
-            document.querySelectorAll('.content-section').forEach(section => {
-                section.classList.add('hidden');
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(sec => {
+                sec.classList.add('hidden');
             });
-            
+
+            // Remove active state from sidebar items
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.remove('active');
             });
-            
+
+            // Show target section
             const section = document.getElementById(sectionId);
             if (section) {
                 section.classList.remove('hidden');
+            } else {
+                console.error('Section not found:', sectionId);
             }
-            
-            event.target.closest('.nav-item').classList.add('active');
-        }
 
-        // Modal functions
-        function openModal(modalId) {
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.classList.add('active');
-            }
-        }
-
-        function closeModal(modalId) {
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.classList.remove('active');
-                const form = modal.querySelector('form');
-                if (form) form.reset();
+            // ONLY apply active nav highlight if event exists
+            if (event) {
+                const navItem = event.target.closest('.nav-item');
+                if (navItem) {
+                    navItem.classList.add('active');
+                }
             }
         }
 
-        // Patient functions
-        function filterPatients() {
-            const searchTerm = document.getElementById('patientSearch').value.toLowerCase();
-            const statusFilter = document.getElementById('patientStatusFilter').value.toLowerCase();
-            
-            const rows = document.querySelectorAll('#patientsTableBody tr');
-            
-            rows.forEach(row => {
-                const text = row.textContent.toLowerCase();
-                const matchesSearch = text.includes(searchTerm);
-                const matchesStatus = !statusFilter || text.includes(statusFilter);
+        // DOCTOR APPOINTMENTS MANAGEMENT
+        let allDoctorAppointments = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDoctorAppointments();
+        });
+
+        async function loadDoctorAppointments() {
+            console.log('[DEBUG] Loading doctor appointments...');
+            try {
+                const response = await fetch('/api/doctor/appointments');
+                console.log('[DEBUG] Response status:', response.status);
                 
-                row.style.display = (matchesSearch && matchesStatus) ? '' : 'none';
-            });
-        }
-
-        function openPatientEMR(patientId) {
-            showSection('emr');
-            // Load patient EMR data
-        }
-
-        function startConsultation(patientId) {
-            showAlert('info', 'Starting Consultation', 'Opening patient record...');
-            openPatientEMR(patientId);
-        }
-
-        // Order functions
-        function openOrderForm(type) {
-            openModal('newOrderModal');
-            document.getElementById('orderType').value = type.charAt(0).toUpperCase() + type.slice(1);
-        }
-
-        function submitOrder(event) {
-            event.preventDefault();
-            showAlert('success', 'Success', 'Order submitted successfully!');
-            closeModal('newOrderModal');
-        }
-
-        function viewOrder(id) {
-            showAlert('info', 'Coming Soon', 'View order details');
-        }
-
-        // Prescription functions
-        function filterPrescriptions() {
-            const searchTerm = document.getElementById('prescriptionSearch').value.toLowerCase();
-            const statusFilter = document.getElementById('prescriptionStatus').value.toLowerCase();
-            
-            const rows = document.querySelectorAll('#prescriptionsTableBody tr');
-            
-            rows.forEach(row => {
-                const text = row.textContent.toLowerCase();
-                const matchesSearch = text.includes(searchTerm);
-                const matchesStatus = !statusFilter || text.includes(statusFilter);
+                const data = await response.json();
+                console.log('[DEBUG] Response data:', data);
                 
-                row.style.display = (matchesSearch && matchesStatus) ? '' : 'none';
+                if (data.status === 'success') {
+                    allDoctorAppointments = data.data || [];
+                    console.log('[DEBUG] Loaded appointments:', allDoctorAppointments.length);
+                    renderDoctorAppointments();
+                } else {
+                    console.error('[DEBUG] Failed to load appointments:', data.message);
+                    showError('pendingAppointmentsTableBody', data.message);
+                    showError('scheduleAppointmentsTableBody', data.message);
+                    showError('pastAppointmentsTableBody', data.message);
+                }
+            } catch (error) {
+                console.error('[DEBUG] Error loading appointments:', error);
+                const errorMsg = 'Failed to load appointments. Please refresh the page.';
+                showError('pendingAppointmentsTableBody', errorMsg);
+                showError('scheduleAppointmentsTableBody', errorMsg);
+                showError('pastAppointmentsTableBody', errorMsg);
+            }
+        }
+
+        function showError(tableBodyId, message) {
+            const tbody = document.getElementById(tableBodyId);
+            if (tbody) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #ef4444; padding: 40px;">${message}</td></tr>`;
+            }
+        }
+
+        function renderDoctorAppointments() {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            console.log('[DEBUG] Total appointments:', allDoctorAppointments.length);
+            
+            // APPOINTMENTS PAGE: Only "Waiting to Approved" status
+            const pending = allDoctorAppointments.filter(a => {
+                return a.status === 'Waiting to Approved';
             });
+            
+            // MY SCHEDULE PAGE: Only "Approved" status with future/today dates
+            const schedule = allDoctorAppointments.filter(a => {
+                const aptDate = new Date(a.appointment_date);
+                aptDate.setHours(0, 0, 0, 0);
+                return a.status === 'Approved' && aptDate >= today;
+            });
+            
+            // PAST APPOINTMENTS: Completed, Rejected, or Approved with past dates
+            const past = allDoctorAppointments.filter(a => {
+                const aptDate = new Date(a.appointment_date);
+                aptDate.setHours(0, 0, 0, 0);
+                
+                if (a.status === 'Completed' || a.status === 'Rejected') {
+                    return true;
+                }
+                
+                if (a.status === 'Approved' && aptDate < today) {
+                    return true;
+                }
+                
+                return false;
+            });
+            
+            console.log('[DEBUG] Pending (Waiting to Approved):', pending.length);
+            console.log('[DEBUG] Schedule (Approved & Future):', schedule.length);
+            console.log('[DEBUG] Past:', past.length);
+            
+            renderPendingAppointments(pending);
+            renderScheduleAppointments(schedule);
+            renderPastAppointments(past);
         }
 
-        function submitPrescription(event) {
-            event.preventDefault();
-            showAlert('success', 'Success', 'Prescription generated successfully!');
-            closeModal('newPrescriptionModal');
+        function renderPendingAppointments(appointments) {
+            const tbody = document.getElementById('pendingAppointmentsTableBody');
+            if (!tbody) {
+                console.error('[DEBUG] pendingAppointmentsTableBody not found!');
+                return;
+            }
+            
+            if (appointments.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #888; padding: 40px;">No appointments waiting for approval</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = appointments.map((apt) => `
+                <tr>
+                    <td>
+                        <div style="display: flex; flex-direction: column;">
+                            <strong>${escapeHtml(apt.patient_name)}</strong>
+                            <span style="color: #888; font-size: 12px;">PHID-24-${String(apt.patient_id).padStart(6, '0')}</span>
+                        </div>
+                    </td>
+                    <td>${formatDate(apt.appointment_date)} ${apt.appointment_time}</td>
+                    <td>${escapeHtml(apt.service_type)}</td>
+                    <td><span class="status-badge" style="background-color: #fef3c7; color: #92400e;">Pending</span></td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-success btn-small" onclick="approveAppointment(${apt.id})">Approve</button>
+                            <button class="btn-secondary btn-small" onclick="viewAppointmentDetails(${apt.id})">View</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
         }
 
-        function viewPrescription(id) {
-            showAlert('info', 'Coming Soon', 'View prescription details');
+        function renderScheduleAppointments(appointments) {
+            const tbody = document.getElementById('scheduleAppointmentsTableBody');
+            if (!tbody) return;
+            
+            if (appointments.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #888; padding: 40px;">No approved appointments scheduled</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = appointments.map((apt) => {
+                const aptDate = new Date(apt.appointment_date);
+                const today = new Date();
+                aptDate.setHours(0, 0, 0, 0);
+                today.setHours(0, 0, 0, 0);
+                
+                const canComplete = aptDate <= today;
+                
+                return `
+                    <tr>
+                        <td>
+                            <div style="display: flex; flex-direction: column;">
+                                <strong>${escapeHtml(apt.patient_name)}</strong>
+                                <span style="color: #888; font-size: 12px;">PHID-24-${String(apt.patient_id).padStart(6, '0')}</span>
+                            </div>
+                        </td>
+                        <td>${formatDate(apt.appointment_date)} ${apt.appointment_time}</td>
+                        <td>${escapeHtml(apt.service_type)}</td>
+                        <td><span class="status-badge" style="background-color: #d1fae5; color: #065f46;">Approved</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                ${canComplete ? 
+                                    `<button class="btn-success btn-small" onclick="completeAppointment(${apt.id})">Complete</button>` : 
+                                    `<span style="color: #888; font-size: 12px;">Available on ${formatDate(apt.appointment_date)}</span>`
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
         }
 
-        function printPrescription(id) {
-            showAlert('info', 'Coming Soon', 'Print prescription');
+        function renderPastAppointments(appointments) {
+            const tbody = document.getElementById('pastAppointmentsTableBody');
+            if (!tbody) return;
+            
+            if (appointments.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #888; padding: 40px;">No past appointments</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = appointments.map((apt) => {
+                let statusBadge = '';
+                
+                if (apt.status === 'Completed') {
+                    statusBadge = '<span class="status-badge" style="background-color: #d1fae5; color: #065f46;">Completed</span>';
+                } else if (apt.status === 'Rejected') {
+                    statusBadge = '<span class="status-badge" style="background-color: #fee2e2; color: #991b1b;">Rejected</span>';
+                } else if (apt.status === 'Approved') {
+                    statusBadge = '<span class="status-badge" style="background-color: #fed7aa; color: #7c2d12;">Missed</span>';
+                } else {
+                    statusBadge = `<span class="status-badge">${escapeHtml(apt.status)}</span>`;
+                }
+                
+                return `
+                    <tr>
+                        <td>
+                            <div style="display: flex; flex-direction: column;">
+                                <strong>${escapeHtml(apt.patient_name)}</strong>
+                                <span style="color: #888; font-size: 12px;">PHID-24-${String(apt.patient_id).padStart(6, '0')}</span>
+                            </div>
+                        </td>
+                        <td>${formatDate(apt.appointment_date)} ${apt.appointment_time}</td>
+                        <td>${escapeHtml(apt.service_type)}</td>
+                        <td>${statusBadge}</td>
+                        <td>
+                            <button class="btn-secondary btn-small" onclick="viewAppointmentDetails(${apt.id})">View</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
         }
 
-        function addAnotherMedication() {
-            showAlert('info', 'Coming Soon', 'Add another medication form');
-        }
-
-        // Progress Note functions
-        function submitProgressNote(event) {
-            event.preventDefault();
-            showAlert('success', 'Success', 'Progress note saved successfully!');
-            closeModal('newProgressNoteModal');
-        }
-
-        function editProgressNote(id) {
-            showAlert('info', 'Coming Soon', 'Edit progress note');
-        }
-
-        // Diagnosis functions
-        function submitDiagnosis(event) {
-            event.preventDefault();
-            showAlert('success', 'Success', 'Diagnosis saved successfully!');
-            closeModal('newDiagnosisModal');
-        }
-
-        function viewTreatmentPlan(id) {
-            showAlert('info', 'Coming Soon', 'View treatment plan');
-        }
-
-        function updateDiagnosis(id) {
-            showAlert('info', 'Coming Soon', 'Update diagnosis');
-        }
-
-        // Schedule functions
-        function viewDaySchedule() {
-            showAlert('info', 'Day View', 'Viewing today\'s schedule');
-        }
-
-        function viewWeekSchedule() {
-            showAlert('info', 'Week View', 'Viewing this week\'s schedule');
-        }
-
-        function manageAvailability() {
-            showAlert('info', 'Coming Soon', 'Manage availability settings');
-        }
-
-        function viewConsultationNotes(id) {
-            showAlert('info', 'Coming Soon', 'View consultation notes');
-        }
-
-        // Logout
-        function logout() {
-            if (confirm('Are you sure you want to logout?')) {
-                window.location.href = '/';
+        async function approveAppointment(id) {
+            if (!confirm('Approve this appointment?')) return;
+            
+            try {
+                const response = await fetch(`/api/doctor/appointment/approve/${id}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    alert('Appointment approved successfully!');
+                    loadDoctorAppointments();
+                } else {
+                    alert(data.message || 'Failed to approve appointment');
+                }
+            } catch (error) {
+                console.error('Error approving appointment:', error);
+                alert('Failed to approve appointment. Please try again.');
             }
         }
 
-        // Alert System
-        function showAlert(type, title, message) {
-            const alert = document.createElement('div');
-            alert.className = `custom-alert ${type}`;
-            alert.innerHTML = `
-                <div class="alert-content">
-                    <div class="alert-icon">
-                        ${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'}
+        async function rejectAppointment(id) {
+            if (!confirm('Are you sure you want to reject this appointment?')) return;
+            
+            try {
+                const response = await fetch(`/api/doctor/appointment/reject/${id}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    alert('Appointment rejected');
+                    loadDoctorAppointments();
+                } else {
+                    alert(data.message || 'Failed to reject appointment');
+                }
+            } catch (error) {
+                console.error('Error rejecting appointment:', error);
+                alert('Failed to reject appointment. Please try again.');
+            }
+        }
+
+        async function completeAppointment(id) {
+            if (!confirm('Mark this appointment as completed?')) return;
+            
+            try {
+                const response = await fetch(`/api/doctor/appointment/complete/${id}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    alert('Appointment marked as completed');
+                    loadDoctorAppointments();
+                } else {
+                    alert(data.message || 'Failed to complete appointment');
+                }
+            } catch (error) {
+                console.error('Error completing appointment:', error);
+                alert('Failed to complete appointment. Please try again.');
+            }
+        }
+
+        async function viewAppointmentDetails(id) {
+            try {
+                const response = await fetch(`/api/doctor/appointment/${id}`);
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    const apt = data.data;
+                    
+                    const detailsText = `
+        Appointment Details:
+
+        Patient Name: ${apt.patient_name}
+        Username: ${apt.patient_username}
+        Service Type: ${apt.service_type}
+        Department: ${apt.department || 'N/A'}
+        Doctor: ${apt.doctor}
+        Date & Time: ${formatDate(apt.appointment_date)} ${apt.appointment_time}
+        Reason: ${apt.reason}
+        ${apt.room_type ? `Room Type: ${apt.room_type}` : ''}
+        ${apt.duration ? `Duration: ${apt.duration} days` : ''}
+        Status: ${apt.status}
+        Created: ${apt.created_date}
+                    `.trim();
+                    
+                    alert(detailsText);
+                } else {
+                    alert(data.message || 'Failed to load appointment details');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to load appointment details');
+            }
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+
+
+
+        // shortcuts
+        function openPatientOrders() {
+            showMainSection('patientOrdersPage');
+        }
+
+        function openMedicalRecords() {
+            showMainSection('medicalRecordsPage');
+        }
+
+        function backToPatients() {
+            showMainSection('patients');
+        }
+
+
+
+        // Messages functionality
+        function loadConversation(conversationId) {
+            // Remove active class from all conversations
+            document.querySelectorAll('.conversation-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Add active class to clicked conversation
+            event.target.closest('.conversation-item').classList.add('active');
+            
+            // In a real app, you would load the actual conversation here
+            console.log('Loading conversation:', conversationId);
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (message) {
+                // In a real app, you would send this to the server
+                console.log('Sending message:', message);
+                
+                // Add message to chat (sample implementation)
+                const messagesContainer = document.getElementById('messagesContainer');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'flex';
+                messageDiv.style.marginBottom = '16px';
+                messageDiv.innerHTML = `
+                    <div class="message-bubble message-sent">
+                        <div>${message}</div>
+                        <div class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
                     </div>
-                    <div class="alert-text">
-                        <strong>${title}</strong>
-                        <p>${message}</p>
-                    </div>
-                </div>
-            `;
-            
-            alert.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
-                color: white;
-                padding: 20px;
-                border-radius: 8px;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-                z-index: 10000;
-                min-width: 300px;
-                animation: slideIn 0.3s ease;
-            `;
-            
-            document.body.appendChild(alert);
-            
-            setTimeout(() => {
-                alert.style.animation = 'slideOut 0.3s ease';
-                setTimeout(() => alert.remove(), 300);
-            }, 3000);
+                `;
+                messagesContainer.appendChild(messageDiv);
+                
+                // Clear input
+                input.value = '';
+                
+                // Scroll to bottom
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
         }
 
-        // Add animation keyframes
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideIn {
-                from {
-                    transform: translateX(100%);
-                    opacity: 0;
-                }
-                to {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
+        function handleMessageKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+
+        
+
+        async function logout() {
+            if (!confirm('Are you sure you want to logout?')) {
+                return;
             }
             
-            @keyframes slideOut {
-                from {
-                    transform: translateX(0);
-                    opacity: 1;
+            try {
+                const response = await fetch('/api/logout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    window.location.href = data.redirect;
                 }
-                to {
-                    transform: translateX(100%);
-                    opacity: 0;
-                }
+            } catch (err) {
+                console.error('Logout error:', err);
+                window.location.href = '/IMS';
             }
-        `;
-        document.head.appendChild(style);
+        }
+
+
     </script>
 </body>
 </html>

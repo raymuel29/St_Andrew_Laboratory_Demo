@@ -4,7 +4,1258 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>St. Andrew Hospital - Patient Portal</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='user-portal.css') }}">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(180deg, #2c5aa0 0%, #1e3a5f 100%);
+            color: white;
+            padding: 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            padding: 25px 20px;
+            background: rgba(0,0,0,0.2);
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .logo h2 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .logo p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .nav-menu {
+            padding: 20px 0;
+        }
+
+        .nav-item {
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: rgba(255,255,255,0.1);
+            border-left-color: #4a9eff;
+        }
+
+        .nav-item.active {
+            background: rgba(255,255,255,0.15);
+            border-left-color: #4a9eff;
+        }
+
+        .nav-item svg {
+            width: 20px;
+            height: 20px;
+            margin-right: 15px;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            padding: 0;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 20px 40px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left h1 {
+            font-size: 24px;
+            color: #2c5aa0;
+            margin-bottom: 5px;
+        }
+
+        .header-left p {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .user-info h3 {
+            font-size: 16px;
+            color: #333;
+        }
+
+        .user-info p {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .user-avatar {
+            cursor: pointer;
+            position: relative;
+        }
+
+        .profile-dropdown {
+            position: absolute;
+            top: 70px;
+            right: 40px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            width: 220px;
+            display: none;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .profile-dropdown.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .dropdown-header {
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .dropdown-header h4 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .dropdown-header p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .dropdown-menu {
+            padding: 10px 0;
+        }
+
+        .dropdown-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .dropdown-item:hover {
+            background: #f5f5f5;
+        }
+
+        .dropdown-item svg {
+            width: 18px;
+            height: 18px;
+            color: #666;
+        }
+
+        .dropdown-item.logout {
+            color: #dc3545;
+            border-top: 1px solid #f0f0f0;
+            margin-top: 5px;
+        }
+
+        .dropdown-item.logout svg {
+            color: #dc3545;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            overflow-y: auto;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 50px auto;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 700px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            animation: slideUp 0.3s;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            padding: 25px 30px;
+            background: linear-gradient(135deg, #2c5aa0 0%, #1e3a5f 100%);
+            color: white;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .close-modal {
+            font-size: 32px;
+            cursor: pointer;
+            line-height: 1;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        .close-modal:hover {
+            opacity: 1;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #2c5aa0;
+        }
+
+        .payment-options {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .radio-option {
+            flex: 1;
+            min-width: 200px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .radio-option:hover {
+            border-color: #2c5aa0;
+            background: #f8f9fa;
+        }
+
+        .radio-option input[type="radio"] {
+            width: auto;
+            cursor: pointer;
+        }
+
+        .radio-option input[type="radio"]:checked + span {
+            color: #2c5aa0;
+            font-weight: 600;
+        }
+
+        .cost-summary {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #2c5aa0;
+        }
+
+        .cost-summary h3 {
+            margin: 0 0 10px 0;
+            color: #2c5aa0;
+            font-size: 16px;
+        }
+
+        .cost-summary p {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            margin-top: 30px;
+        }
+
+        .btn-primary,
+        .btn-secondary {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #2c5aa0;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1e3a5f;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(44, 90, 160, 0.3);
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #d0d0d0;
+        }
+
+        .btn-cancel {
+            padding: 8px 16px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        .btn-cancel:hover {
+            background: #c82333;
+        }
+
+        /* Message Styles */
+        .message-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #f0f2f5;
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            color: #2c5aa0;
+            border-bottom-color: #2c5aa0;
+        }
+
+        .tab-btn:hover {
+            color: #2c5aa0;
+        }
+
+        .message-item {
+            display: flex;
+            gap: 15px;
+            padding: 20px;
+            background: white;
+            border: 2px solid #f0f2f5;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .message-item:hover {
+            border-color: #2c5aa0;
+            box-shadow: 0 4px 12px rgba(44, 90, 160, 0.1);
+            transform: translateX(5px);
+        }
+
+        .message-item.unread {
+            background: #f0f7ff;
+            border-color: #2c5aa0;
+        }
+
+        .message-icon {
+            width: 50px;
+            height: 50px;
+            background: #e3f2fd;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .message-details {
+            flex: 1;
+        }
+
+        .message-details h4 {
+            margin: 0 0 8px 0;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .message-preview {
+            margin: 0 0 8px 0;
+            color: #666;
+            font-size: 14px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .message-time {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .unread-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #2c5aa0;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .priority-options {
+            display: flex;
+            gap: 15px;
+        }
+
+        .message-view-header {
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f2f5;
+            margin-bottom: 20px;
+        }
+
+        .message-view-header h3 {
+            margin: 0 0 15px 0;
+            color: #2c5aa0;
+            font-size: 20px;
+        }
+
+        .message-view-header p {
+            margin: 5px 0;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .message-view-body {
+            padding: 20px 0;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .message-view-actions {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #f0f2f5;
+            display: flex;
+            gap: 15px;
+        }
+
+        /* Transaction Styles */
+        .filter-select {
+            padding: 10px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: #2c5aa0;
+        }
+
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: white;
+            border: 2px solid #f0f2f5;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            gap: 20px;
+        }
+
+        .transaction-item.pending {
+            border-left: 4px solid #ff9800;
+            background: #fff8f0;
+        }
+
+        .transaction-item.paid {
+            border-left: 4px solid #4caf50;
+        }
+
+        .transaction-icon {
+            width: 50px;
+            height: 50px;
+            background: #e3f2fd;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .transaction-details {
+            flex: 1;
+        }
+
+        .transaction-details h4 {
+            margin: 0 0 5px 0;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .transaction-details p {
+            margin: 3px 0;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .transaction-id {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .payment-method {
+            display: inline-block;
+            margin-top: 5px;
+            padding: 4px 10px;
+            background: #e8f5e9;
+            color: #4caf50;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+
+        .transaction-amount {
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .transaction-amount .amount {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ff9800;
+        }
+
+        .transaction-amount .amount.paid {
+            color: #4caf50;
+        }
+
+        .btn-pay {
+            padding: 10px 24px;
+            background: #2c5aa0;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .btn-pay:hover {
+            background: #1e3a5f;
+        }
+
+        .btn-receipt {
+            padding: 8px 16px;
+            background: #f5f5f5;
+            color: #333;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+
+        .btn-receipt:hover {
+            background: #e8e8e8;
+        }
+
+        .payment-summary {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-left: 4px solid #2c5aa0;
+        }
+
+        .payment-summary h3 {
+            margin: 0 0 15px 0;
+            color: #2c5aa0;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+        }
+
+        .payment-card {
+            cursor: pointer;
+        }
+
+        .payment-card input[type="radio"] {
+            display: none;
+        }
+
+        .payment-card .card-content {
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .payment-card:hover .card-content {
+            border-color: #2c5aa0;
+            background: #f8f9fa;
+        }
+
+        .payment-card input[type="radio"]:checked + .card-content {
+            border-color: #2c5aa0;
+            background: #e3f2fd;
+        }
+
+        /* Medical Records Styles */
+        .medical-info-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .medical-info-card h3 {
+            margin: 0 0 20px 0;
+            font-size: 20px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .info-label {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .info-value {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .record-item {
+            background: white;
+            border: 2px solid #f0f2f5;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .record-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        .record-header h4 {
+            margin: 0 0 5px 0;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .record-header p {
+            margin: 0;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .btn-view-doc,
+        .btn-download {
+            padding: 8px 16px;
+            background: #2c5aa0;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: background 0.3s;
+        }
+
+        .btn-view-doc:hover,
+        .btn-download:hover {
+            background: #1e3a5f;
+        }
+
+        .record-content p {
+            margin: 8px 0;
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-badge.active {
+            background: #e3f2fd;
+            color: #2196f3;
+        }
+
+        .status-badge.completed {
+            background: #e8f5e9;
+            color: #4caf50;
+        }
+
+        .lab-results {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .lab-result-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .result-normal {
+            color: #4caf50;
+            font-weight: 600;
+        }
+
+        .result-borderline {
+            color: #ff9800;
+            font-weight: 600;
+        }
+
+        .result-abnormal {
+            color: #f44336;
+            font-weight: 600;
+        }
+
+        /* Profile Styles */
+        .profile-header-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        .profile-avatar-large {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: white;
+            color: #667eea;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .profile-main-info h2 {
+            margin: 0 0 10px 0;
+            font-size: 32px;
+        }
+
+        .profile-main-info p {
+            margin: 5px 0;
+            opacity: 0.95;
+        }
+
+        .profile-section-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid #f0f2f5;
+            margin-bottom: 20px;
+        }
+
+        .profile-section-card h3 {
+            margin: 0 0 20px 0;
+            color: #2c5aa0;
+            font-size: 18px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f2f5;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        /* Support Styles */
+        .support-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .support-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            border: 2px solid #f0f2f5;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .support-card:hover {
+            border-color: #2c5aa0;
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(44, 90, 160, 0.15);
+        }
+
+        .support-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .support-card h3 {
+            margin: 0 0 10px 0;
+            color: #2c5aa0;
+            font-size: 18px;
+        }
+
+        .support-card p {
+            margin: 0;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .faq-section {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            border: 2px solid #f0f2f5;
+        }
+
+        .faq-section > h3 {
+            margin: 0 0 25px 0;
+            color: #2c5aa0;
+            font-size: 22px;
+        }
+
+        .faq-category {
+            margin-bottom: 30px;
+        }
+
+        .faq-category h4 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .faq-item {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 15px 20px;
+            background: #f8f9fa;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .faq-question:hover {
+            background: #e9ecef;
+        }
+
+        .faq-toggle {
+            font-size: 24px;
+            font-weight: 400;
+            color: #2c5aa0;
+            transition: transform 0.3s;
+        }
+
+        .faq-question.active .faq-toggle {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .faq-answer.show {
+            padding: 15px 20px;
+            max-height: 500px;
+        }
+
+        /* Content Area */
+        .content {
+            padding: 30px 40px;
+        }
+
+        /* Cards */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .card-icon.blue {
+            background: #e3f2fd;
+            color: #2196f3;
+        }
+
+        .card-icon.green {
+            background: #e8f5e9;
+            color: #4caf50;
+        }
+
+        .card-icon.orange {
+            background: #fff3e0;
+            color: #ff9800;
+        }
+
+        .card-icon.purple {
+            background: #f3e5f5;
+            color: #9c27b0;
+        }
+
+        .card h3 {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .card .value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        /* Section */
+        .section {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f2f5;
+        }
+
+        .section-header h2 {
+            font-size: 20px;
+            color: #2c5aa0;
+        }
+
+        .btn-view-all {
+            padding: 8px 16px;
+            background: #2c5aa0;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        .btn-view-all:hover {
+            background: #1e3a5f;
+        }
+
+        /* Appointments */
+        .appointment-item {
+            padding: 15px;
+            border-left: 4px solid #4caf50;
+            background: #f8f9fa;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .appointment-info h4 {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .appointment-info p {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .appointment-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-upcoming {
+            background: #e3f2fd;
+            color: #2196f3;
+        }
+
+        .status-completed {
+            background: #e8f5e9;
+            color: #4caf50;
+        }
+
+        /* Announcements */
+        .announcement-item {
+            padding: 15px;
+            border-left: 4px solid #ff9800;
+            background: #fff8f0;
+            margin-bottom: 15px;
+            border-radius: 6px;
+        }
+
+        .announcement-item h4 {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .announcement-item p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .announcement-date {
+            font-size: 12px;
+            color: #999;
+            margin-top: 8px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 0;
+                transform: translateX(-100%);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+    </style>
     
 </head>
 <body>
@@ -41,14 +1292,6 @@
                         <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
                     </svg>
                     <span>Messages</span>
-                </div>
-               
-                <div class="nav-item" onclick="showSection('transactions', event)">
-                    <svg fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"/>
-                        <path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd"/>
-                    </svg>
-                    <span>Transactions</span>
                 </div>
                 <div class="nav-item" onclick="showSection('medical-records', event)">
                     <svg fill="currentColor" viewBox="0 0 20 20">
@@ -146,16 +1389,7 @@
                             <h3>Unread Messages</h3>
                             <div class="value">7</div>
                         </div>
-                        <div class="card">
-                            <div class="card-icon purple">
-                                <svg fill="currentColor" viewBox="0 0 20 20" width="24" height="24">
-                                    <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"/>
-                                    <path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd"/>
-                                </svg>
-                            </div>
-                            <h3>Pending Payments</h3>
-                            <div class="value">₱2,450</div>
-                        </div>
+                        
                     </div>
 
                     <!-- Upcoming Appointments -->
@@ -335,14 +1569,6 @@
                                     <div class="form-group">
                                         <label>Policy Number</label>
                                         <input type="text" id="policyNumber" value="12-345678901-2" disabled>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>HMO Provider</label>
-                                        <input type="text" id="hmoProvider" value="Maxicare" disabled>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>HMO Card Number</label>
-                                        <input type="text" id="hmoCard" value="MAX-2024-123456" disabled>
                                     </div>
                                 </div>
                             </div>
@@ -593,7 +1819,6 @@
                         </div>
                         <div class="modal-body">
                             <form id="bookingForm" onsubmit="submitBooking(event)">
-                                <!-- Service Type -->
                                 <div class="form-group">
                                     <label>Service Type *</label>
                                     <select id="serviceType" required onchange="updateDoctorList()">
@@ -602,42 +1827,105 @@
                                         <option value="consultation">Specialist Consultation</option>
                                         <option value="counselling">Counselling</option>
                                         <option value="room">Room Booking for Patient</option>
-                                        <option value="emergency">Emergency</option>
-                                        <option value="laboratory">Laboratory Tests</option>
-                                        <option value="xray">X-Ray / Imaging</option>
                                     </select>
                                 </div>
 
-                                <!-- Department -->
                                 <div class="form-group" id="departmentGroup">
                                     <label>Department *</label>
-                                    <select id="department" required onchange="updateDoctorList()">
+                                    <select id="department" required>
                                         <option value="">Select Department</option>
-                                        <option value="cardiology">Cardiology</option>
-                                        <option value="pediatrics">Pediatrics</option>
-                                        <option value="orthopedics">Orthopedics</option>
-                                        <option value="neurology">Neurology</option>
-                                        <option value="general">General Medicine</option>
-                                        <option value="psychology">Psychology</option>
-                                        <option value="emergency">Emergency</option>
+                                        <option value="pediatric">Pediatrics</option>
+                                        <option value="cardiologist">Cardiologist</option>
+                                        <option value="pulmonologist">Pulmonologist</option>
+                                        <option value="gastroenterologist">Gastroenterologist</option>
+                                        <option value="nephrologist">Nephrologist</option>
+                                        <option value="orthopedic">Orthopedic</option>
+                                        <option value="urologist">Urologist</option>
+                                        <option value="ophthalmologist">Ophthalmologist</option>
+                                        <option value="obstetric">Obstetric and Gynecology</option>
+                                        <option value="psychiatrist">Psychiatrist</option>
+                                        <option value="psychologist">Psychologist</option>
                                     </select>
                                 </div>
 
-                                <!-- Doctor Selection -->
                                 <div class="form-group">
-                                    <label>Select Doctor *</label>
+                                    <label>Doctor *</label>
                                     <select id="doctor" required>
                                         <option value="">Choose a doctor</option>
+                                        
+                                        <optgroup label="Pediatrics">
+                                            <option value="Dra. Karen Icel B. Parcon" data-dept="pediatric">Dra. Karen Icel B. Parcon</option>
+                                            <option value="Dr. Jose Martinez" data-dept="pediatric">Dr. Jose Martinez - Pediatrician</option>
+                                            <option value="Dra. Maria Santos" data-dept="pediatric">Dra. Maria Santos - Pediatric Specialist</option>
+                                        </optgroup>
+                                        
+                                        <optgroup label="Cardiologist">
+                                            <option value="Dr. Roberto Cruz" data-dept="cardiologist">Dr. Roberto Cruz - Cardiologist</option>
+                                            <option value="Dra. Ana Reyes" data-dept="cardiologist">Dra. Ana Reyes - Cardiac Specialist</option>
+                                            <option value="Dr. Miguel Torres" data-dept="cardiologist">Dr. Miguel Torres - Interventional Cardiologist</option>
+                                        </optgroup>
+                                        
+                                        <optgroup label="Pulmonologist">
+                                            <option value="Dr. Juan Dela Cruz" data-dept="pulmonologist">Dr. Juan Dela Cruz - Pulmonologist</option>
+                                            <option value="Dra. Teresa Garcia" data-dept="pulmonologist">Dra. Teresa Garcia - Respiratory Specialist</option>
+                                            <option value="Dr. Rafael Santos" data-dept="pulmonologist">Dr. Rafael Santos - Pulmonary Medicine</option>
+                                        </optgroup>
+                                        
+                                        <optgroup label="Gastroenterologist">
+                                            <option value="Dr. Carlos Rivera" data-dept="gastroenterologist">Dr. Carlos Rivera - Gastroenterologist</option>
+                                            <option value="Dra. Linda Ramos" data-dept="gastroenterologist">Dra. Linda Ramos - GI Specialist</option>
+                                            <option value="Dr. Antonio Lopez" data-dept="gastroenterologist">Dr. Antonio Lopez - Digestive Health Expert</option>
+                                        </optgroup>
+                                        
+                                        <optgroup label="Nephrologist">
+                                            <option value="Dr. Fernando Santos" data-dept="nephrologist">Dr. Fernando Santos - Nephrologist</option>
+                                            <option value="Dra. Patricia Cruz" data-dept="nephrologist">Dra. Patricia Cruz - Kidney Specialist</option>
+                                            <option value="Dr. Ricardo Mendoza" data-dept="nephrologist">Dr. Ricardo Mendoza - Renal Medicine</option>
+                                        </optgroup>
+                                        
+                                        <optgroup label="Orthopedic">
+                                            <option value="Dr. Manuel Garcia" data-dept="orthopedic">Dr. Manuel Garcia - Orthopedic Surgeon</option>
+                                            <option value="Dra. Sofia Martinez" data-dept="orthopedic">Dra. Sofia Martinez - Sports Medicine</option>
+                                            <option value="Dr. Eduardo Reyes" data-dept="orthopedic">Dr. Eduardo Reyes - Joint & Spine Specialist</option>
+                                        </optgroup>
+                                        
+                                        <optgroup label="Urologist">
+                                            <option value="Dr. Michael Conrad S. Mendoza" data-dept="urologist">Dr. Michael Conrad S. Mendoza</option>
+                                            <option value="Dra. Angela Torres" data-dept="urologist">Dra. Angela Torres - Urologist</option>
+                                            <option value="Dr. Benjamin Cruz" data-dept="urologist">Dr. Benjamin Cruz - Urological Surgeon</option>
+                                        </optgroup>
+                                        
+                                        <optgroup label="Ophthalmologist">
+                                            <option value="Dr. Pedro Santos" data-dept="ophthalmologist">Dr. Pedro Santos - Ophthalmologist</option>
+                                            <option value="Dra. Rosa Garcia" data-dept="ophthalmologist">Dra. Rosa Garcia - Eye Surgeon</option>
+                                            <option value="Dr. Luis Ramos" data-dept="ophthalmologist">Dr. Luis Ramos - Vision Specialist</option>
+                                        </optgroup>
+                                        
+                                        <optgroup label="Obstetric and Gynecology">
+                                            <option value="Dra. Katrina Rose S. Balasbas" data-dept="obstetric">Dra. Katrina Rose S. Balasbas</option>
+                                            <option value="Dra. Isabel Reyes" data-dept="obstetric">Dra. Isabel Reyes - OB-GYN</option>
+                                            <option value="Dra. Carmen Santos" data-dept="obstetric">Dra. Carmen Santos - Maternal Health Specialist</option>
+                                        </optgroup>
+                                        
+                                        <optgroup label="Psychiatrist">
+                                            <option value="Dr. Mark Anthony S. Mendoza" data-dept="psychiatrist">Dr. Mark Anthony S. Mendoza</option>
+                                            <option value="Dra. Elena Cruz" data-dept="psychiatrist">Dra. Elena Cruz - Psychiatrist</option>
+                                            <option value="Dr. Gabriel Torres" data-dept="psychiatrist">Dr. Gabriel Torres - Mental Health Specialist</option>
+                                        </optgroup>
+                                        
+                                        <optgroup label="Psychologist">
+                                            <option value="Dra. Anna Reyes" data-dept="psychologist">Dra. Anna Reyes - Clinical Psychologist</option>
+                                            <option value="Dr. David Garcia" data-dept="psychologist">Dr. David Garcia - Counseling Psychologist</option>
+                                            <option value="Dra. Maria Lopez" data-dept="psychologist">Dra. Maria Lopez - Child Psychologist</option>
+                                        </optgroup>
                                     </select>
                                 </div>
 
-                                <!-- Date -->
                                 <div class="form-group">
                                     <label>Preferred Date *</label>
                                     <input type="date" id="appointmentDate" required>
                                 </div>
 
-                                <!-- Time -->
                                 <div class="form-group">
                                     <label>Preferred Time *</label>
                                     <select id="appointmentTime" required>
@@ -653,7 +1941,6 @@
                                     </select>
                                 </div>
 
-                                <!-- Room Type (only for room booking) -->
                                 <div class="form-group" id="roomTypeGroup" style="display:none;">
                                     <label>Room Type *</label>
                                     <select id="roomType">
@@ -665,40 +1952,16 @@
                                     </select>
                                 </div>
 
-                                <!-- Duration (for room booking) -->
                                 <div class="form-group" id="durationGroup" style="display:none;">
                                     <label>Estimated Duration (days) *</label>
                                     <input type="number" id="duration" min="1" value="1">
                                 </div>
 
-                                <!-- Reason -->
                                 <div class="form-group">
                                     <label>Reason for Visit *</label>
                                     <textarea id="reason" rows="3" required placeholder="Please describe your symptoms or reason for visit"></textarea>
                                 </div>
 
-                                <!-- Payment Method -->
-                                <div class="form-group">
-                                    <label>Payment Method *</label>
-                                    <div class="payment-options">
-                                        <label class="radio-option">
-                                            <input type="radio" name="payment" value="online" required>
-                                            <span>💳 Pay Online Now</span>
-                                        </label>
-                                        <label class="radio-option">
-                                            <input type="radio" name="payment" value="hospital" required>
-                                            <span>🏥 Pay at Hospital</span>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <!-- Estimated Cost -->
-                                <div class="cost-summary">
-                                    <h3>Estimated Cost</h3>
-                                    <p id="costDisplay">Please select service type to see estimated cost</p>
-                                </div>
-
-                                <!-- Submit Buttons -->
                                 <div class="form-actions">
                                     <button type="button" class="btn-secondary" onclick="closeBookingModal()">Cancel</button>
                                     <button type="submit" class="btn-primary">Book Appointment</button>
@@ -718,9 +1981,8 @@
                     </div>
                 </div>
 
-              
                 <!-- MESSAGES SECTION -->
-                <div id="messages-section" class="page-section" style="display:none;">
+                <div id="messages-section" class="page-section" style="display:none">
                     <div class="section">
                         <div class="section-header">
                             <h2>Messages</h2>
@@ -767,19 +2029,70 @@
                                     <label>To: *</label>
                                     <select id="recipient" required>
                                         <option value="">Select Recipient</option>
-                                        <optgroup label="Doctors">
-                                            <option value="Dr. Maria Santos - Cardiology">Dr. Maria Santos - Cardiology</option>
-                                            <option value="Dr. Jose Garcia - Cardiac Surgeon">Dr. Jose Garcia - Cardiac Surgeon</option>
-                                            <option value="Dr. Roberto Cruz - General Medicine">Dr. Roberto Cruz - General Medicine</option>
-                                            <option value="Dr. Ana Cruz - Pediatrics">Dr. Ana Cruz - Pediatrics</option>
-                                            <option value="Dr. Anna Reyes - Psychology">Dr. Anna Reyes - Psychology</option>
+                                        <optgroup label="Pediatrics">
+                                            <option value="Dra. Karen Icel B. Parcon" data-dept="pediatric">Dra. Karen Icel B. Parcon</option>
+                                            <option value="Dr. Jose Martinez" data-dept="pediatric">Dr. Jose Martinez - Pediatrician</option>
+                                            <option value="Dra. Maria Santos" data-dept="pediatric">Dra. Maria Santos - Pediatric Specialist</option>
                                         </optgroup>
-                                        <optgroup label="Departments">
-                                            <option value="Billing Department">Billing Department</option>
-                                            <option value="Pharmacy">Pharmacy</option>
-                                            <option value="Laboratory">Laboratory</option>
-                                            <option value="Front Desk / Reception">Front Desk / Reception</option>
-                                            <option value="Administration">Administration</option>
+                                        
+                                        <optgroup label="Cardiologist">
+                                            <option value="Dr. Roberto Cruz" data-dept="cardiologist">Dr. Roberto Cruz - Cardiologist</option>
+                                            <option value="Dra. Ana Reyes" data-dept="cardiologist">Dra. Ana Reyes - Cardiac Specialist</option>
+                                            <option value="Dr. Miguel Torres" data-dept="cardiologist">Dr. Miguel Torres - Interventional Cardiologist</option>
+                                        </optgroup>
+                                        
+                                        <optgroup label="Pulmonologist">
+                                            <option value="Dr. Juan Dela Cruz" data-dept="pulmonologist">Dr. Juan Dela Cruz - Pulmonologist</option>
+                                            <option value="Dra. Teresa Garcia" data-dept="pulmonologist">Dra. Teresa Garcia - Respiratory Specialist</option>
+                                            <option value="Dr. Rafael Santos" data-dept="pulmonologist">Dr. Rafael Santos - Pulmonary Medicine</option>
+                                        </optgroup>
+                                        
+                                        <optgroup label="Gastroenterologist">
+                                            <option value="Dr. Carlos Rivera" data-dept="gastroenterologist">Dr. Carlos Rivera - Gastroenterologist</option>
+                                            <option value="Dra. Linda Ramos" data-dept="gastroenterologist">Dra. Linda Ramos - GI Specialist</option>
+                                            <option value="Dr. Antonio Lopez" data-dept="gastroenterologist">Dr. Antonio Lopez - Digestive Health Expert</option>
+                                        </optgroup>
+                                        
+                                        <optgroup label="Nephrologist">
+                                            <option value="Dr. Fernando Santos" data-dept="nephrologist">Dr. Fernando Santos - Nephrologist</option>
+                                            <option value="Dra. Patricia Cruz" data-dept="nephrologist">Dra. Patricia Cruz - Kidney Specialist</option>
+                                            <option value="Dr. Ricardo Mendoza" data-dept="nephrologist">Dr. Ricardo Mendoza - Renal Medicine</option>
+                                        </optgroup>
+                                        
+                                        <optgroup label="Orthopedic">
+                                            <option value="Dr. Manuel Garcia" data-dept="orthopedic">Dr. Manuel Garcia - Orthopedic Surgeon</option>
+                                            <option value="Dra. Sofia Martinez" data-dept="orthopedic">Dra. Sofia Martinez - Sports Medicine</option>
+                                            <option value="Dr. Eduardo Reyes" data-dept="orthopedic">Dr. Eduardo Reyes - Joint & Spine Specialist</option>
+                                        </optgroup>
+                                        
+                                        <optgroup label="Urologist">
+                                            <option value="Dr. Michael Conrad S. Mendoza" data-dept="urologist">Dr. Michael Conrad S. Mendoza</option>
+                                            <option value="Dra. Angela Torres" data-dept="urologist">Dra. Angela Torres - Urologist</option>
+                                            <option value="Dr. Benjamin Cruz" data-dept="urologist">Dr. Benjamin Cruz - Urological Surgeon</option>
+                                        </optgroup>
+                                        
+                                        <optgroup label="Ophthalmologist">
+                                            <option value="Dr. Pedro Santos" data-dept="ophthalmologist">Dr. Pedro Santos - Ophthalmologist</option>
+                                            <option value="Dra. Rosa Garcia" data-dept="ophthalmologist">Dra. Rosa Garcia - Eye Surgeon</option>
+                                            <option value="Dr. Luis Ramos" data-dept="ophthalmologist">Dr. Luis Ramos - Vision Specialist</option>
+                                        </optgroup>
+                                        
+                                        <optgroup label="Obstetric and Gynecology">
+                                            <option value="Dra. Katrina Rose S. Balasbas" data-dept="obstetric">Dra. Katrina Rose S. Balasbas</option>
+                                            <option value="Dra. Isabel Reyes" data-dept="obstetric">Dra. Isabel Reyes - OB-GYN</option>
+                                            <option value="Dra. Carmen Santos" data-dept="obstetric">Dra. Carmen Santos - Maternal Health Specialist</option>
+                                        </optgroup>
+                                        
+                                        <optgroup label="Psychiatrist">
+                                            <option value="Dr. Mark Anthony S. Mendoza" data-dept="psychiatrist">Dr. Mark Anthony S. Mendoza</option>
+                                            <option value="Dra. Elena Cruz" data-dept="psychiatrist">Dra. Elena Cruz - Psychiatrist</option>
+                                            <option value="Dr. Gabriel Torres" data-dept="psychiatrist">Dr. Gabriel Torres - Mental Health Specialist</option>
+                                        </optgroup>
+                                        
+                                        <optgroup label="Psychologist">
+                                            <option value="Dra. Anna Reyes" data-dept="psychologist">Dra. Anna Reyes - Clinical Psychologist</option>
+                                            <option value="Dr. David Garcia" data-dept="psychologist">Dr. David Garcia - Counseling Psychologist</option>
+                                            <option value="Dra. Maria Lopez" data-dept="psychologist">Dra. Maria Lopez - Child Psychologist</option>
                                         </optgroup>
                                     </select>
                                 </div>
@@ -909,216 +2222,6 @@
                                 <div class="form-actions">
                                     <button type="button" class="btn-secondary" onclick="closeReplyModal()">Cancel</button>
                                     <button type="submit" class="btn-primary">Send Reply</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-        
-                
-                <!-- TRANSACTIONS SECTION -->
-                <div id="transactions-section" class="page-section" style="display:none;">
-                    <div class="section">
-                        <div class="section-header">
-                            <h2>Transactions & Billing</h2>
-                        </div>
-
-                        <!-- Summary Cards -->
-                        <div class="cards-grid" style="margin-bottom: 30px;">
-                            <div class="card">
-                                <div class="card-icon orange">
-                                    <svg fill="currentColor" viewBox="0 0 20 20" width="24" height="24">
-                                        <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"/>
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd"/>
-                                    </svg>
-                                </div>
-                                <h3>Total Paid</h3>
-                                <div class="value">₱45,890</div>
-                            </div>
-                            <div class="card">
-                                <div class="card-icon purple">
-                                    <svg fill="currentColor" viewBox="0 0 20 20" width="24" height="24">
-                                        <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"/>
-                                        <path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd"/>
-                                    </svg>
-                                </div>
-                                <h3>Pending Payment</h3>
-                                <div class="value" style="color: #ff9800;">₱2,450</div>
-                            </div>
-                            <div class="card">
-                                <div class="card-icon green">
-                                    <svg fill="currentColor" viewBox="0 0 20 20" width="24" height="24">
-                                        <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z" clip-rule="evenodd"/>
-                                    </svg>
-                                </div>
-                                <h3>Total Transactions</h3>
-                                <div class="value">24</div>
-                            </div>
-                        </div>
-
-                        <!-- Transaction Filter -->
-                        <div style="margin-bottom: 20px; display: flex; gap: 15px; flex-wrap: wrap;">
-                            <select class="filter-select" onchange="filterTransactions(this.value)">
-                                <option value="all">All Transactions</option>
-                                <option value="paid">Paid</option>
-                                <option value="pending">Pending</option>
-                                <option value="cancelled">Cancelled</option>
-                            </select>
-                            <select class="filter-select">
-                                <option value="all">All Time</option>
-                                <option value="month">This Month</option>
-                                <option value="quarter">Last 3 Months</option>
-                                <option value="year">This Year</option>
-                            </select>
-                        </div>
-
-                        <!-- Pending Payments -->
-                        <h3 style="color: #2c5aa0; margin-bottom: 15px; font-size: 18px;">⏳ Pending Payments</h3>
-                        <div class="transaction-item pending">
-                            <div class="transaction-icon">💳</div>
-                            <div class="transaction-details">
-                                <h4>General Check-up - Dr. Roberto Cruz</h4>
-                                <p>📅 November 28, 2025 Appointment</p>
-                                <p class="transaction-id">Transaction ID: #TXN-2025-0128</p>
-                            </div>
-                            <div class="transaction-amount">
-                                <span class="amount">₱1,500</span>
-                                <button class="btn-pay" onclick="payNow('TXN-2025-0128', 1500)">Pay Now</button>
-                            </div>
-                        </div>
-
-                        <div class="transaction-item pending">
-                            <div class="transaction-icon">🏥</div>
-                            <div class="transaction-details">
-                                <h4>Laboratory Tests</h4>
-                                <p>📅 November 20, 2025</p>
-                                <p class="transaction-id">Transaction ID: #TXN-2025-0125</p>
-                            </div>
-                            <div class="transaction-amount">
-                                <span class="amount">₱950</span>
-                                <button class="btn-pay" onclick="payNow('TXN-2025-0125', 950)">Pay Now</button>
-                            </div>
-                        </div>
-
-                        <!-- Transaction History -->
-                        <h3 style="color: #2c5aa0; margin: 30px 0 15px 0; font-size: 18px;">📋 Transaction History</h3>
-                        
-                        <div class="transaction-item paid">
-                            <div class="transaction-icon">✅</div>
-                            <div class="transaction-details">
-                                <h4>Cardiology Consultation - Dr. Maria Santos</h4>
-                                <p>📅 November 15, 2025</p>
-                                <p class="transaction-id">Transaction ID: #TXN-2025-0120</p>
-                                <span class="payment-method">💳 Paid via Credit Card</span>
-                            </div>
-                            <div class="transaction-amount">
-                                <span class="amount paid">₱2,500</span>
-                                <button class="btn-receipt" onclick="downloadReceipt('TXN-2025-0120')">📄 Receipt</button>
-                            </div>
-                        </div>
-
-                        <div class="transaction-item paid">
-                            <div class="transaction-icon">✅</div>
-                            <div class="transaction-details">
-                                <h4>Counselling Session - Dr. Anna Reyes</h4>
-                                <p>📅 November 10, 2025</p>
-                                <p class="transaction-id">Transaction ID: #TXN-2025-0115</p>
-                                <span class="payment-method">💵 Paid at Hospital</span>
-                            </div>
-                            <div class="transaction-amount">
-                                <span class="amount paid">₱1,500</span>
-                                <button class="btn-receipt" onclick="downloadReceipt('TXN-2025-0115')">📄 Receipt</button>
-                            </div>
-                        </div>
-
-                        <div class="transaction-item paid">
-                            <div class="transaction-icon">✅</div>
-                            <div class="transaction-details">
-                                <h4>X-Ray Imaging</h4>
-                                <p>📅 November 5, 2025</p>
-                                <p class="transaction-id">Transaction ID: #TXN-2025-0110</p>
-                                <span class="payment-method">💳 Paid via GCash</span>
-                            </div>
-                            <div class="transaction-amount">
-                                <span class="amount paid">₱1,200</span>
-                                <button class="btn-receipt" onclick="downloadReceipt('TXN-2025-0110')">📄 Receipt</button>
-                            </div>
-                        </div>
-
-                        <div class="transaction-item paid">
-                            <div class="transaction-icon">✅</div>
-                            <div class="transaction-details">
-                                <h4>Emergency Room Visit</h4>
-                                <p>📅 October 28, 2025</p>
-                                <p class="transaction-id">Transaction ID: #TXN-2025-0098</p>
-                                <span class="payment-method">💳 Paid via Debit Card</span>
-                            </div>
-                            <div class="transaction-amount">
-                                <span class="amount paid">₱5,800</span>
-                                <button class="btn-receipt" onclick="downloadReceipt('TXN-2025-0098')">📄 Receipt</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Payment Modal -->
-                <div id="paymentModal" class="modal">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h2>Payment</h2>
-                            <span class="close-modal" onclick="closePaymentModal()">&times;</span>
-                        </div>
-                        <div class="modal-body">
-                            <div class="payment-summary">
-                                <h3>Payment Summary</h3>
-                                <div class="summary-row">
-                                    <span>Transaction ID:</span>
-                                    <strong id="paymentTxnId">#TXN-2025-0128</strong>
-                                </div>
-                                <div class="summary-row">
-                                    <span>Amount:</span>
-                                    <strong id="paymentAmount" style="color: #2c5aa0; font-size: 24px;">₱1,500</strong>
-                                </div>
-                            </div>
-
-                            <form id="paymentForm" onsubmit="processPayment(event)">
-                                <div class="form-group">
-                                    <label>Select Payment Method *</label>
-                                    <div class="payment-methods">
-                                        <label class="payment-card">
-                                            <input type="radio" name="paymentMethod" value="card" required>
-                                            <div class="card-content">
-                                                <span style="font-size: 24px;">💳</span>
-                                                <span>Credit/Debit Card</span>
-                                            </div>
-                                        </label>
-                                        <label class="payment-card">
-                                            <input type="radio" name="paymentMethod" value="gcash" required>
-                                            <div class="card-content">
-                                                <span style="font-size: 24px;">📱</span>
-                                                <span>GCash</span>
-                                            </div>
-                                        </label>
-                                        <label class="payment-card">
-                                            <input type="radio" name="paymentMethod" value="paymaya" required>
-                                            <div class="card-content">
-                                                <span style="font-size: 24px;">💰</span>
-                                                <span>PayMaya</span>
-                                            </div>
-                                        </label>
-                                        <label class="payment-card">
-                                            <input type="radio" name="paymentMethod" value="bank" required>
-                                            <div class="card-content">
-                                                <span style="font-size: 24px;">🏦</span>
-                                                <span>Bank Transfer</span>
-                                            </div>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="form-actions">
-                                    <button type="button" class="btn-secondary" onclick="closePaymentModal()">Cancel</button>
-                                    <button type="submit" class="btn-primary">Proceed to Payment</button>
                                 </div>
                             </form>
                         </div>
@@ -1427,945 +2530,696 @@
         </div>
     </div>
 
-<script>
-    // ============================================
-    // NAVIGATION & UI FUNCTIONS
-    // ============================================
-    function showSection(section, event) {
-        const navItems = document.querySelectorAll('.nav-item');
-        navItems.forEach(item => item.classList.remove('active'));
-    
-        if (event && event.currentTarget) {
-            event.currentTarget.classList.add('active');
-        }
-    
-        const sections = document.querySelectorAll('.page-section');
-        sections.forEach(s => s.style.display = 'none');
-    
-        const selectedSection = document.getElementById(section + '-section');
-        if (selectedSection) selectedSection.style.display = 'block';
-    
-        if (section === 'appointments') {
+    <script>
+
+        let currentMessage = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load appointments when page loads
             loadAppointments();
-        }
-        if (section === 'messages') {
+            
+            // Load messages
             loadMessages();
-        }
-    }
-    
-    function viewProfile() {
-        const sections = document.querySelectorAll('.page-section');
-        sections.forEach(s => s.style.display = 'none');
-        document.getElementById('profile-section').style.display = 'block';
-        const navItems = document.querySelectorAll('.nav-item');
-        navItems.forEach(item => item.classList.remove('active'));
-    }
-    
-    function goToSettings() {
-        const sections = document.querySelectorAll('.page-section');
-        sections.forEach(s => s.style.display = 'none');
-        document.getElementById('settings-section').style.display = 'block';
-        const navItems = document.querySelectorAll('.nav-item');
-        navItems.forEach(item => item.classList.remove('active'));
-    }
-    
-    function goToHelp() {
-        const sections = document.querySelectorAll('.page-section');
-        sections.forEach(s => s.style.display = 'none');
-        document.getElementById('help-section').style.display = 'block';
-        const navItems = document.querySelectorAll('.nav-item');
-        navItems.forEach(item => item.classList.remove('active'));
-    }
-    
-    function toggleProfileDropdown() {
-        const dropdown = document.getElementById('profileDropdown');
-        dropdown.classList.toggle('show');
-    }
-    
-    function closeDropdown() {
-        const dropdown = document.getElementById('profileDropdown');
-        dropdown.classList.remove('show');
-    }
-    
-    // LOGOUT FUNCTION - FIXED
-    async function logout() {
-        try {
-            const response = await fetch('/api/logout', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-    
-            if (response.ok) {
-                window.location.href = '/website';
-            } else {
-                window.location.href = '/website';
+            
+            // Load inbox
+            loadInbox();
+            
+            // Set minimum date for appointment booking (today)
+            const appointmentDateInput = document.getElementById('appointmentDate');
+            if (appointmentDateInput) {
+                const today = new Date().toISOString().split('T')[0];
+                appointmentDateInput.setAttribute('min', today);
             }
-        } catch (error) {
-            console.error('Logout error:', error);
-            window.location.href = '/website';
+        });
+
+        // NAVIGATION FUNCTIONS
+        function showSection(sectionName, event) {
+            if (event && event.currentTarget) {
+                // Remove active class from all nav items
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                // Add active class to clicked nav item
+                event.currentTarget.classList.add('active');
+            }
+            
+            // Hide all sections
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Show selected section
+            const targetSection = document.getElementById(`${sectionName}-section`);
+            if (targetSection) {
+                targetSection.style.display = 'block';
+                
+                // Load data based on section
+                if (sectionName === 'appointments') {
+                    loadAppointments();
+                } else if (sectionName === 'messages') {
+                    loadMessages();
+                    loadInbox();
+                }
+            }
         }
-    }
-    
-    // Close dropdown when clicking outside
-    document.addEventListener('click', function(event) {
-        const dropdown = document.getElementById('profileDropdown');
-        const avatar = document.querySelector('.user-avatar');
-        
-        if (dropdown && avatar && !dropdown.contains(event.target) && !avatar.contains(event.target)) {
+
+        // PROFILE DROPDOWN FUNCTIONS
+        function toggleProfileDropdown() {
+            const dropdown = document.getElementById('profileDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        function closeDropdown() {
+            const dropdown = document.getElementById('profileDropdown');
             dropdown.classList.remove('show');
         }
-    });
-    
-    // Set current date
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    const today = new Date().toLocaleDateString('en-US', options);
-    const headerDate = document.querySelector('.header-left p');
-    if (headerDate) {
-        headerDate.textContent = today;
-    }
-    
-    // ============================================
-    // APPOINTMENT BOOKING DATA
-    // ============================================
-    const doctors = {
-        cardiology: [
-            { value: "dr-santos", name: "Dr. Maria Santos - Cardiologist", fee: 1500 },
-            { value: "dr-reyes", name: "Dr. Juan Reyes - Heart Specialist", fee: 2000 }
-        ],
-        pediatrics: [
-            { value: "dr-cruz", name: "Dr. Roberto Cruz - Pediatrician", fee: 1200 },
-            { value: "dr-garcia", name: "Dr. Ana Garcia - Child Specialist", fee: 1300 }
-        ],
-        orthopedics: [
-            { value: "dr-lopez", name: "Dr. Carlos Lopez - Orthopedic Surgeon", fee: 1800 },
-            { value: "dr-mendoza", name: "Dr. Sofia Mendoza - Sports Medicine", fee: 1600 }
-        ],
-        neurology: [
-            { value: "dr-torres", name: "Dr. Miguel Torres - Neurologist", fee: 2200 },
-            { value: "dr-rivera", name: "Dr. Elena Rivera - Brain Specialist", fee: 2500 }
-        ],
-        general: [
-            { value: "dr-martinez", name: "Dr. Jose Martinez - General Practitioner", fee: 800 },
-            { value: "dr-santos-gen", name: "Dr. Lisa Santos - Family Medicine", fee: 900 }
-        ],
-        psychology: [
-            { value: "dr-anna-reyes", name: "Dr. Anna Reyes - Clinical Psychologist", fee: 1500 },
-            { value: "dr-fernando", name: "Dr. Miguel Fernandez - Counselor", fee: 1200 }
-        ],
-        emergency: [
-            { value: "dr-emergency", name: "Emergency Department - On-Call Doctor", fee: 2000 }
-        ]
-    };
-    
-    const serviceCosts = {
-        checkup: { name: "General Check-up", cost: 800 },
-        consultation: { name: "Specialist Consultation", cost: 1500 },
-        counselling: { name: "Counselling Session", cost: 1500 },
-        room: { name: "Room Booking", cost: 0 },
-        emergency: { name: "Emergency Service", cost: 3000 },
-        laboratory: { name: "Laboratory Tests", cost: 500 },
-        xray: { name: "X-Ray / Imaging", cost: 1000 }
-    };
-    
-    const roomCosts = {
-        private: 5000,
-        "semi-private": 3000,
-        ward: 1500,
-        icu: 10000
-    };
-    
-    // ============================================
-    // APPOINTMENT BOOKING FUNCTIONS
-    // ============================================
-    function showBookingModal() {
-        document.getElementById('bookingModal').style.display = 'block';
-        document.body.style.overflow = 'hidden';
-        const dateInput = document.getElementById('appointmentDate');
-        if (dateInput) {
-            const today = new Date().toISOString().split('T')[0];
-            dateInput.setAttribute('min', today);
+
+        function viewProfile() {
+            showSection('profile');
+            closeDropdown();
         }
-    }
-    
-    function closeBookingModal() {
-        document.getElementById('bookingModal').style.display = 'none';
-        document.body.style.overflow = 'auto';
-        document.getElementById('bookingForm').reset();
-        updateCost();
-    }
-    
-    function updateDoctorList() {
-        const serviceType = document.getElementById('serviceType').value;
-        const department = document.getElementById('department').value;
-        const doctorSelect = document.getElementById('doctor');
-        const roomTypeGroup = document.getElementById('roomTypeGroup');
-        const durationGroup = document.getElementById('durationGroup');
-        const departmentGroup = document.getElementById('departmentGroup');
-        
-        if (serviceType === 'room') {
-            roomTypeGroup.style.display = 'block';
-            durationGroup.style.display = 'block';
-            departmentGroup.style.display = 'block';
-            document.getElementById('roomType').required = true;
-            document.getElementById('duration').required = true;
-            document.getElementById('department').required = true;
-        } else {
-            roomTypeGroup.style.display = 'none';
-            durationGroup.style.display = 'none';
-            departmentGroup.style.display = 'block';
-            document.getElementById('roomType').required = false;
-            document.getElementById('duration').required = false;
-            document.getElementById('department').required = true;
+
+        function goToSettings() {
+            showSection('settings');
+            closeDropdown();
         }
-        
-        doctorSelect.innerHTML = '<option value="">Choose a doctor</option>';
-        
-        if (department && doctors[department]) {
-            doctors[department].forEach(doctor => {
-                const option = document.createElement('option');
-                option.value = doctor.value;
-                option.textContent = `${doctor.name} (₱${doctor.fee})`;
-                option.dataset.fee = doctor.fee;
-                doctorSelect.appendChild(option);
-            });
+
+        function goToHelp() {
+            showSection('help');
+            closeDropdown();
         }
-        
-        updateCost();
-    }
-    
-    function updateCost() {
-        const serviceType = document.getElementById('serviceType').value;
-        const roomType = document.getElementById('roomType').value;
-        const duration = parseInt(document.getElementById('duration').value) || 1;
-        const doctorSelect = document.getElementById('doctor');
-        const doctorFee = doctorSelect.selectedIndex > 0 ? parseInt(doctorSelect.options[doctorSelect.selectedIndex].dataset.fee) || 0 : 0;
-        const costDisplay = document.getElementById('costDisplay');
-        
-        if (!serviceType) {
-            costDisplay.innerHTML = 'Please select service type to see estimated cost';
-            return;
-        }
-        
-        let totalCost = 0;
-        let breakdown = '';
-        
-        if (serviceType === 'room' && roomType) {
-            const roomCost = roomCosts[roomType];
-            totalCost = roomCost * duration;
-            breakdown = `Room: ₱${roomCost.toLocaleString()}/day × ${duration} day(s)`;
-            if (doctorFee > 0) {
-                totalCost += doctorFee;
-                breakdown += ` + Doctor: ₱${doctorFee.toLocaleString()}`;
-            }
-        } else if (serviceCosts[serviceType]) {
-            totalCost = serviceCosts[serviceType].cost;
-            breakdown = `Service: ₱${totalCost.toLocaleString()}`;
-            if (doctorFee > 0) {
-                totalCost += doctorFee;
-                breakdown += ` + Doctor: ₱${doctorFee.toLocaleString()}`;
-            }
-        }
-        
-        if (totalCost > 0) {
-            costDisplay.innerHTML = `
-                <strong style="font-size: 24px; color: #2c5aa0;">₱${totalCost.toLocaleString()}</strong><br>
-                <span style="color: #666; font-size: 14px;">${breakdown}</span>
-            `;
-        } else {
-            costDisplay.innerHTML = 'Cost will be calculated based on your selection';
-        }
-    }
-    
-    function calculateTotalCost() {
-        const serviceType = document.getElementById('serviceType').value;
-        const roomType = document.getElementById('roomType').value;
-        const duration = parseInt(document.getElementById('duration').value) || 1;
-        const doctorSelect = document.getElementById('doctor');
-        const doctorFee = doctorSelect.selectedIndex > 0 ? parseInt(doctorSelect.options[doctorSelect.selectedIndex].dataset.fee) || 0 : 0;
-        
-        let totalCost = 0;
-        
-        if (serviceType === 'room' && roomType) {
-            totalCost = roomCosts[roomType] * duration + doctorFee;
-        } else if (serviceCosts[serviceType]) {
-            totalCost = serviceCosts[serviceType].cost + doctorFee;
-        }
-        
-        return totalCost;
-    }
-    
-    async function submitBooking(event) {
-        event.preventDefault();
-        
-        const doctorSelect = document.getElementById('doctor');
-        const selectedDoctor = doctorSelect.options[doctorSelect.selectedIndex].text;
-        
-        const formData = {
-            serviceType: document.getElementById('serviceType').value,
-            department: document.getElementById('department').value,
-            doctor: selectedDoctor,
-            appointmentDate: document.getElementById('appointmentDate').value,
-            appointmentTime: document.getElementById('appointmentTime').value,
-            roomType: document.getElementById('roomType').value,
-            duration: parseInt(document.getElementById('duration').value) || null,
-            reason: document.getElementById('reason').value,
-            paymentMethod: document.querySelector('input[name="payment"]:checked').value,
-            estimatedCost: calculateTotalCost()
-        };
-        
-        const submitBtn = event.target.querySelector('button[type="submit"]');
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Booking...';
-        
-        try {
-            const response = await fetch('/api/book-appointment', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData)
-            });
-            
-            const data = await response.json();
-            
-            if (data.status === 'success') {
-                alert('✅ Appointment booked successfully!\n\nYour appointment has been confirmed.');
-                closeBookingModal();
-                loadAppointments();
-            } else {
-                alert('❌ Error: ' + (data.message || 'Failed to book appointment'));
-            }
-            
-        } catch (error) {
-            alert('❌ Error: Failed to book appointment. Please try again.');
-            console.error('Booking error:', error);
-        } finally {
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Book Appointment';
-        }
-    }
-    
-    // ============================================
-    // LOAD APPOINTMENTS FROM DATABASE
-    // ============================================
-    async function loadAppointments() {
-        const upcomingContainer = document.getElementById('upcomingAppointmentsContainer');
-        const pastContainer = document.getElementById('pastAppointmentsContainer');
-        
-        if (upcomingContainer) {
-            upcomingContainer.innerHTML = `
-                <div class="loading-message">
-                    <p>📅 Loading your upcoming appointments...</p>
-                </div>
-            `;
-        }
-        
-        if (pastContainer) {
-            pastContainer.innerHTML = `
-                <div class="loading-message">
-                    <p>📋 Loading your past appointments...</p>
-                </div>
-            `;
-        }
-        
-        try {
-            const response = await fetch('/api/my-appointments');
-            const data = await response.json();
-            
-            if (data.status === 'success') {
-                displayAppointments(data.upcoming, data.past);
-            } else {
-                showError(upcomingContainer, 'Failed to load appointments');
-                showError(pastContainer, 'Failed to load appointments');
-            }
-        } catch (error) {
-            console.error('Error loading appointments:', error);
-            showError(upcomingContainer, 'Error connecting to server');
-            showError(pastContainer, 'Error connecting to server');
-        }
-    }
-    
-    function displayAppointments(upcoming, past) {
-        const upcomingContainer = document.getElementById('upcomingAppointmentsContainer');
-        const pastContainer = document.getElementById('pastAppointmentsContainer');
-        
-        if (upcomingContainer) {
-            if (upcoming && upcoming.length > 0) {
-                upcomingContainer.innerHTML = upcoming.map(apt => createAppointmentHTML(apt, true)).join('');
-            } else {
-                upcomingContainer.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-state-icon">📅</div>
-                        <h4>No Upcoming Appointments</h4>
-                        <p>You don't have any scheduled appointments at the moment.</p>
-                        <button class="btn-view-all" onclick="showBookingModal()" style="margin-top: 10px;">
-                            + Book Your First Appointment
-                        </button>
-                    </div>
-                `;
-            }
-        }
-        
-        if (pastContainer) {
-            if (past && past.length > 0) {
-                pastContainer.innerHTML = past.map(apt => createAppointmentHTML(apt, false)).join('');
-            } else {
-                pastContainer.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-state-icon">📋</div>
-                        <h4>No Past Appointments</h4>
-                        <p>Your appointment history will appear here.</p>
-                    </div>
-                `;
-            }
-        }
-    }
-    
-    function createAppointmentHTML(appointment, isUpcoming) {
-        const date = new Date(appointment.appointment_date);
-        const formattedDate = date.toLocaleDateString('en-US', { 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric' 
-        });
-        
-        const timeStr = appointment.appointment_time;
-        let displayTime = timeStr;
-        
-        if (timeStr) {
-            const [hours, minutes] = timeStr.split(':');
-            const hour = parseInt(hours);
-            const ampm = hour >= 12 ? 'PM' : 'AM';
-            const displayHour = hour % 12 || 12;
-            displayTime = `${displayHour}:${minutes} ${ampm}`;
-        }
-        
-        const paymentText = appointment.payment_method === 'online' ? 'Paid Online' : 'Pay at Hospital';
-        
-        let statusClass = 'status-confirmed';
-        let borderColor = '#2c5aa0';
-        let statusText = appointment.status || 'Confirmed';
-        
-        if (appointment.status === 'Completed') {
-            statusClass = 'status-completed';
-            borderColor = '#4caf50';
-        } else if (appointment.status === 'Cancelled') {
-            statusClass = 'status-cancelled';
-            borderColor = '#d32f2f';
-        }
-        
-        const serviceDisplay = formatServiceType(appointment.service_type);
-        
-        return `
-            <div class="appointment-item" style="border-left-color: ${borderColor};">
-                <div class="appointment-info">
-                    <h4>${appointment.doctor} - ${serviceDisplay}</h4>
-                    <p>📅 ${formattedDate} at ${displayTime}</p>
-                    <p style="margin-top: 5px;">💳 Payment: ${paymentText}</p>
-                    ${appointment.estimated_cost ? `<p style="margin-top: 5px;">💰 Cost: ₱${parseFloat(appointment.estimated_cost).toLocaleString()}</p>` : ''}
-                </div>
-                <div style="display: flex; gap: 10px; align-items: center;">
-                    <span class="appointment-status ${statusClass}">${statusText}</span>
-                    ${isUpcoming && appointment.status === 'Confirmed' ? 
-                        `<button class="btn-cancel" onclick="cancelAppointment(${appointment.id})">Cancel</button>` 
-                        : ''}
-                </div>
-            </div>
-        `;
-    }
-    
-    function formatServiceType(serviceType) {
-        const serviceNames = {
-            'checkup': 'General Check-up',
-            'consultation': 'Specialist Consultation',
-            'counselling': 'Counselling',
-            'room': 'Room Booking',
-            'emergency': 'Emergency',
-            'laboratory': 'Laboratory Tests',
-            'xray': 'X-Ray / Imaging'
-        };
-        
-        return serviceNames[serviceType] || serviceType;
-    }
-    
-    function showError(container, message) {
-        if (container) {
-            container.innerHTML = `
-                <div class="empty-state" style="background: #ffebee; border-left: 4px solid #d32f2f;">
-                    <div class="empty-state-icon">⚠️</div>
-                    <h4 style="color: #d32f2f;">Error</h4>
-                    <p>${message}</p>
-                    <button class="btn-view-all" onclick="loadAppointments()" style="margin-top: 10px;">
-                        🔄 Try Again
-                    </button>
-                </div>
-            `;
-        }
-    }
-    
-    async function cancelAppointment(appointmentId) {
-        if (!appointmentId) {
-            alert('⚠️ Invalid appointment ID');
-            return;
-        }
-        
-        if (!confirm('Are you sure you want to cancel this appointment?\n\nThis action cannot be undone.')) {
-            return;
-        }
-        
-        try {
-            const response = await fetch(`/api/cancel-appointment/${appointmentId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            });
-            
-            const data = await response.json();
-            
-            if (data.status === 'success') {
-                alert('✅ Appointment cancelled successfully!');
-                loadAppointments();
-            } else {
-                alert('❌ Error: ' + (data.message || 'Failed to cancel appointment.'));
-            }
-            
-        } catch (error) {
-            console.error('Cancel error:', error);
-            alert('❌ Error: Failed to connect to server.');
-        }
-    }
-    
-    // ============================================
-    // MESSAGE FUNCTIONS - ALIGNED WITH DATABASE
-    // ============================================
-    let currentMessageTab = 'sent';
-    let currentMessage = null;
-    
-    function loadMessages() {
-        loadSentMessages();
-    }
-    
-    function loadSentMessages() {
-        const container = document.getElementById('sentMessagesContainer');
-        
-        if (container) {
-            container.innerHTML = `
-                <div class="loading-message">
-                    <p>📧 Loading sent messages...</p>
-                </div>
-            `;
-        }
-        
-        fetch('/api/my-messages')
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    displaySentMessages(data.messages);
+
+        async function logout() {
+            try {
+                const response = await fetch('/api/website-logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    window.location.href = data.redirect || '/website';
                 } else {
-                    showSentMessagesError('Failed to load messages');
+                    alert('Logout failed');
                 }
-            })
-            .catch(error => {
-                console.error('Error loading sent messages:', error);
-                showSentMessagesError('Error connecting to server');
-            });
-    }
-    
-    function displaySentMessages(messages) {
-        const container = document.getElementById('sentMessagesContainer');
-        
-        if (!container) return;
-        
-        if (messages && messages.length > 0) {
-            container.innerHTML = messages.map(msg => createSentMessageHTML(msg)).join('');
-        } else {
-            container.innerHTML = `
-                <div class="empty-state">
-                    <div class="empty-state-icon">📧</div>
-                    <h4>No Sent Messages</h4>
-                    <p>You haven't sent any messages yet. Click "Compose Message" to send your first message to the hospital.</p>
-                    <button class="btn-view-all" onclick="showComposeModal()" style="margin-top: 10px;">
-                        + Compose Your First Message
-                    </button>
-                </div>
-            `;
+            } catch (error) {
+                console.error('Logout error:', error);
+                alert('An error occurred during logout');
+            }
         }
-    }
-    
-    function createSentMessageHTML(message) {
-        const date = new Date(message.created_at);
-        const formattedDate = date.toLocaleDateString('en-US', { 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-        
-        let icon = '📧';
-        if (message.category.includes('Medical')) icon = '🩺';
-        else if (message.category.includes('Prescription')) icon = '💊';
-        else if (message.category.includes('Appointment')) icon = '📅';
-        else if (message.category.includes('Billing')) icon = '💳';
-        
-        let priorityBadge = '';
-        if (message.priority === 'urgent') {
-            priorityBadge = '<span class="priority-badge urgent" style="background: #ff5252; color: white; padding: 2px 8px; border-radius: 4px; font-size: 11px; margin-left: 10px;">⚠️ URGENT</span>';
-        }
-        
-        const messagePreview = message.message.substring(0, 100) + (message.message.length > 100 ? '...' : '');
-        
-        return `
-            <div class="message-item" onclick='viewSentMessage(${JSON.stringify(message).replace(/'/g, "&#39;")})' style="cursor: pointer;">
-                <div class="message-icon">${icon}</div>
-                <div class="message-details">
-                    <h4>To: ${message.doctor_name} ${priorityBadge}</h4>
-                    <p class="message-preview" style="font-weight: 600; color: #2c5aa0;">${message.subject}</p>
-                    <p class="message-preview">${messagePreview}</p>
-                    <span class="message-time">${formattedDate}</span>
-                </div>
-                <span class="message-category" style="background: #e3f2fd; color: #2c5aa0; padding: 5px 12px; border-radius: 20px; font-size: 12px;">
-                    ${message.category}
-                </span>
-            </div>
-        `;
-    }
-    
-    function viewSentMessage(message) {
-        currentMessage = { ...message, type: 'sent' };
-        
-        const date = new Date(message.created_at);
-        const formattedDate = date.toLocaleDateString('en-US', { 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-        
-        document.getElementById('viewSubject').textContent = message.subject;
-        const recipientLabel = document.querySelector('#viewMessageModal .message-view-header p:first-of-type strong');
-        if (recipientLabel) recipientLabel.textContent = 'To:';
-        document.getElementById('viewRecipient').textContent = message.doctor_name;
-        document.getElementById('viewCategory').textContent = message.category;
-        document.getElementById('viewDate').textContent = formattedDate;
-        document.getElementById('viewPriority').textContent = message.priority === 'urgent' ? '⚠️ Urgent' : '📋 Normal';
-        document.getElementById('viewBody').innerHTML = message.message.replace(/\n/g, '<br>');
-        
-        document.getElementById('viewMessageModal').style.display = 'block';
-        document.body.style.overflow = 'hidden';
-    }
-    
-    function closeViewMessageModal() {
-        document.getElementById('viewMessageModal').style.display = 'none';
-        document.body.style.overflow = 'auto';
-        currentMessage = null;
-    }
-    
-    function showSentMessagesError(message) {
-        const container = document.getElementById('sentMessagesContainer');
-        if (container) {
-            container.innerHTML = `
-                <div class="empty-state" style="background: #ffebee; border-left: 4px solid #d32f2f;">
-                    <div class="empty-state-icon">⚠️</div>
-                    <h4 style="color: #d32f2f;">Error</h4>
-                    <p>${message}</p>
-                    <button class="btn-view-all" onclick="loadSentMessages()" style="margin-top: 10px;">
-                        🔄 Try Again
-                    </button>
-                </div>
-            `;
-        }
-    }
-    
-    function showMessageTab(tab) {
-        const tabBtns = document.querySelectorAll('.message-tabs .tab-btn');
-        tabBtns.forEach(btn => btn.classList.remove('active'));
-        if (event && event.currentTarget) {
-            event.currentTarget.classList.add('active');
-        }
-        
-        currentMessageTab = tab;
-        
-        document.getElementById('inbox-tab').style.display = tab === 'inbox' ? 'block' : 'none';
-        document.getElementById('sent-tab').style.display = tab === 'sent' ? 'block' : 'none';
-    }
-    
-    function showComposeModal() {
-        document.getElementById('composeModal').style.display = 'block';
-        document.body.style.overflow = 'hidden';
-    }
-    
-    function closeComposeModal() {
-        document.getElementById('composeModal').style.display = 'none';
-        document.body.style.overflow = 'auto';
-        document.getElementById('composeForm').reset();
-    }
-    
-    async function sendMessage(event) {
-        event.preventDefault();
-        
-        const doctorName = document.getElementById('recipient').value;
-        const subject = document.getElementById('subject').value;
-        const category = document.getElementById('category').value;
-        const message = document.getElementById('messageBody').value;
-        const priority = document.querySelector('input[name="priority"]:checked').value;
-        
-        const submitBtn = event.target.querySelector('button[type="submit"]');
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Sending...';
-        
-        try {
-            const response = await fetch('/api/send-message', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    doctorName: doctorName,
-                    subject: subject,
-                    category: category,
-                    message: message,
-                    priority: priority
-                })
-            });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('profileDropdown');
+            const userAvatar = document.querySelector('.user-avatar');
             
-            const data = await response.json();
+            if (dropdown && userAvatar) {
+                if (!dropdown.contains(event.target) && !userAvatar.contains(event.target)) {
+                    dropdown.classList.remove('show');
+                }
+            }
+        });
+
+        
+        // APPOINTMENT BOOKING FUNCTIONS
+        function showBookingModal() {
+            document.getElementById("bookingModal").style.display = "block";
+        }
+
+        function closeBookingModal() {
+            document.getElementById("bookingModal").style.display = "none";
+            document.getElementById('bookingForm').reset();
             
-            if (data.status === 'success') {
-                alert('✅ Message sent successfully!\n\nYour message has been sent.');
-                closeComposeModal();
-                loadSentMessages();
-            } else {
-                alert('❌ Error: ' + (data.message || 'Failed to send message'));
+            // Reset visibility of room-related fields
+            document.getElementById('roomTypeGroup').style.display = 'none';
+            document.getElementById('durationGroup').style.display = 'none';
+            document.getElementById('departmentGroup').style.display = 'block';
+        }
+
+        function updateDoctorList() {
+            const serviceType = document.getElementById("serviceType").value;
+            const departmentGroup = document.getElementById("departmentGroup");
+            const department = document.getElementById("department");
+            const doctorSelect = document.getElementById("doctor");
+            const roomTypeGroup = document.getElementById("roomTypeGroup");
+            const durationGroup = document.getElementById("durationGroup");
+
+            const allDoctors = doctorSelect.querySelectorAll("option[data-dept]");
+            const allOptGroups = doctorSelect.querySelectorAll("optgroup");
+
+            // Reset department
+            department.value = "";
+            Array.from(department.options).forEach(opt => {
+                if (!opt.value) return;
+                opt.style.display = "none";
+            });
+
+            let allowedDepts = [];
+
+            if (serviceType === "checkup") {
+                allowedDepts = ["pediatric"];
+            } else if (serviceType === "consultation") {
+                allowedDepts = ["cardiologist","pulmonologist","gastroenterologist","nephrologist","orthopedic","urologist","ophthalmologist","obstetric"];
+            } else if (serviceType === "counselling") {
+                allowedDepts = ["psychiatrist","psychologist"];
             }
             
-        } catch (error) {
-            alert('❌ Error: Failed to send message. Please try again.');
-            console.error('Send message error:', error);
-        } finally {
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Send Message';
-        }
-    }
-    
-    function showReplyModal() {
-        if (!currentMessage) return;
-        
-        closeViewMessageModal();
-        
-        let recipientName = currentMessage.doctor_name;
-        
-        document.getElementById('replyOriginalSubject').textContent = currentMessage.subject;
-        document.getElementById('replyRecipient').textContent = recipientName;
-        document.getElementById('replyToDoctor').value = recipientName;
-        document.getElementById('replyToCategory').value = currentMessage.category;
-        document.getElementById('replyToSubject').value = 'Re: ' + currentMessage.subject;
-        
-        document.getElementById('replyModal').style.display = 'block';
-        document.body.style.overflow = 'hidden';
-    }
-    
-    function closeReplyModal() {
-        document.getElementById('replyModal').style.display = 'none';
-        document.body.style.overflow = 'auto';
-        document.getElementById('replyForm').reset();
-    }
-    
-    async function sendReply(event) {
-        event.preventDefault();
-    
-        const doctorName = document.getElementById('replyToDoctor').value;
-        const subject = document.getElementById('replyToSubject').value;
-        const category = document.getElementById('replyToCategory').value;
-        const message = document.getElementById('replyBody').value;
-        const priority = document.querySelector('input[name="replyPriority"]:checked').value;
-    
-        const submitBtn = event.target.querySelector('button[type="submit"]');
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Sending Reply...';
-    
-        try {
-            const response = await fetch('/api/send-message', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    doctorName: doctorName,
-                    subject: subject,
-                    category: category,
-                    message: message,
-                    priority: priority
-                })
+            // Show/hide departments
+            allowedDepts.forEach(d => {
+                const opt = department.querySelector(`option[value="${d}"]`);
+                if (opt) opt.style.display = "block";
             });
-    
-            const data = await response.json();
-    
-            if (data.status === 'success') {
-                alert('✅ Reply sent successfully!');
-                closeReplyModal();
-                loadSentMessages();
+
+            // Show/hide room booking fields
+            if (serviceType === "room") {
+                departmentGroup.style.display = "none";
+                department.required = false;
+                roomTypeGroup.style.display = "block";
+                durationGroup.style.display = "block";
+                document.getElementById("roomType").required = true;
+                document.getElementById("duration").required = true;
             } else {
-                alert('❌ Error: ' + (data.message || 'Failed to send reply'));
+                departmentGroup.style.display = "block";
+                department.required = true;
+                roomTypeGroup.style.display = "none";
+                durationGroup.style.display = "none";
+                document.getElementById("roomType").required = false;
+                document.getElementById("duration").required = false;
             }
-    
-        } catch (error) {
-            console.error('Reply error:', error);
-            alert('❌ Error: Failed to send reply. Please try again.');
-        } finally {
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Send Reply';
+
+            if (serviceType === "room") {
+                // Show all doctors for room service
+                allDoctors.forEach(opt => opt.style.display = "block");
+                allOptGroups.forEach(g => g.style.display = "block");
+                doctorSelect.value = "";
+            } else {
+                // Reset doctor select
+                doctorSelect.value = "";
+                allDoctors.forEach(opt => opt.style.display = "none");
+                allOptGroups.forEach(g => g.style.display = "none");
+
+                // For counselling: show doctors immediately
+                if (serviceType === "counselling") {
+                    showDoctorsByDept(allowedDepts);
+                }
+            }
         }
-    }
-    // ============================================
-    // REMAINING FUNCTIONS (Add after sendReply)
-    // ============================================
-    
-    // Transaction Functions
-    function payNow(txnId, amount) {
-        document.getElementById('paymentTxnId').textContent = txnId;
-        document.getElementById('paymentAmount').textContent = '₱' + amount.toLocaleString();
-        document.getElementById('paymentModal').style.display = 'block';
-        document.body.style.overflow = 'hidden';
-    }
-    
-    function closePaymentModal() {
-        document.getElementById('paymentModal').style.display = 'none';
-        document.body.style.overflow = 'auto';
-        document.getElementById('paymentForm').reset();
-    }
-    
-    function processPayment(event) {
-        event.preventDefault();
-        const method = document.querySelector('input[name="paymentMethod"]:checked').value;
-        const amount = document.getElementById('paymentAmount').textContent;
-        
-        alert(`Processing payment of ${amount} via ${method}...`);
-        closePaymentModal();
-    }
-    
-    function downloadReceipt(txnId) {
-        alert(`Downloading receipt for transaction ${txnId}...`);
-    }
-    
-    function filterTransactions(filter) {
-        alert(`Filtering transactions by: ${filter}`);
-    }
-    
-    // Medical Records Functions
-    function showRecordTab(tab) {
-        const tabBtns = document.querySelectorAll('.tab-btn');
-        tabBtns.forEach(btn => btn.classList.remove('active'));
-        event.currentTarget.classList.add('active');
-        
-        document.querySelectorAll('.record-tab-content').forEach(content => {
-            content.style.display = 'none';
-        });
-        
-        document.getElementById(tab + '-tab').style.display = 'block';
-    }
-    
-    function requestRecord() {
-        const request = prompt('Which medical record would you like to request?');
-        if (request) {
-            alert(`Your request for "${request}" has been submitted.`);
+
+        function showDoctorsByDept(depts) {
+            const doctorSelect = document.getElementById("doctor");
+            const options = doctorSelect.querySelectorAll("option[data-dept]");
+            const groups = doctorSelect.querySelectorAll("optgroup");
+
+            options.forEach(opt => {
+                opt.style.display = depts.includes(opt.dataset.dept) ? "block" : "none";
+            });
+
+            groups.forEach(group => {
+                const hasVisible = Array.from(group.children)
+                    .some(opt => opt.style.display === "block");
+                group.style.display = hasVisible ? "block" : "none";
+            });
         }
-    }
-    
-    function viewDocument(docId) {
-        alert(`Viewing document: ${docId}`);
-    }
-    
-    function downloadFile(filename) {
-        alert(`Downloading: ${filename}`);
-    }
-    
-    // Profile Functions
-    function enableEditProfile() {
-        const inputs = document.querySelectorAll('#profileForm input, #profileForm select, #profileForm textarea');
-        inputs.forEach(input => input.disabled = false);
-        
-        document.getElementById('profileActions').style.display = 'flex';
-        
-        event.currentTarget.textContent = '🔒 Cancel Edit';
-        event.currentTarget.onclick = cancelEditProfile;
-    }
-    
-    function cancelEditProfile() {
-        const inputs = document.querySelectorAll('#profileForm input, #profileForm select, #profileForm textarea');
-        inputs.forEach(input => input.disabled = true);
-        
-        document.getElementById('profileActions').style.display = 'none';
-        
-        const editBtn = document.querySelector('#profile-section .btn-view-all');
-        editBtn.textContent = '✏️ Edit Profile';
-        editBtn.onclick = enableEditProfile;
-        
-        alert('Changes cancelled.');
-    }
-    
-    function saveProfile() {
-        alert('Profile Updated Successfully!');
-        cancelEditProfile();
-    }
-    
-    // Support Functions
-    function callSupport() {
-        alert('Calling Hospital Support\n\nPhone: (046) 483-0000');
-    }
-    
-    function emailSupport() {
-        alert('Opening email client...\n\nTo: support@standrews.com');
-    }
-    
-    function visitHospital() {
-        alert('St. Andrew Hospital\nTagaytay City, Cavite 4120');
-    }
-    
-    function toggleFaq(element) {
-        element.classList.toggle('active');
-        const answer = element.nextElementSibling;
-        answer.classList.toggle('show');
-    }
-    
-    // Modal Click Outside Handler
-    window.onclick = function(event) {
-        const bookingModal = document.getElementById('bookingModal');
-        const composeModal = document.getElementById('composeModal');
-        const viewModal = document.getElementById('viewMessageModal');
-        const replyModal = document.getElementById('replyModal');
-        const paymentModal = document.getElementById('paymentModal');
-        
-        if (event.target == bookingModal) closeBookingModal();
-        if (event.target == composeModal) closeComposeModal();
-        if (event.target == viewModal) closeViewMessageModal();
-        if (event.target == replyModal) closeReplyModal();
-        if (event.target == paymentModal) closePaymentModal();
-    }
-    
-    // Page Load Event Listeners
-    document.addEventListener('DOMContentLoaded', function() {
-        const serviceType = document.getElementById('serviceType');
-        const department = document.getElementById('department');
-        const doctor = document.getElementById('doctor');
-        const roomType = document.getElementById('roomType');
-        const duration = document.getElementById('duration');
-        
-        if (serviceType) serviceType.addEventListener('change', updateCost);
-        if (department) department.addEventListener('change', updateCost);
-        if (doctor) doctor.addEventListener('change', updateCost);
-        if (roomType) roomType.addEventListener('change', updateCost);
-        if (duration) duration.addEventListener('input', updateCost);
-        
-        const appointmentsSection = document.getElementById('appointments-section');
-        if (appointmentsSection && window.getComputedStyle(appointmentsSection).display !== 'none') {
-            loadAppointments();
+
+        // Department change handler
+        const departmentSelect = document.getElementById("department");
+        if (departmentSelect) {
+            departmentSelect.addEventListener("change", function () {
+                const dept = this.value;
+                const doctorSelect = document.getElementById("doctor");
+
+                // Reset doctor selection
+                doctorSelect.value = "";
+
+                if (dept) {
+                    showDoctorsByDept([dept]);
+                } else {
+                    // Show all doctors if no department selected
+                    doctorSelect.querySelectorAll("option[data-dept]").forEach(opt => opt.style.display = "block");
+                    doctorSelect.querySelectorAll("optgroup").forEach(g => g.style.display = "block");
+                }
+            });
         }
-    });
+
+        async function submitBooking(event) {
+            event.preventDefault();
+            
+            const formData = {
+                serviceType: document.getElementById('serviceType').value,
+                department: document.getElementById('department').value,
+                doctor: document.getElementById('doctor').value,
+                appointmentDate: document.getElementById('appointmentDate').value,
+                appointmentTime: document.getElementById('appointmentTime').value,
+                reason: document.getElementById('reason').value,
+                roomType: document.getElementById('roomType')?.value,
+                duration: document.getElementById('duration')?.value
+            };
+            
+            try {
+                const response = await fetch('/api/appointment/book', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    alert('Appointment booked successfully!');
+                    closeBookingModal();
+                    loadAppointments();
+                    showSection('appointments');
+                } else {
+                    alert(data.message || 'Failed to book appointment');
+                }
+            } catch (error) {
+                console.error('Booking error:', error);
+                alert('An error occurred while booking appointment');
+            }
+        }
+
+        async function loadAppointments() {
+            try {
+                const response = await fetch('/api/appointment/list');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    displayAppointments(data.data);
+                } else {
+                    console.error('Failed to load appointments');
+                }
+            } catch (error) {
+                console.error('Error loading appointments:', error);
+            }
+        }
+
+        function displayAppointments(appointments) {
+            const upcomingContainer = document.getElementById('upcomingAppointmentsContainer');
+            const pastContainer = document.getElementById('pastAppointmentsContainer');
+            
+            // Display upcoming appointments
+            if (appointments.upcoming && appointments.upcoming.length > 0) {
+                upcomingContainer.innerHTML = appointments.upcoming.map(apt => {
+                    // Show cancel button only if status is NOT "Cancelled", "Rejected", "Waiting to Approved", or "Approved"
+                    const showCancelButton = !['Cancelled', 'Rejected', 'Waiting to Approved', 'Approved'].includes(apt.status);
+                    
+                    return `
+                        <div class="appointment-item">
+                            <div class="appointment-info">
+                                <h4>${apt.doctor}${apt.department ? ' - ' + apt.department : ''}</h4>
+                                <p>📅 ${formatDate(apt.appointment_date)} at ${apt.appointment_time}</p>
+                                <p>🩺 ${apt.service_type}</p>
+                                <p><strong>Reason:</strong> ${apt.reason}</p>
+                                ${apt.room_type ? `<p><strong>Room Type:</strong> ${apt.room_type}</p>` : ''}
+                                ${apt.duration ? `<p><strong>Duration:</strong> ${apt.duration} day(s)</p>` : ''}
+                            </div>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <span class="appointment-status status-upcoming">${apt.status}</span>
+                                ${showCancelButton ? 
+                                    `<button class="btn-cancel" onclick="cancelAppointment(${apt.id})" style="background: #dc3545; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">Cancel</button>` 
+                                    : ''}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                upcomingContainer.innerHTML = '<p style="text-align: center; padding: 40px; color: #666;">No upcoming appointments</p>';
+            }
+            
+            // Display past appointments
+            if (appointments.past && appointments.past.length > 0) {
+                pastContainer.innerHTML = appointments.past.map(apt => {
+                    // Determine status class based on status
+                    let statusClass = 'status-completed';
+                    if (apt.status === 'Cancelled') statusClass = 'status-cancelled';
+                    else if (apt.status === 'Rejected') statusClass = 'status-rejected';
+                    else if (apt.status === 'Approved') statusClass = 'status-approved';
+                    else if (apt.status === 'Completed') statusClass = 'status-completed';
+                    
+                    return `
+                        <div class="appointment-item">
+                            <div class="appointment-info">
+                                <h4>${apt.doctor}${apt.department ? ' - ' + apt.department : ''}</h4>
+                                <p>📅 ${formatDate(apt.appointment_date)} at ${apt.appointment_time}</p>
+                                <p>🩺 ${apt.service_type}</p>
+                                <p><strong>Reason:</strong> ${apt.reason}</p>
+                                ${apt.room_type ? `<p><strong>Room Type:</strong> ${apt.room_type}</p>` : ''}
+                                ${apt.duration ? `<p><strong>Duration:</strong> ${apt.duration} day(s)</p>` : ''}
+                            </div>
+                            <span class="appointment-status ${statusClass}">${apt.status}</span>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                pastContainer.innerHTML = '<p style="text-align: center; padding: 40px; color: #666;">No past appointments</p>';
+            }
+        }
+
+        async function cancelAppointment(appointmentId) {
+            if (!confirm('Are you sure you want to cancel this appointment?')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/appointment/cancel/${appointmentId}`, {
+                    method: 'POST'
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    alert('Appointment cancelled successfully');
+                    loadAppointments();
+                } else {
+                    alert(data.message || 'Failed to cancel appointment');
+                }
+            } catch (error) {
+                console.error('Cancel error:', error);
+                alert('An error occurred while cancelling appointment');
+            }
+        }
+
+        // MESSAGE FUNCTIONS
+        function showComposeModal() {
+            document.getElementById('composeModal').style.display = 'block';
+            document.getElementById('composeForm').reset();
+        }
+
+        function closeComposeModal() {
+            document.getElementById('composeModal').style.display = 'none';
+        }
+
+        async function sendMessage(event) {
+            event.preventDefault();
+            
+            const formData = {
+                recipient: document.getElementById('recipient').value,
+                subject: document.getElementById('subject').value,
+                category: document.getElementById('category').value,
+                messageBody: document.getElementById('messageBody').value,
+                priority: document.querySelector('input[name="priority"]:checked').value
+            };
+            
+            try {
+                const response = await fetch('/api/message/send', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    alert('Message sent successfully!');
+                    closeComposeModal();
+                    loadMessages();
+                } else {
+                    alert(data.message || 'Failed to send message');
+                }
+            } catch (error) {
+                console.error('Send message error:', error);
+                alert('An error occurred while sending message');
+            }
+        }
+
+        async function loadMessages() {
+            try {
+                const response = await fetch('/api/message/list');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    displayMessages(data.data);
+                }
+            } catch (error) {
+                console.error('Error loading messages:', error);
+            }
+        }
+
+        async function loadInbox() {
+            try {
+                const response = await fetch('/api/message/inbox');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    displayInbox(data.data);
+                    
+                    // Update inbox count in tab
+                    const inboxTab = document.querySelector('.message-tabs .tab-btn:first-child');
+                    if (inboxTab) {
+                        inboxTab.textContent = `Inbox (${data.data.length})`;
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading inbox:', error);
+            }
+        }
+
+        function displayMessages(messages) {
+            const container = document.getElementById('sentMessagesContainer');
+            
+            if (messages && messages.length > 0) {
+                container.innerHTML = messages.map(msg => `
+                    <div class="message-item" onclick="viewMessage(${msg.id})" style="cursor: pointer; padding: 15px; border: 1px solid #e0e0e0; border-radius: 8px; margin-bottom: 10px;">
+                        <div class="message-header" style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <h4 style="margin: 0;">${msg.subject}</h4>
+                            <span class="message-date" style="color: #666;">${formatDate(msg.sent_date)}</span>
+                        </div>
+                        <p style="margin: 5px 0;"><strong>To:</strong> ${msg.recipient}</p>
+                        <p style="margin: 5px 0;"><strong>Category:</strong> ${msg.category}</p>
+                        <p class="message-preview" style="color: #666; margin: 10px 0 0 0;">${msg.message_body.substring(0, 100)}...</p>
+                    </div>
+                `).join('');
+            } else {
+                container.innerHTML = '<p style="text-align: center; padding: 40px; color: #666;">No sent messages</p>';
+            }
+        }
+
+        function displayInbox(messages) {
+            const container = document.getElementById('inboxMessagesContainer');
+            
+            if (messages && messages.length > 0) {
+                container.innerHTML = messages.map(msg => `
+                    <div class="message-item ${msg.is_read ? '' : 'unread'}" onclick="viewInboxMessage(${msg.id})" style="cursor: pointer; padding: 15px; border: 1px solid #e0e0e0; border-radius: 8px; margin-bottom: 10px; ${!msg.is_read ? 'background: #f0f8ff;' : ''}">
+                        <div class="message-header" style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <h4 style="margin: 0;">${msg.subject} ${!msg.is_read ? '<span class="badge-new" style="background: #dc3545; color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; margin-left: 8px;">NEW</span>' : ''}</h4>
+                            <span class="message-date" style="color: #666;">${formatDate(msg.sent_date)}</span>
+                        </div>
+                        <p style="margin: 5px 0;"><strong>From:</strong> ${msg.sender_name} (${msg.sender_type})</p>
+                        <p style="margin: 5px 0;"><strong>Category:</strong> ${msg.category}</p>
+                        <p class="message-preview" style="color: #666; margin: 10px 0 0 0;">${msg.message_body.substring(0, 100)}...</p>
+                    </div>
+                `).join('');
+            } else {
+                container.innerHTML = '<p style="text-align: center; padding: 40px; color: #666;">No inbox messages</p>';
+            }
+        }
+
+        function viewMessage(messageId) {
+            fetch(`/api/message/${messageId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        const message = data.data;
+                        currentMessage = message;
+                        document.getElementById('viewSubject').textContent = message.subject;
+                        document.getElementById('viewRecipient').textContent = message.recipient;
+                        document.getElementById('viewCategory').textContent = message.category;
+                        document.getElementById('viewDate').textContent = formatDate(message.sent_date);
+                        document.getElementById('viewPriority').textContent = message.priority.toUpperCase();
+                        document.getElementById('viewBody').textContent = message.message_body;
+                        
+                        document.getElementById('viewMessageModal').style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error viewing message:', error);
+                    alert('Failed to load message');
+                });
+        }
+
+        function viewInboxMessage(messageId) {
+            // For now, since inbox is empty, we'll keep the old implementation
+            // You can update this when you implement the inbox functionality
+            fetch(`/api/message/inbox`)
+                .then(response => response.json())
+                .then(data => {
+                    const message = data.data.find(m => m.id === messageId);
+                    if (message) {
+                        currentMessage = message;
+                        document.getElementById('viewSubject').textContent = message.subject;
+                        document.getElementById('viewRecipient').textContent = `From: ${message.sender_name}`;
+                        document.getElementById('viewCategory').textContent = message.category;
+                        document.getElementById('viewDate').textContent = formatDate(message.sent_date);
+                        document.getElementById('viewPriority').textContent = message.priority.toUpperCase();
+                        document.getElementById('viewBody').textContent = message.message_body;
+                        
+                        document.getElementById('viewMessageModal').style.display = 'block';
+                    }
+                });
+        }
+
+        function closeViewMessageModal() {
+            document.getElementById('viewMessageModal').style.display = 'none';
+        }
+
+        function showReplyModal() {
+            if (!currentMessage) return;
+            
+            document.getElementById('replyOriginalSubject').textContent = currentMessage.subject;
+            document.getElementById('replyRecipient').textContent = currentMessage.recipient;
+            document.getElementById('replyToDoctor').value = currentMessage.recipient;
+            document.getElementById('replyToCategory').value = currentMessage.category;
+            document.getElementById('replyToSubject').value = currentMessage.subject;
+            
+            closeViewMessageModal();
+            document.getElementById('replyModal').style.display = 'block';
+        }
+
+        function closeReplyModal() {
+            document.getElementById('replyModal').style.display = 'none';
+        }
+
+        async function sendReply(event) {
+            event.preventDefault();
+            
+            const formData = {
+                parentMessageId: currentMessage.id,
+                messageBody: document.getElementById('replyBody').value,
+                priority: document.querySelector('input[name="replyPriority"]:checked').value
+            };
+            
+            try {
+                const response = await fetch('/api/message/reply', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    alert('Reply sent successfully!');
+                    closeReplyModal();
+                    loadMessages();
+                } else {
+                    alert(data.message || 'Failed to send reply');
+                }
+            } catch (error) {
+                console.error('Send reply error:', error);
+                alert('An error occurred while sending reply');
+            }
+        }
+
+        function showMessageTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.message-tab-content').forEach(tab => {
+                tab.style.display = 'none';
+            });
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.message-tabs .tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(`${tabName}-tab`).style.display = 'block';
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return date.toLocaleDateString('en-US', options);
+        }
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+
+        function toggleFaq(element) {
+            const faqItem = element.closest('.faq-item');
+            const answer = faqItem.querySelector('.faq-answer');
+            const toggle = element.querySelector('.faq-toggle');
+            
+            if (answer.style.display === 'block') {
+                answer.style.display = 'none';
+                toggle.textContent = '+';
+            } else {
+                answer.style.display = 'block';
+                toggle.textContent = '-';
+            }
+        }
+
+        function showRecordTab(tabName) {
+            document.querySelectorAll('.record-tab-content').forEach(tab => {
+                tab.style.display = 'none';
+            });
+            document.querySelectorAll('.message-tabs .tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(`${tabName}-tab`).style.display = 'block';
+            event.target.classList.add('active');
+        }
+
+        function viewDocument(docId) {
+            alert(`Viewing document: ${docId} - Feature coming soon`);
+        }
+
+        function downloadFile(filename) {
+            alert(`Downloading: ${filename} - Feature coming soon`);
+        }
+
+        function requestRecord() {
+            alert('Record request feature - Coming soon');
+        }
+
+        function enableEditProfile() {
+            const formFields = document.querySelectorAll('#profileForm input, #profileForm select, #profileForm textarea');
+            formFields.forEach(field => field.disabled = false);
+            document.getElementById('profileActions').style.display = 'flex';
+        }
+
+        function cancelEditProfile() {
+            const formFields = document.querySelectorAll('#profileForm input, #profileForm select, #profileForm textarea');
+            formFields.forEach(field => field.disabled = true);
+            document.getElementById('profileActions').style.display = 'none';
+            document.getElementById('profileForm').reset();
+        }
+
+        function saveProfile() {
+            alert('Profile update feature - Coming soon');
+            cancelEditProfile();
+        }
+
+        function callSupport() {
+            window.location.href = 'tel:+63464830000';
+        }
+
+        function emailSupport() {
+            window.location.href = 'mailto:support@standrews.com';
+        }
+
+        function visitHospital() {
+            window.open('https://maps.google.com/?q=St.+Andrew+Hospital+Tagaytay', '_blank');
+        }
     </script>
 </body>
 </html>

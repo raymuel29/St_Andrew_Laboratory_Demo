@@ -1,48 +1,55 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Front Desk/Admission Module - St. Andrew Hospital</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         :root {
-            --primary: 168 85% 60%;
-            --primary-foreground: 0 0% 100%;
-            --secondary: 240 4% 16%;
-            --secondary-foreground: 0 0% 100%;
-            --accent: 142 71% 45%;
-            --accent-foreground: 0 0% 100%;
-            --background: 0 0% 7%;
-            --foreground: 0 0% 98%;
-            --card: 240 4% 10%;
-            --card-foreground: 0 0% 98%;
-            --border: 240 4% 16%;
-            --muted: 240 4% 16%;
-            --muted-foreground: 240 5% 65%;
+            --primary: hsl(168, 85%, 60%);
+            --primary-foreground: hsl(0, 0%, 100%);
+            --secondary: hsl(240, 4%, 16%);
+            --secondary-foreground: hsl(0, 0%, 100%);
+            --accent: hsl(142, 71%, 45%);
+            --accent-foreground: hsl(0, 0%, 100%);
+            --background: hsl(0, 0%, 7%);
+            --foreground: hsl(0, 0%, 98%);
+            --card: hsl(240, 4%, 10%);
+            --card-foreground: hsl(0, 0%, 98%);
+            --border: hsl(240, 4%, 16%);
+            --muted: hsl(240, 4%, 16%);
+            --muted-foreground: hsl(240, 5%, 65%);
         }
         
         body {
-            background-color: hsl(var(--background));
-            color: hsl(var(--foreground));
+            background-color: var(--background);
+            color: var(--foreground);
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
         
         .card {
-            background-color: hsl(var(--card));
-            border: 1px solid hsl(var(--border));
+            background-color: var(--card);
+            border: 1px solid var(--border);
             border-radius: 8px;
         }
         
         .btn-primary {
-            background-color: hsl(var(--primary));
-            color: hsl(var(--primary-foreground));
+            background-color: var(--primary);
+            color: var(--primary-foreground);
             border: none;
             padding: 10px 20px;
             border-radius: 6px;
             cursor: pointer;
             font-weight: 500;
             transition: opacity 0.2s;
+            font-size: 14px;
         }
         
         .btn-primary:hover {
@@ -50,48 +57,52 @@
         }
         
         .btn-secondary {
-            background-color: hsl(var(--secondary));
-            color: hsl(var(--secondary-foreground));
-            border: 1px solid hsl(var(--border));
+            background-color: var(--secondary);
+            color: var(--secondary-foreground);
+            border: 1px solid var(--border);
             padding: 10px 20px;
             border-radius: 6px;
             cursor: pointer;
             font-weight: 500;
             transition: background-color 0.2s;
+            font-size: 14px;
         }
         
         .btn-secondary:hover {
-            background-color: hsl(240 4% 20%);
+            background-color: hsl(240, 4%, 20%);
         }
         
         .btn-success {
-            background-color: hsl(var(--accent));
-            color: hsl(var(--accent-foreground));
+            background-color: var(--accent);
+            color: var(--accent-foreground);
             border: none;
             padding: 10px 20px;
             border-radius: 6px;
             cursor: pointer;
             font-weight: 500;
+            font-size: 14px;
         }
         
         .btn-danger {
-            background-color: hsl(0 72% 51%);
+            background-color: hsl(0, 72%, 51%);
             color: white;
             border: none;
             padding: 10px 20px;
             border-radius: 6px;
             cursor: pointer;
             font-weight: 500;
+            font-size: 14px;
         }
         
         .btn-warning {
-            background-color: hsl(45 93% 47%);
-            color: hsl(0 0% 7%);
+            background-color: hsl(45, 93%, 47%);
+            color: hsl(0, 0%, 7%);
             border: none;
             padding: 10px 20px;
             border-radius: 6px;
             cursor: pointer;
             font-weight: 500;
+            font-size: 14px;
         }
         
         .nav-item {
@@ -105,12 +116,27 @@
         }
         
         .nav-item:hover {
-            background-color: hsl(var(--secondary));
+            background-color: var(--secondary);
         }
         
         .nav-item.active {
-            background-color: hsl(var(--secondary));
-            color: hsl(var(--primary));
+            background-color: var(--secondary);
+            color: var(--primary);
+        }
+        
+        .nav-submenu {
+            margin-left: 20px;
+            margin-top: 8px;
+            display: none;
+        }
+        
+        .nav-submenu.active {
+            display: block;
+        }
+        
+        .nav-submenu .nav-item {
+            padding: 10px 12px;
+            font-size: 14px;
         }
         
         .table {
@@ -121,19 +147,19 @@
         .table th {
             text-align: left;
             padding: 12px;
-            border-bottom: 1px solid hsl(var(--border));
-            color: hsl(var(--muted-foreground));
+            border-bottom: 1px solid var(--border);
+            color: var(--muted-foreground);
             font-size: 14px;
             font-weight: 500;
         }
         
         .table td {
             padding: 12px;
-            border-bottom: 1px solid hsl(var(--border));
+            border-bottom: 1px solid var(--border);
         }
         
         .table tr:hover {
-            background-color: hsl(240 4% 12%);
+            background-color: hsl(240, 4%, 12%);
         }
         
         .badge {
@@ -145,48 +171,45 @@
         }
         
         .badge-success {
-            background-color: hsl(142 71% 45% / 0.2);
-            color: hsl(142 71% 60%);
+            background-color: hsl(142, 71%, 45%, 0.2);
+            color: hsl(142, 71%, 60%);
         }
         
         .badge-warning {
-            background-color: hsl(45 93% 47% / 0.2);
-            color: hsl(45 93% 60%);
+            background-color: hsl(45, 93%, 47%, 0.2);
+            color: hsl(45, 93%, 60%);
         }
         
         .badge-info {
-            background-color: hsl(200 90% 50% / 0.2);
-            color: hsl(200 90% 60%);
+            background-color: hsl(200, 90%, 50%, 0.2);
+            color: hsl(200, 90%, 60%);
         }
         
         .badge-danger {
-            background-color: hsl(0 72% 51% / 0.2);
-            color: hsl(0 72% 65%);
+            background-color: hsl(0, 72%, 51%, 0.2);
+            color: hsl(0, 72%, 65%);
         }
         
         .badge-primary {
-            background-color: hsl(var(--primary) / 0.2);
-            color: hsl(var(--primary));
+            background-color: hsla(168, 85%, 60%, 0.2);
+            color: var(--primary);
         }
         
         input, select, textarea {
-            background-color: hsl(var(--secondary));
-            border: 1px solid hsl(var(--border));
-            color: hsl(var(--foreground));
+            background-color: var(--secondary);
+            border: 1px solid var(--border);
+            color: var(--foreground);
             padding: 10px 14px;
             border-radius: 6px;
             width: 100%;
             font-size: 14px;
+            font-family: inherit;
         }
         
         input:focus, select:focus, textarea:focus {
             outline: none;
-            border-color: hsl(var(--primary));
-            box-shadow: 0 0 0 3px hsl(var(--primary) / 0.1);
-        }
-        
-        input::placeholder {
-            color: hsl(var(--muted-foreground));
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px hsla(168, 85%, 60%, 0.1);
         }
         
         label {
@@ -194,9 +217,9 @@
             margin-bottom: 8px;
             font-weight: 500;
             font-size: 14px;
-            color: hsl(var(--foreground));
+            color: var(--foreground);
         }
-        
+
         .modal {
             display: none;
             position: fixed;
@@ -215,7 +238,7 @@
         }
         
         .modal-content {
-            background-color: hsl(var(--card));
+            background-color: var(--card);
             border-radius: 8px;
             max-width: 700px;
             width: 90%;
@@ -224,8 +247,8 @@
         }
         
         .stat-card {
-            background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(240 4% 13%) 100%);
-            border: 1px solid hsl(var(--border));
+            background: linear-gradient(135deg, var(--card) 0%, hsl(240, 4%, 13%) 100%);
+            border: 1px solid var(--border);
             border-radius: 8px;
             padding: 20px;
         }
@@ -247,47 +270,42 @@
             left: 12px;
             top: 50%;
             transform: translateY(-50%);
-            color: hsl(var(--muted-foreground));
+            color: var(--muted-foreground);
         }
 
-        .patient-card {
-            background-color: hsl(var(--card));
-            border: 1px solid hsl(var(--border));
+        .bed-card {
+            background-color: var(--card);
+            border: 2px solid var(--border);
             border-radius: 8px;
             padding: 16px;
             transition: all 0.2s;
             cursor: pointer;
-        }
-
-        .patient-card:hover {
-            border-color: hsl(var(--primary));
-            transform: translateY(-2px);
-        }
-
-        .time-slot {
-            padding: 10px 16px;
-            border: 1px solid hsl(var(--border));
-            border-radius: 6px;
             text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
         }
 
-        .time-slot:hover {
-            border-color: hsl(var(--primary));
-            background-color: hsl(var(--secondary));
+        .bed-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
 
-        .time-slot.selected {
-            background-color: hsl(var(--primary));
-            border-color: hsl(var(--primary));
-            color: white;
+        .bed-card.occupied {
+            border-color: hsl(0, 72%, 51%);
+            background-color: hsl(0, 72%, 51%, 0.1);
         }
 
-        .time-slot.booked {
-            background-color: hsl(var(--muted));
-            cursor: not-allowed;
-            opacity: 0.5;
+        .bed-card.available {
+            border-color: hsl(142, 71%, 45%);
+            background-color: hsl(142, 71%, 45%, 0.1);
+        }
+
+        .bed-card.reserved {
+            border-color: hsl(45, 93%, 47%);
+            background-color: hsl(45, 93%, 47%, 0.1);
+        }
+
+        .bed-card.maintenance {
+            border-color: hsl(240, 5%, 65%);
+            background-color: hsl(240, 5%, 65%, 0.1);
         }
 
         .form-grid {
@@ -305,37 +323,451 @@
             font-weight: 600;
             margin-bottom: 16px;
             padding-bottom: 8px;
-            border-bottom: 1px solid hsl(var(--border));
-            color: hsl(var(--primary));
+            border-bottom: 1px solid var(--border);
+            color: var(--primary);
         }
+
+        .ward-card {
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.2s;
+        }
+
+        .ward-card:hover {
+            border-color: var(--primary);
+        }
+
+        .floor-selector {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .floor-btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background-color: var(--secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--foreground);
+        }
+
+        .floor-btn:hover {
+            border-color: var(--primary);
+        }
+
+        .floor-btn.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Header styles */
+        header {
+            border-bottom: 1px solid var(--border);
+            background-color: var(--card);
+        }
+
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 24px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--accent);
+        }
+
+        .header-title h1 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .header-title p {
+            font-size: 14px;
+            color: var(--muted-foreground);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header-user {
+            color: var(--muted-foreground);
+        }
+
+        /* Layout */
+        .main-layout {
+            display: flex;
+        }
+
+        aside {
+            width: 256px;
+            min-height: 100vh;
+            border-right: 1px solid var(--border);
+            padding: 16px;
+            background-color: var(--card);
+        }
+
+        main {
+            flex: 1;
+            padding: 24px;
+        }
+
+        nav {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* Sections spacing */
+        #patient-admission,
+        #admission-list {
+            padding: 24px;
+        }
+
+        /* Titles */
+        #patient-admission h2,
+        #admission-list h2 {
+            margin-bottom: 24px;
+        }
+
+        #patient-admission h3,
+        #admission-list h3 {
+            margin-bottom: 16px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        /* Form layout */
+        #patient-admission .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        /* Deposit input */
+        #patient-admission #depositAmount {
+            max-width: 220px;
+        }
+
+        /* Button spacing */
+        #patient-admission button[type="submit"] {
+            margin-top: 12px;
+        }
+
+        /* Search input */
+        #admission-list #patientSearchInput {
+            max-width: 500px;
+        }
+
+        /* Table container */
+        #admission-list .table-container {
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        /* Admission table */
+        #admission-list #patientsTable {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        #admission-list #patientsTable thead {
+            background-color: var(--secondary);
+        }
+
+        #admission-list #patientsTable th {
+            padding: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            border-bottom: 1px solid var(--border);
+            color: var(--muted-foreground);
+        }
+
+        #admission-list #patientsTable td {
+            padding: 12px;
+            font-size: 14px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        #admission-list #patientsTable tbody tr:hover {
+            background-color: hsl(240, 4%, 12%);
+        }
+
+        /* Empty state */
+        #admission-list #patientsTable td[colspan] {
+            text-align: center;
+            padding: 32px;
+            color: var(--muted-foreground);
+            font-style: italic;
+        }
+
+        /* Visit status badge (optional use) */
+        .visit-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .visit-status.admitted {
+            background-color: hsla(168, 85%, 60%, 0.2);
+            color: var(--primary);
+        }
+
+        .visit-status.discharged {
+            background-color: hsla(0, 72%, 51%, 0.2);
+            color: hsl(0, 72%, 65%);
+        }
+
+        /* Action buttons container (future-safe) */
+        .table-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Responsive fix */
+        @media (max-width: 768px) {
+            #patient-admission .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+
+
+        /* Grid utilities */
+        .grid {
+            display: grid;
+        }
+
+        .grid-cols-1 { grid-template-columns: repeat(1, 1fr); }
+        .grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+        .grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+        .grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+        @media (min-width: 768px) {
+            .md-grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+            .md-grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+        }
+
+        @media (min-width: 1024px) {
+            .lg-grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+            .lg-grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+            .lg-grid-cols-6 { grid-template-columns: repeat(6, 1fr); }
+        }
+
+        @media (min-width: 1280px) {
+            .xl-grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        .gap-4 { gap: 16px; }
+        .gap-6 { gap: 24px; }
+
+        /* Flexbox utilities */
+        .flex {
+            display: flex;
+        }
+
+        .flex-1 {
+            flex: 1;
+        }
+
+        .flex-wrap {
+            flex-wrap: wrap;
+        }
+
+        .items-center {
+            align-items: center;
+        }
+
+        .items-end {
+            align-items: flex-end;
+        }
+
+        .items-start {
+            align-items: flex-start;
+        }
+
+        .justify-between {
+            justify-content: space-between;
+        }
+
+        .gap-2 { gap: 8px; }
+        .gap-3 { gap: 12px; }
+        .gap-4 { gap: 16px; }
+
+        /* Spacing */
+        .p-0 { padding: 0; }
+        .p-3 { padding: 12px; }
+        .p-4 { padding: 16px; }
+        .p-6 { padding: 24px; }
+
+        .mb-1 { margin-bottom: 4px; }
+        .mb-2 { margin-bottom: 8px; }
+        .mb-4 { margin-bottom: 16px; }
+        .mb-6 { margin-bottom: 24px; }
+        .mb-8 { margin-bottom: 32px; }
+
+        .mt-1 { margin-top: 4px; }
+        .mt-6 { margin-top: 24px; }
+
+        .ml-auto {
+            margin-left: auto;
+        }
+
+        /* Text utilities */
+        .text-sm { font-size: 14px; }
+        .text-lg { font-size: 18px; }
+        .text-xl { font-size: 20px; }
+        .text-2xl { font-size: 24px; }
+        .text-3xl { font-size: 30px; }
+
+        .font-semibold { font-weight: 600; }
+        .font-bold { font-weight: 700; }
+
+        .capitalize { text-transform: capitalize; }
+
+        /* Width utilities */
+        .w-full { width: 100%; }
+        .w-48 { width: 192px; }
+        .w-64 { width: 256px; }
+        .min-w-64 { min-width: 256px; }
+
+        /* Size utilities */
+        .w-2 { width: 8px; }
+        .h-2 { height: 8px; }
+        .w-4 { width: 16px; }
+        .h-4 { height: 16px; }
+        .w-5 { width: 20px; }
+        .h-5 { height: 20px; }
+        .w-6 { width: 24px; }
+        .h-6 { height: 24px; }
+        .w-10 { width: 40px; }
+        .h-10 { height: 40px; }
+
+        /* Border utilities */
+        .rounded { border-radius: 4px; }
+        .rounded-lg { border-radius: 8px; }
+        .rounded-full { border-radius: 9999px; }
+
+        /* Other utilities */
+        .inline { display: inline; }
+        .cursor-pointer { cursor: pointer; }
+
+        .col-span-2 {
+            grid-column: span 2;
+        }
+
+        /* Space utilities */
+        .space-y-2 > * + * {
+            margin-top: 8px;
+        }
+
+        .space-y-3 > * + * {
+            margin-top: 12px;
+        }
+
+        .space-y-4 > * + * {
+            margin-top: 16px;
+        }
+
+        .space-y-6 > * + * {
+            margin-top: 24px;
+        }
+
+        /* Progress bar */
+        .progress-bar {
+            width: 100%;
+            background-color: #374151;
+            border-radius: 9999px;
+            height: 8px;
+        }
+
+        .progress-fill {
+            height: 8px;
+            border-radius: 9999px;
+        }
+
+        .bg-green-500 { background-color: #10b981; }
+        .bg-yellow-500 { background-color: #f59e0b; }
+        .bg-blue-500 { background-color: #3b82f6; }
+        .bg-red-500 { background-color: #ef4444; }
+
+        .text-green-400 { color: #34d399; }
+        .text-red-400 { color: #f87171; }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        
     </style>
 </head>
-<body class="p-0 m-0">
+<body class="p-0">
     <!-- Header -->
-    <header class="border-b" style="border-color: hsl(var(--border)); background-color: hsl(var(--card));">
-        <div class="flex items-center justify-between px-6 py-4">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background-color: hsl(var(--accent));">
+    <header>
+        <div class="header-container">
+            <div class="header-left">
+                <div class="header-icon">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                     </svg>
                 </div>
-                <div>
-                    <h1 class="text-xl font-semibold">Front Desk/Admission</h1>
-                    <p class="text-sm" style="color: hsl(var(--muted-foreground));">St. Andrew Hospital</p>
+                <div class="header-title">
+                    <h1>Front Desk/Admission</h1>
+                    <p>St. Andrew Hospital</p>
                 </div>
             </div>
-            <div class="flex items-center gap-4">
-                <span style="color: hsl(var(--muted-foreground));">Staff: <span id="currentUserName">Maria Santos</span></span>
+            <div class="header-right">
+                <span class="header-user">Staff: <span id="currentUserName">Maria Santos</span></span>
                 <button class="btn-secondary" onclick="logout()">Logout</button>
             </div>
         </div>
     </header>
 
-    <div class="flex">
+    <div class="main-layout">
         <!-- Sidebar -->
-        <aside class="w-64 min-h-screen border-r p-4" style="border-color: hsl(var(--border)); background-color: hsl(var(--card));">
-            <nav class="space-y-2">
+        <aside>
+            <nav>
                 <div class="nav-item active" onclick="showSection('dashboard')">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
@@ -354,12 +786,83 @@
                     </svg>
                     Appointments
                 </div>
+                <div class="nav-item" onclick="showSection('messages')">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                    Messages
+                    <span class="badge badge-danger ml-auto" id="unreadCount">3</span>
+                </div>
                 <div class="nav-item" onclick="showSection('checkin')">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                     Check-in/Check-out
                 </div>
+                
+                <!-- In-Patient Management Section -->
+                <div>
+                    <div class="nav-item" onclick="toggleSubmenu('inpatient')">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                        </svg>
+                        In-Patient Management
+                        <svg class="w-4 h-4 ml-auto" id="inpatient-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </div>
+                    <div class="nav-submenu" id="inpatient-submenu">
+                        <div class="nav-item" onclick="showSection('admission-request')">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                            Admission Request
+                        </div>
+                        <div class="nav-item" onclick="showSection('patient-admission')">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
+                            </svg>
+                            Patient Admission
+                        </div>
+                        <div class="nav-item" onclick="showSection('admission-list')">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                            </svg>
+                            Admission List
+                        </div>
+                        <div class="nav-item" onclick="showSection('bed-status')">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                            </svg>
+                            Bed Status
+                        </div>
+                        <div class="nav-item" onclick="showSection('ward-rooms')">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                            </svg>
+                            Ward/Room Management
+                        </div>
+                        <div class="nav-item" onclick="showSection('doctor-transfer')">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
+                            </svg>
+                            Doctor Transfer
+                        </div>
+                        <div class="nav-item" onclick="showSection('room-transfer')">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
+                            </svg>
+                            Room Transfer
+                        </div>
+                        <div class="nav-item" onclick="showSection('patient-discharge')">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                            </svg>
+                            Patient Discharge
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="nav-item" onclick="showSection('insurance')">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
@@ -382,112 +885,130 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="flex-1 p-6">
+        <main>
             <!-- Dashboard Section -->
             <section id="dashboard" class="content-section">
                 <h2 class="text-2xl font-semibold mb-6">Front Desk Dashboard</h2>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                <div class="grid grid-cols-1 md-grid-cols-2 lg-grid-cols-4 gap-4 mb-8">
                     <div class="stat-card">
                         <div class="flex items-center justify-between mb-2">
-                            <span style="color: hsl(var(--muted-foreground));">Today's Check-ins</span>
-                            <svg class="w-5 h-5" style="color: hsl(var(--accent));" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <span style="color: var(--muted-foreground);">Today's Check-ins</span>
+                            <svg class="w-5 h-5" style="color: var(--accent);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
                         </div>
                         <div class="text-3xl font-bold">32</div>
-                        <div class="text-sm mt-1" style="color: hsl(var(--accent));">+8 from yesterday</div>
+                        <div class="text-sm mt-1" style="color: var(--accent);">+8 from yesterday</div>
                     </div>
                     
                     <div class="stat-card">
                         <div class="flex items-center justify-between mb-2">
-                            <span style="color: hsl(var(--muted-foreground));">Scheduled Appointments</span>
-                            <svg class="w-5 h-5" style="color: hsl(var(--primary));" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            <span style="color: var(--muted-foreground);">In-Patients</span>
+                            <svg class="w-5 h-5" style="color: var(--primary);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
                             </svg>
                         </div>
-                        <div class="text-3xl font-bold">45</div>
-                        <div class="text-sm mt-1" style="color: hsl(var(--muted-foreground));">18 remaining today</div>
+                        <div class="text-3xl font-bold">78</div>
+                        <div class="text-sm mt-1" style="color: var(--muted-foreground);">85% bed occupancy</div>
                     </div>
                     
                     <div class="stat-card">
                         <div class="flex items-center justify-between mb-2">
-                            <span style="color: hsl(var(--muted-foreground));">Waiting Patients</span>
-                            <svg class="w-5 h-5" style="color: hsl(45 93% 60%);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <span style="color: var(--muted-foreground);">Available Beds</span>
+                            <svg class="w-5 h-5" style="color: hsl(45, 93%, 60%);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                            </svg>
+                        </div>
+                        <div class="text-3xl font-bold">14</div>
+                        <div class="text-sm mt-1" style="color: var(--muted-foreground);">Out of 92 total beds</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between mb-2">
+                            <span style="color: var(--muted-foreground);">Pending Admissions</span>
+                            <svg class="w-5 h-5" style="color: hsl(200, 90%, 60%);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
                         </div>
-                        <div class="text-3xl font-bold">12</div>
-                        <div class="text-sm mt-1" style="color: hsl(45 93% 60%);">Avg wait: 15 mins</div>
-                    </div>
-                    
-                    <div class="stat-card">
-                        <div class="flex items-center justify-between mb-2">
-                            <span style="color: hsl(var(--muted-foreground));">New Registrations</span>
-                            <svg class="w-5 h-5" style="color: hsl(200 90% 60%);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
-                            </svg>
-                        </div>
-                        <div class="text-3xl font-bold">7</div>
-                        <div class="text-sm mt-1" style="color: hsl(var(--muted-foreground));">This week</div>
+                        <div class="text-3xl font-bold">6</div>
+                        <div class="text-sm mt-1" style="color: var(--muted-foreground);">Awaiting room assignment</div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 lg-grid-cols-2 gap-6">
                     <div class="card p-6">
-                        <h3 class="text-lg font-semibold mb-4">Today's Appointments</h3>
+                        <h3 class="text-lg font-semibold mb-4">Recent Activities</h3>
                         <div class="space-y-3">
-                            <div class="flex items-center justify-between p-3 rounded-lg" style="background-color: hsl(var(--secondary));">
-                                <div>
-                                    <div class="font-medium">John Smith</div>
-                                    <div class="text-sm" style="color: hsl(var(--muted-foreground));">Dr. Sarah Johnson - 9:00 AM</div>
+                            <div class="flex gap-3 p-3 rounded-lg" style="background-color: var(--secondary);">
+                                <div class="w-2 h-2 rounded-full mt-2" style="background-color: var(--accent);"></div>
+                                <div class="flex-1">
+                                    <div class="font-semibold">Patient admitted to ICU</div>
+                                    <div class="text-sm" style="color: var(--muted-foreground);">John Smith - Bed 302-A</div>
+                                    <div class="text-sm mt-1" style="color: var(--muted-foreground);">5 minutes ago</div>
                                 </div>
-                                <span class="badge badge-success">Checked-in</span>
                             </div>
-                            <div class="flex items-center justify-between p-3 rounded-lg" style="background-color: hsl(var(--secondary));">
-                                <div>
-                                    <div class="font-medium">Emma Davis</div>
-                                    <div class="text-sm" style="color: hsl(var(--muted-foreground));">Dr. Michael Chen - 10:30 AM</div>
+                            
+                            <div class="flex gap-3 p-3 rounded-lg" style="background-color: var(--secondary);">
+                                <div class="w-2 h-2 rounded-full mt-2" style="background-color: var(--primary);"></div>
+                                <div class="flex-1">
+                                    <div class="font-semibold">Room transfer completed</div>
+                                    <div class="text-sm" style="color: var(--muted-foreground);">Emma Davis - 201-B to 305-A</div>
+                                    <div class="text-sm mt-1" style="color: var(--muted-foreground);">15 minutes ago</div>
                                 </div>
-                                <span class="badge badge-warning">Waiting</span>
                             </div>
-                            <div class="flex items-center justify-between p-3 rounded-lg" style="background-color: hsl(var(--secondary));">
-                                <div>
-                                    <div class="font-medium">Robert Taylor</div>
-                                    <div class="text-sm" style="color: hsl(var(--muted-foreground));">Dr. Sarah Johnson - 2:00 PM</div>
+                            
+                            <div class="flex gap-3 p-3 rounded-lg" style="background-color: var(--secondary);">
+                                <div class="w-2 h-2 rounded-full mt-2" style="background-color: hsl(45, 93%, 60%);"></div>
+                                <div class="flex-1">
+                                    <div class="font-semibold">Patient discharged</div>
+                                    <div class="text-sm" style="color: var(--muted-foreground);">Robert Taylor - Ward 4</div>
+                                    <div class="text-sm mt-1" style="color: var(--muted-foreground);">1 hour ago</div>
                                 </div>
-                                <span class="badge badge-info">Scheduled</span>
                             </div>
                         </div>
                     </div>
 
                     <div class="card p-6">
-                        <h3 class="text-lg font-semibold mb-4">Recent Activities</h3>
+                        <h3 class="text-lg font-semibold mb-4">Ward Occupancy Overview</h3>
                         <div class="space-y-3">
-                            <div class="flex gap-3 p-3 rounded-lg" style="background-color: hsl(var(--secondary));">
-                                <div class="w-2 h-2 rounded-full mt-2" style="background-color: hsl(var(--accent));"></div>
-                                <div class="flex-1">
-                                    <div class="font-medium">New patient registered</div>
-                                    <div class="text-sm" style="color: hsl(var(--muted-foreground));">Linda Martinez - #PAT1234</div>
-                                    <div class="text-xs mt-1" style="color: hsl(var(--muted-foreground));">10 minutes ago</div>
+                            <div class="p-3 rounded-lg" style="background-color: var(--secondary);">
+                                <div class="flex justify-between mb-2">
+                                    <span class="font-semibold">General Ward</span>
+                                    <span class="text-sm" style="color: var(--muted-foreground);">28/32 beds</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill bg-green-500" style="width: 87.5%"></div>
                                 </div>
                             </div>
-                            
-                            <div class="flex gap-3 p-3 rounded-lg" style="background-color: hsl(var(--secondary));">
-                                <div class="w-2 h-2 rounded-full mt-2" style="background-color: hsl(var(--primary));"></div>
-                                <div class="flex-1">
-                                    <div class="font-medium">Appointment scheduled</div>
-                                    <div class="text-sm" style="color: hsl(var(--muted-foreground));">Robert Wilson - Jan 5, 2025</div>
-                                    <div class="text-xs mt-1" style="color: hsl(var(--muted-foreground));">25 minutes ago</div>
+
+                            <div class="p-3 rounded-lg" style="background-color: var(--secondary);">
+                                <div class="flex justify-between mb-2">
+                                    <span class="font-semibold">ICU</span>
+                                    <span class="text-sm" style="color: var(--muted-foreground);">10/12 beds</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill bg-yellow-500" style="width: 83.3%"></div>
                                 </div>
                             </div>
-                            
-                            <div class="flex gap-3 p-3 rounded-lg" style="background-color: hsl(var(--secondary));">
-                                <div class="w-2 h-2 rounded-full mt-2" style="background-color: hsl(45 93% 60%);"></div>
-                                <div class="flex-1">
-                                    <div class="font-medium">Insurance verified</div>
-                                    <div class="text-sm" style="color: hsl(var(--muted-foreground));">Emma Davis - PhilHealth</div>
-                                    <div class="text-xs mt-1" style="color: hsl(var(--muted-foreground));">1 hour ago</div>
+
+                            <div class="p-3 rounded-lg" style="background-color: var(--secondary);">
+                                <div class="flex justify-between mb-2">
+                                    <span class="font-semibold">Private Rooms</span>
+                                    <span class="text-sm" style="color: var(--muted-foreground);">18/24 beds</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill bg-blue-500" style="width: 75%"></div>
+                                </div>
+                            </div>
+
+                            <div class="p-3 rounded-lg" style="background-color: var(--secondary);">
+                                <div class="flex justify-between mb-2">
+                                    <span class="font-semibold">Maternity Ward</span>
+                                    <span class="text-sm" style="color: var(--muted-foreground);">22/24 beds</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill bg-red-500" style="width: 91.6%"></div>
                                 </div>
                             </div>
                         </div>
@@ -532,12 +1053,27 @@
                                     </select>
                                 </div>
                                 <div>
+                                    <label>Blood Type</label>
+                                    <select id="bloodType">
+                                        <option value="">Select blood type</option>
+                                        <option value="O+">O+</option>
+                                        <option value="O-">O-</option>
+                                        <option value="A+">A+</option>
+                                        <option value="A-">A-</option>
+                                        <option value="B+">B+</option>
+                                        <option value="B-">B-</option>
+                                        <option value="AB+">AB+</option>
+                                        <option value="AB-">AB-</option>
+                                    </select>
+                                </div>
+                                <div>
                                     <label>Civil Status</label>
                                     <select id="civilStatus">
                                         <option value="">Select status</option>
                                         <option value="Single">Single</option>
                                         <option value="Married">Married</option>
                                         <option value="Widowed">Widowed</option>
+                                        <option value="Divorced">Divorced</option>
                                         <option value="Separated">Separated</option>
                                     </select>
                                 </div>
@@ -548,15 +1084,15 @@
                             <h3 class="form-section-title">Contact Information</h3>
                             <div class="form-grid">
                                 <div>
+                                    <label>Email Address *</label>
+                                    <input type="email" id="email" required placeholder="patient@email.com">
+                                </div>
+                                <div>
                                     <label>Mobile Number *</label>
                                     <input type="tel" id="mobile" required placeholder="+63 912 345 6789">
                                 </div>
-                                <div>
-                                    <label>Email Address</label>
-                                    <input type="email" id="email" placeholder="patient@email.com">
-                                </div>
                                 <div class="col-span-2">
-                                    <label>Address *</label>
+                                    <label>Home Address *</label>
                                     <textarea id="address" required rows="2" placeholder="Complete address"></textarea>
                                 </div>
                                 <div>
@@ -584,6 +1120,28 @@
                                 <div>
                                     <label>Contact Number *</label>
                                     <input type="tel" id="emergencyPhone" required placeholder="+63 912 345 6789">
+                                </div>
+                                <div>
+                                    <label>Emergency Email</label>
+                                    <input type="email" id="emergencyEmail" placeholder="emergency@email.com">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3 class="form-section-title">Medical Information</h3>
+                            <div class="form-grid">
+                                <div class="col-span-2">
+                                    <label>Known Allergies</label>
+                                    <textarea id="allergies" rows="2" placeholder="List any known allergies (e.g., Penicillin, Peanuts)"></textarea>
+                                </div>
+                                <div class="col-span-2">
+                                    <label>Chronic Conditions</label>
+                                    <textarea id="conditions" rows="2" placeholder="List any chronic conditions or medical history"></textarea>
+                                </div>
+                                <div class="col-span-2">
+                                    <label>Current Medications</label>
+                                    <textarea id="medications" rows="2" placeholder="List current medications and dosages"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -617,94 +1175,163 @@
                 </div>
             </section>
 
-            <!-- Appointments Section -->
+            <!-- Appointment Section -->
             <section id="appointments" class="content-section hidden">
+
                 <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-2xl font-semibold">Appointment Scheduling</h2>
-                    <button class="btn-primary" onclick="openModal('newAppointmentModal')">+ Schedule Appointment</button>
+                    <h2 class="text-2xl font-semibold">Appointments</h2>
+
+                    <button class="btn-secondary flex items-center gap-2"
+                            onclick="openModal('appointmentListModal')">
+                        Appointment List
+                        <span class="badge badge-warning" id="totalAppointmentsCount">0</span>
+                    </button>
                 </div>
 
+                <!-- Filters -->
                 <div class="card p-6 mb-6">
                     <div class="flex gap-4 flex-wrap">
                         <div class="search-box flex-1 min-w-64">
                             <svg class="search-icon w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                             </svg>
-                            <input type="text" id="appointmentSearch" placeholder="Search appointments..." onkeyup="filterAppointments()">
+                            <input type="text"
+                                id="appointmentSearch"
+                                placeholder="Search appointments..."
+                                onkeyup="filterAppointmentsSection()">
                         </div>
-                        <input type="date" id="appointmentDate" class="w-48" onchange="filterAppointments()">
-                        <select id="appointmentStatus" onchange="filterAppointments()" class="w-48">
-                            <option value="">All Status</option>
-                            <option value="Scheduled">Scheduled</option>
-                            <option value="Checked-in">Checked-in</option>
-                            <option value="In Progress">In Progress</option>
-                            <option value="Completed">Completed</option>
-                            <option value="Cancelled">Cancelled</option>
-                        </select>
+
+                        <input type="date"
+                            id="appointmentDate"
+                            class="w-48"
+                            onchange="filterAppointmentsSection()">
+
                     </div>
                 </div>
 
+                <!-- Appointment Table -->
                 <div class="card">
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>Appointment ID</th>
-                                <th>Patient Name</th>
+                                <th>Patient</th>
                                 <th>Doctor</th>
                                 <th>Date & Time</th>
-                                <th>Type</th>
+                                <th>Service Type</th>
                                 <th>Status</th>
-                                <th>Actions</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody id="appointmentsTableBody">
                             <tr>
-                                <td>#APT001</td>
-                                <td>John Smith</td>
-                                <td>Dr. Sarah Johnson</td>
-                                <td>Jan 02, 2025 - 9:00 AM</td>
-                                <td><span class="badge badge-info">Consultation</span></td>
-                                <td><span class="badge badge-success">Checked-in</span></td>
-                                <td>
-                                    <div class="flex gap-2">
-                                        <button class="btn-secondary text-sm" onclick="viewAppointment(1)">View</button>
-                                        <button class="btn-warning text-sm" onclick="rescheduleAppointment(1)">Reschedule</button>
-                                        <button class="btn-danger text-sm" onclick="cancelAppointment(1)">Cancel</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>#APT002</td>
-                                <td>Emma Davis</td>
-                                <td>Dr. Michael Chen</td>
-                                <td>Jan 02, 2025 - 10:30 AM</td>
-                                <td><span class="badge badge-warning">Follow-up</span></td>
-                                <td><span class="badge badge-warning">Waiting</span></td>
-                                <td>
-                                    <div class="flex gap-2">
-                                        <button class="btn-secondary text-sm" onclick="viewAppointment(2)">View</button>
-                                        <button class="btn-warning text-sm" onclick="rescheduleAppointment(2)">Reschedule</button>
-                                        <button class="btn-danger text-sm" onclick="cancelAppointment(2)">Cancel</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>#APT003</td>
-                                <td>Robert Taylor</td>
-                                <td>Dr. Sarah Johnson</td>
-                                <td>Jan 02, 2025 - 2:00 PM</td>
-                                <td><span class="badge badge-primary">Laboratory</span></td>
-                                <td><span class="badge badge-info">Scheduled</span></td>
-                                <td>
-                                    <div class="flex gap-2">
-                                        <button class="btn-secondary text-sm" onclick="viewAppointment(3)">View</button>
-                                        <button class="btn-warning text-sm" onclick="rescheduleAppointment(3)">Reschedule</button>
-                                        <button class="btn-danger text-sm" onclick="cancelAppointment(3)">Cancel</button>
-                                    </div>
+                                <td colspan="8" style="text-align: center; color: var(--muted-foreground); padding: 40px;">
+                                    Loading appointments... 
                                 </td>
                             </tr>
                         </tbody>
                     </table>
+                </div>
+
+            </section>
+
+
+            <!-- Messages Section -->
+            <section id="messages" class="content-section hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-semibold">Messages</h2>
+                    <button class="btn-primary" onclick="openCompose()">+ New Message</button>
+                </div>
+
+                <div class="grid grid-cols-3 gap-6" style="height: calc(100vh - 200px);">
+                    <!-- Conversation List -->
+                    <div class="card col-span-1 flex flex-col" style="height: 100%;">
+                        <div class="p-4 border-b" style="border-color: var(--border);">
+                            <div class="search-box">
+                                <svg class="search-icon w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                                </svg>
+                                <input type="text" placeholder="Search conversations..." >
+                            </div>
+                            <div id="conversationList" class="flex-1 pt-2" style="overflow-y: auto;">
+                                <!--message list appear here-->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chat Window -->
+                    <div class="card col-span-2" style="height: 100%; display: flex; flex-direction: column;">
+                        <!-- Chat Header -->
+                        <div id="chatHeader" class="p-4 border-b" style="border-color: var(--border); display: none;">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background-color: var(--primary);">
+                                    <span id="chatContactInitial" class="font-semibold"></span>
+                                </div>
+                                <div class="flex-1">
+                                    <div id="chatContactName" class="font-semibold"></div>
+                                    <div id="chatContactRole" class="text-sm" style="color: var(--muted-foreground);"></div>
+                                </div>
+                                <button class="btn-secondary text-sm" onclick="closeConversation()">Close</button>
+                            </div>
+                        </div>
+
+                        <!-- Messages Container -->
+                        <div id="messagesContainer" class="p-4" style="flex: 1; overflow-y: auto; background-color: var(--background); display: none;"></div>
+
+                        <!-- Empty State -->
+                        <div id="noConversationText" style="flex: 1; display: flex; align-items: center; justify-content: center; color: var(--muted-foreground);">
+                            <div class="text-center">
+                                <svg class="w-16 h-16 mx-auto mb-4" style="color: var(--muted-foreground);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                                </svg>
+                                <p>Select a conversation to start messaging</p>
+                            </div>
+                        </div>
+
+                        <!-- Message Input -->
+                        <div id="messageInputContainer" class="p-4 border-t" style="border-color: var(--border); display: none;">
+                            <div class="flex gap-2">
+                                <input type="text" id="messageInput" placeholder="Type a message..." class="flex-1" onkeypress="handleMessageKeyPress(event)">
+                                <button class="btn-primary" onclick="sendChatMessage()">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Compose Modal -->
+                <div class="modal" id="composeModal">
+                    <div class="modal-content p-6">
+                        <h3 class="text-lg font-semibold mb-4">New Message</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label>To</label>
+                                <select id="composeTo">
+                                    <option value="">Select recipient</option>
+                                    <option value="Dr. Sarah Johnson">Dr. Sarah Johnson</option>
+                                    <option value="Dr. Michael Chen">Dr. Michael Chen</option>
+                                    <option value="Billing Department">Billing Department</option>
+                                    <option value="Pharmacy">Pharmacy</option>
+                                    <option value="Laboratory">Laboratory</option>
+                                    <option value="Nursing Station">Nursing Station</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>Subject</label>
+                                <input type="text" id="composeSubject" placeholder="Message subject">
+                            </div>
+                            <div>
+                                <label>Message</label>
+                                <textarea id="composeBody" rows="5" placeholder="Type your message here..."></textarea>
+                            </div>
+                            <div class="flex gap-2">
+                                <button class="btn-primary flex-1" onclick="sendNewMessage()">Send</button>
+                                <button class="btn-secondary flex-1" onclick="closeCompose()">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -712,7 +1339,7 @@
             <section id="checkin" class="content-section hidden">
                 <h2 class="text-2xl font-semibold mb-6">Patient Check-in/Check-out</h2>
 
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <div class="grid grid-cols-1 lg-grid-cols-2 gap-6 mb-6">
                     <div class="card p-6">
                         <h3 class="text-lg font-semibold mb-4">Quick Check-in</h3>
                         <div class="space-y-4">
@@ -739,51 +1366,74 @@
                         </div>
                     </div>
                 </div>
+            </section>
+
+
+            <!-- Admission Request Section -->
+            <section id="admission-request" class="content-section hidden">
+                <h2 class="text-2xl font-semibold mb-6">Admission Requests</h2>
+
+                <div class="card p-6 mb-6">
+                    <div class="flex gap-4 flex-wrap">
+                        <div class="search-box flex-1 min-w-64">
+                            <svg class="search-icon w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                            <input type="text" id="admissionRequestSearch" placeholder="Search by patient name or UHID...">
+                        </div>
+                        <select class="w-48">
+                            <option value="">All Status</option>
+                            <option value="Pending">Pending Request</option>
+                            <option value="Approved">Approved</option>
+                            <option value="Rejected">Rejected</option>
+                        </select>
+                        <input type="date" class="w-48">
+                    </div>
+                </div>
 
                 <div class="card">
-                    <div class="p-6 border-b" style="border-color: hsl(var(--border));">
-                        <h3 class="text-lg font-semibold">Today's Check-ins</h3>
-                    </div>
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>Patient ID</th>
+                                <th>UHID</th>
                                 <th>Patient Name</th>
-                                <th>Appointment</th>
-                                <th>Check-in Time</th>
+                                <th>Age/Gender</th>
+                                <th>Requesting Doctor</th>
+                                <th>Ward Requested</th>
+                                <th>Request Date</th>
                                 <th>Status</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="admissionRequestTable">
                             <tr>
-                                <td>#PAT001</td>
-                                <td>John Smith</td>
-                                <td>#APT001 - Dr. Sarah Johnson</td>
-                                <td>8:55 AM</td>
-                                <td><span class="badge badge-warning">In Progress</span></td>
+                                <td>KIPC-19-000784</td>
+                                <td>Dua Lipa</td>
+                                <td>24Y/F</td>
+                                <td>Dr. Sarah Johnson</td>
+                                <td>General Ward</td>
+                                <td>Jan 04, 2025</td>
+                                <td><span class="badge badge-warning">Pending</span></td>
                                 <td>
-                                    <button class="btn-success text-sm" onclick="checkoutPatient(1)">Check-out</button>
+                                    <div class="flex gap-2">
+                                        <button class="btn-success text-sm" onclick="approveAdmission('000784')">Approve</button>
+                                        <button class="btn-secondary text-sm" onclick="viewAdmissionDetails('000784')">View</button>
+                                    </div>
                                 </td>
                             </tr>
                             <tr>
-                                <td>#PAT002</td>
-                                <td>Emma Davis</td>
-                                <td>#APT002 - Dr. Michael Chen</td>
-                                <td>10:25 AM</td>
-                                <td><span class="badge badge-info">Waiting</span></td>
+                                <td>KIPC-19-000787</td>
+                                <td>Selena Gomez</td>
+                                <td>23Y/F</td>
+                                <td>Dr. Michael Chen</td>
+                                <td>ICU</td>
+                                <td>Jan 04, 2025</td>
+                                <td><span class="badge badge-warning">Pending</span></td>
                                 <td>
-                                    <button class="btn-success text-sm" onclick="checkoutPatient(2)">Check-out</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>#PAT003</td>
-                                <td>Maria Santos</td>
-                                <td>#APT005 - Dr. Sarah Johnson</td>
-                                <td>11:30 AM</td>
-                                <td><span class="badge badge-success">Completed</span></td>
-                                <td>
-                                    <button class="btn-success text-sm" disabled>Checked-out</button>
+                                    <div class="flex gap-2">
+                                        <button class="btn-success text-sm" onclick="approveAdmission('000787')">Approve</button>
+                                        <button class="btn-secondary text-sm" onclick="viewAdmissionDetails('000787')">View</button>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>
@@ -791,7 +1441,575 @@
                 </div>
             </section>
 
-            <!-- Insurance Verification Section -->
+            <!-- Patient Admission Section -->
+            <section id="patient-admission" class="content-section hidden">
+                <h2 class="text-2xl font-semibold mb-6">Patient Admission</h2>
+
+                <div class="card p-6">
+                    <h3 style="margin-bottom: 20px;">New Patient Admission Form</h3>
+                    <form id="admissionForm">
+                        <div class="form-group">
+                            <label>Patient Name *</label>
+                            <input type="text" id="patientName" required>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Attending Physician *</label>
+                                <select id="patientDoctor">
+                                    <option value="1">Dr. Maria Santos - Internal Medicine (PF: ₱1,500)</option>
+                                    <option value="2">Dr. Juan dela Cruz - Surgery (PF: ₱3,000)</option>
+                                    <option value="3">Dr. Ana Reyes - Pediatrics (PF: ₱1,200)</option>
+                                    <option value="4">Dr. Roberto Garcia - Cardiology (PF: ₱2,500)</option>
+                                    <option value="5">Dr. Elena Mendoza - Orthopedics (PF: ₱2,000)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Gender</label>
+                                <select id="patientGender">
+                                    <option>Male</option>
+                                    <option>Female</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Room Type</label>
+                            <select id="roomType">
+                                <option value="General Ward">General Ward - ₱2,000/day</option>
+                                <option value="Semi-Private">Semi-Private - ₱4,000/day</option>
+                                <option value="Private Room">Private Room - ₱8,000/day</option>
+                                <option value="ICU">ICU - ₱15,000/day</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Deposit Amount</label>
+                            <input type="number" id="depositAmount" value="5000">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Admit Patient</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Admission Section List -->
+            <section id="admission-list" class="content-section hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-semibold">Admitted Patients List</h2>
+                    <button class="btn-primary" onclick="showSection('patient-admission')">+ New Admission</button>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <input type="text" id="patientSearchInput" placeholder="🔍 Search patient by name..." 
+                           style="max-width: 500px; font-size: 15px;" oninput="filterPatientsByName()">
+                </div>
+
+                <div class="table-container">
+                    <table id="patientsTable">
+                        <thead>
+                            <tr>
+                                <th>Patient Name</th>
+                                <th>Room</th>
+                                <th>Doctor</th>
+                                <th>Days</th>
+                                <th>Visit Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="patientsTableBody">
+                            <tr>
+                                <td colspan="6" style="text-align: center; color: #7f8c8d;">No admitted patients</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Bed Status Section -->
+            <section id="bed-status" class="content-section hidden">
+                <h2 class="text-2xl font-semibold mb-6">Bed Status Management</h2>
+
+                <div class="card p-6 mb-6">
+                    <div class="flex gap-4 flex-wrap items-end">
+                        <div>
+                            <label>Search By</label>
+                            <select id="bedSearchType" class="w-48">
+                                <option value="Ward">Ward</option>
+                                <option value="Floor">Floor</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Floor</label>
+                            <select id="bedFloorFilter" class="w-48" onchange="filterBedStatus()">
+                                <option value="">All Floors</option>
+                                <option value="Ground">Ground Floor</option>
+                                <option value="Fourth">Fourth Floor</option>
+                                <option value="Fifth">Fifth Floor</option>
+                            </select>
+                        </div>
+                        <button class="btn-primary" onclick="refreshBedStatus()">
+                            <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                            </svg>
+                            Refresh
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Bed Status Legend -->
+                <div class="card p-4 mb-6">
+                    <div class="flex gap-6 flex-wrap">
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded" style="background-color: hsl(142, 71%, 45%);"></div>
+                            <span>Available</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded" style="background-color: hsl(0, 72%, 51%);"></div>
+                            <span>Occupied</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded" style="background-color: hsl(45, 93%, 47%);"></div>
+                            <span>Reserved</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded" style="background-color: hsl(240, 5%, 65%);"></div>
+                            <span>Maintenance</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bed Grid by Ward -->
+                <div class="space-y-6">
+                    <!-- General Ward -->
+                    <div class="card p-6">
+                        <h3 class="text-lg font-semibold mb-4">General Ward - Floor 4</h3>
+                        <div class="grid grid-cols-2 md-grid-cols-4 lg-grid-cols-6 gap-4" id="generalWardBeds">
+                            <!-- Beds will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- ICU -->
+                    <div class="card p-6">
+                        <h3 class="text-lg font-semibold mb-4">ICU - Floor 5</h3>
+                        <div class="grid grid-cols-2 md-grid-cols-4 lg-grid-cols-6 gap-4" id="icuBeds">
+                            <!-- Beds will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Maternity Ward -->
+                    <div class="card p-6">
+                        <h3 class="text-lg font-semibold mb-4">Maternity Ward - Floor 4</h3>
+                        <div class="grid grid-cols-2 md-grid-cols-4 lg-grid-cols-6 gap-4" id="maternityBeds">
+                            <!-- Beds will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Ward/Room Management Section -->
+            <section id="ward-rooms" class="content-section hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-semibold">Ward/Room Management</h2>
+                    <button class="btn-primary" onclick="openModal('addRoomModal')">+ Add New Room</button>
+                </div>
+
+                <!-- Floor Selection -->
+                <div class="floor-selector">
+                    <button class="floor-btn active" onclick="selectFloor('all')">All Floors</button>
+                    <button class="floor-btn" onclick="selectFloor('ground')">Ground Floor</button>
+                    <button class="floor-btn" onclick="selectFloor('fourth')">4th Floor</button>
+                    <button class="floor-btn" onclick="selectFloor('fifth')">5th Floor</button>
+                </div>
+
+                <div class="grid grid-cols-1 lg-grid-cols-2 xl-grid-cols-3 gap-6">
+                    <!-- Ward Card -->
+                    <div class="ward-card">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-lg font-semibold">General Ward - 401</h3>
+                                <p class="text-sm" style="color: var(--muted-foreground);">Floor 4 • Standard</p>
+                            </div>
+                            <span class="badge badge-success">Active</span>
+                        </div>
+                        <div class="space-y-2 mb-4">
+                            <div class="flex justify-between text-sm">
+                                <span style="color: var(--muted-foreground);">Total Beds:</span>
+                                <span class="font-semibold">8</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span style="color: var(--muted-foreground);">Occupied:</span>
+                                <span class="font-semibold text-red-400">6</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span style="color: var(--muted-foreground);">Available:</span>
+                                <span class="font-semibold text-green-400">2</span>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button class="btn-secondary text-sm flex-1" onclick="viewRoomDetails('401')">View Details</button>
+                            <button class="btn-primary text-sm flex-1" onclick="manageRoom('401')">Manage</button>
+                        </div>
+                    </div>
+
+                    <div class="ward-card">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-lg font-semibold">ICU - 501</h3>
+                                <p class="text-sm" style="color: var(--muted-foreground);">Floor 5 • Critical Care</p>
+                            </div>
+                            <span class="badge badge-success">Active</span>
+                        </div>
+                        <div class="space-y-2 mb-4">
+                            <div class="flex justify-between text-sm">
+                                <span style="color: var(--muted-foreground);">Total Beds:</span>
+                                <span class="font-semibold">12</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span style="color: var(--muted-foreground);">Occupied:</span>
+                                <span class="font-semibold text-red-400">10</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span style="color: var(--muted-foreground);">Available:</span>
+                                <span class="font-semibold text-green-400">2</span>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button class="btn-secondary text-sm flex-1" onclick="viewRoomDetails('501')">View Details</button>
+                            <button class="btn-primary text-sm flex-1" onclick="manageRoom('501')">Manage</button>
+                        </div>
+                    </div>
+
+                    <div class="ward-card">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-lg font-semibold">Private Room - 302</h3>
+                                <p class="text-sm" style="color: var(--muted-foreground);">Floor 3 • Deluxe</p>
+                            </div>
+                            <span class="badge badge-success">Active</span>
+                        </div>
+                        <div class="space-y-2 mb-4">
+                            <div class="flex justify-between text-sm">
+                                <span style="color: var(--muted-foreground);">Total Beds:</span>
+                                <span class="font-semibold">1</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span style="color: var(--muted-foreground);">Occupied:</span>
+                                <span class="font-semibold text-red-400">1</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span style="color: var(--muted-foreground);">Available:</span>
+                                <span class="font-semibold text-green-400">0</span>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button class="btn-secondary text-sm flex-1" onclick="viewRoomDetails('302')">View Details</button>
+                            <button class="btn-primary text-sm flex-1" onclick="manageRoom('302')">Manage</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Doctor Transfer Section -->
+            <section id="doctor-transfer" class="content-section hidden">
+                <h2 class="text-2xl font-semibold mb-6">Doctor Transfer</h2>
+
+                <div class="card p-6">
+                    <form onsubmit="transferDoctor(event)">
+                        <div class="form-section">
+                            <div class="flex gap-4 mb-4">
+                                <div class="flex-1">
+                                    <label>Admission Number *</label>
+                                    <div class="flex gap-2">
+                                        <input type="text" placeholder="Enter admission number" class="flex-1" required>
+                                        <button type="button" class="btn-primary" onclick="searchAdmission()">Search</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section" id="patientInfoSection" style="display: none;">
+                            <h3 class="form-section-title">Patient Information</h3>
+                            <div class="grid grid-cols-3 gap-4 p-4 rounded-lg" style="background-color: var(--secondary);">
+                                <div>
+                                    <div class="text-sm" style="color: var(--muted-foreground);">Patient Name</div>
+                                    <div class="font-semibold" id="transferPatientName">-</div>
+                                </div>
+                                <div>
+                                    <div class="text-sm" style="color: var(--muted-foreground);">Current Doctor</div>
+                                    <div class="font-semibold" id="transferCurrentDoctor">-</div>
+                                </div>
+                                <div>
+                                    <div class="text-sm" style="color: var(--muted-foreground);">Ward/Room</div>
+                                    <div class="font-semibold" id="transferWardRoom">-</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3 class="form-section-title">Doctor Transfer Details</h3>
+                            <div class="form-grid">
+                                <div>
+                                    <label>Transfer Date *</label>
+                                    <input type="date" required>
+                                </div>
+                                <div>
+                                    <label>Visit Type *</label>
+                                    <select required>
+                                        <option value="">Select visit type</option>
+                                        <option value="Admission">Admission Visit</option>
+                                        <option value="Emergency">Emergency Visit</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label>New Doctor *</label>
+                                    <select required>
+                                        <option value="">Select doctor</option>
+                                        <option value="1">Dr. Sarah Johnson</option>
+                                        <option value="2">Dr. Michael Chen</option>
+                                        <option value="3">Dr. Jennifer Adams</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label>Clinic/Department *</label>
+                                    <select required>
+                                        <option value="">Select department</option>
+                                        <option value="General">General Medicine</option>
+                                        <option value="Surgery">Surgery</option>
+                                        <option value="Cardiology">Cardiology</option>
+                                    </select>
+                                </div>
+                                <div class="col-span-2">
+                                    <label>Reason for Doctor Transfer *</label>
+                                    <textarea rows="3" placeholder="Enter reason for transfer" required></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-3 mt-6">
+                            <button type="submit" class="btn-primary flex-1">Transfer Doctor</button>
+                            <button type="button" class="btn-secondary flex-1" onclick="resetTransferForm()">Clear Form</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Room Transfer Section -->
+            <section id="room-transfer" class="content-section hidden">
+                <h2 class="text-2xl font-semibold mb-6">Room/Bed Transfer</h2>
+
+                <div class="card p-6">
+                    <form onsubmit="transferRoom(event)">
+                        <div class="form-section">
+                            <div class="flex gap-4 mb-4">
+                                <div class="flex-1">
+                                    <label>Admission Number *</label>
+                                    <div class="flex gap-2">
+                                        <input type="text" placeholder="Enter admission number" class="flex-1" required>
+                                        <button type="button" class="btn-primary" onclick="searchAdmissionForTransfer()">Search</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section" id="currentRoomInfo" style="display: none;">
+                            <h3 class="form-section-title">Current Room Information</h3>
+                            <div class="grid grid-cols-4 gap-4 p-4 rounded-lg" style="background-color: var(--secondary);">
+                                <div>
+                                    <div class="text-sm" style="color: var(--muted-foreground);">Patient Name</div>
+                                    <div class="font-semibold" id="roomTransferPatientName">-</div>
+                                </div>
+                                <div>
+                                    <div class="text-sm" style="color: var(--muted-foreground);">Current Ward</div>
+                                    <div class="font-semibold" id="roomTransferCurrentWard">-</div>
+                                </div>
+                                <div>
+                                    <div class="text-sm" style="color: var(--muted-foreground);">Current Room</div>
+                                    <div class="font-semibold" id="roomTransferCurrentRoom">-</div>
+                                </div>
+                                <div>
+                                    <div class="text-sm" style="color: var(--muted-foreground);">Bed Number</div>
+                                    <div class="font-semibold" id="roomTransferCurrentBed">-</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3 class="form-section-title">Room Transfer To</h3>
+                            <div class="form-grid">
+                                <div>
+                                    <label>Transfer Date *</label>
+                                    <input type="date" required>
+                                </div>
+                                <div>
+                                    <label>Room Category *</label>
+                                    <select required>
+                                        <option value="">Select category</option>
+                                        <option value="Standard">Standard</option>
+                                        <option value="Private">Private</option>
+                                        <option value="ICU">ICU</option>
+                                        <option value="Deluxe">Deluxe</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label>Floor *</label>
+                                    <select required>
+                                        <option value="">Select floor</option>
+                                        <option value="Ground">Ground Floor</option>
+                                        <option value="Fourth">Fourth Floor</option>
+                                        <option value="Fifth">Fifth Floor</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label>Ward *</label>
+                                    <select required>
+                                        <option value="">Select ward</option>
+                                        <option value="General">General Ward</option>
+                                        <option value="ICU">ICU</option>
+                                        <option value="Maternity">Maternity Ward</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label>Room Type *</label>
+                                    <select required>
+                                        <option value="">Select room type</option>
+                                        <option value="Shared">Shared</option>
+                                        <option value="Private">Private</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label>Room No. *</label>
+                                    <select required>
+                                        <option value="">Select room</option>
+                                        <option value="201">Room 201</option>
+                                        <option value="202">Room 202</option>
+                                        <option value="301">Room 301</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label>Billing Category *</label>
+                                    <select required>
+                                        <option value="">Select category</option>
+                                        <option value="Standard">Standard</option>
+                                        <option value="Insurance">Insurance</option>
+                                    </select>
+                                </div>
+                                <div class="col-span-2">
+                                    <label>Reason for Bed Transfer *</label>
+                                    <textarea rows="2" placeholder="Enter reason for transfer" required></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-3 mt-6">
+                            <button type="submit" class="btn-primary flex-1">Transfer Room</button>
+                            <button type="button" class="btn-secondary flex-1" onclick="resetRoomTransferForm()">Clear Form</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Patient Discharge Section -->
+            <section id="patient-discharge" class="content-section hidden">
+                <h2 class="text-2xl font-semibold mb-6">Patient Discharge</h2>
+
+                <div class="card p-6">
+                    <form onsubmit="dischargePatient(event)">
+                        <div class="form-section">
+                            <div class="flex gap-4 mb-4">
+                                <div class="flex-1">
+                                    <label>Admission Number *</label>
+                                    <div class="flex gap-2">
+                                        <input type="text" placeholder="Enter admission number" class="flex-1" required id="dischargeAdmissionNo">
+                                        <button type="button" class="btn-primary" onclick="searchPatientForDischarge()">Search</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section" id="dischargePatientInfo" style="display: none;">
+                            <h3 class="form-section-title">Patient Information</h3>
+                            <div class="grid grid-cols-4 gap-4 p-4 rounded-lg" style="background-color: var(--secondary);">
+                                <div>
+                                    <div class="text-sm" style="color: var(--muted-foreground);">Patient Name</div>
+                                    <div class="font-semibold" id="dischargePatientName">-</div>
+                                </div>
+                                <div>
+                                    <div class="text-sm" style="color: var(--muted-foreground);">Admission Date</div>
+                                    <div class="font-semibold" id="dischargeAdmissionDate">-</div>
+                                </div>
+                                <div>
+                                    <div class="text-sm" style="color: var(--muted-foreground);">Ward/Room</div>
+                                    <div class="font-semibold" id="dischargeWardRoom">-</div>
+                                </div>
+                                <div>
+                                    <div class="text-sm" style="color: var(--muted-foreground);">Attending Doctor</div>
+                                    <div class="font-semibold" id="dischargeDoctor">-</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3 class="form-section-title">Discharge Details</h3>
+                            <div class="form-grid">
+                                <div>
+                                    <label>Discharge Date *</label>
+                                    <input type="date" required>
+                                </div>
+                                <div>
+                                    <label>Discharge Status *</label>
+                                    <select required>
+                                        <option value="">Select status</option>
+                                        <option value="Recovered">Recovered</option>
+                                        <option value="Improved">Improved</option>
+                                        <option value="Referred">Referred</option>
+                                        <option value="Against Medical Advice">Against Medical Advice</option>
+                                        <option value="Deceased">Deceased</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label>Visit Type *</label>
+                                    <select required>
+                                        <option value="">Select visit type</option>
+                                        <option value="Admission">Admission Visit</option>
+                                        <option value="Emergency">Emergency Visit</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label>Clinic/Department *</label>
+                                    <select required>
+                                        <option value="">Select department</option>
+                                        <option value="General">General Medicine</option>
+                                        <option value="Surgery">Surgery</option>
+                                        <option value="Cardiology">Cardiology</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label>Discharging Doctor *</label>
+                                    <select required>
+                                        <option value="">Select doctor</option>
+                                        <option value="1">Dr. Sarah Johnson</option>
+                                        <option value="2">Dr. Michael Chen</option>
+                                        <option value="3">Dr. Jennifer Adams</option>
+                                    </select>
+                                </div>
+                                <div class="col-span-2">
+                                    <label>Discharge Summary/Remarks</label>
+                                    <textarea rows="3" placeholder="Enter discharge summary and remarks"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-3 mt-6">
+                            <button type="submit" class="btn-success flex-1">Discharge Patient</button>
+                            <button type="button" class="btn-secondary flex-1" onclick="resetDischargeForm()">Clear Form</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Insurance Verification -->
             <section id="insurance" class="content-section hidden">
                 <h2 class="text-2xl font-semibold mb-6">Insurance Verification</h2>
 
@@ -800,270 +2018,65 @@
                     <div class="form-grid">
                         <div>
                             <label>Patient ID or Name</label>
-                            <input type="text" id="insurancePatientSearch" placeholder="Search patient...">
+                            <input type="text" placeholder="Search patient...">
                         </div>
                         <div>
                             <label>Insurance Provider</label>
-                            <select id="insuranceProviderVerify">
+                            <select>
                                 <option value="">Select provider</option>
                                 <option value="PhilHealth">PhilHealth</option>
                                 <option value="Maxicare">Maxicare</option>
                                 <option value="Medicard">Medicard</option>
-                                <option value="Pacific Cross">Pacific Cross</option>
                             </select>
                         </div>
                         <div>
                             <label>Policy/Member Number</label>
-                            <input type="text" id="insurancePolicyVerify" placeholder="Enter policy number">
+                            <input type="text" placeholder="Enter policy number">
                         </div>
                         <div class="flex items-end">
-                            <button class="btn-primary w-full" onclick="verifyInsurance()">Verify Coverage</button>
+                            <button class="btn-primary w-full">Verify Coverage</button>
                         </div>
                     </div>
                 </div>
-
-                <div class="card">
-                    <div class="p-6 border-b" style="border-color: hsl(var(--border));">
-                        <h3 class="text-lg font-semibold">Recent Verifications</h3>
-                    </div>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Patient</th>
-                                <th>Insurance Provider</th>
-                                <th>Policy Number</th>
-                                <th>Coverage Status</th>
-                                <th>Verified By</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Jan 02, 2025</td>
-                                <td>Emma Davis</td>
-                                <td>PhilHealth</td>
-                                <td>PH-123456789</td>
-                                <td><span class="badge badge-success">Active</span></td>
-                                <td>Maria Santos</td>
-                                <td>
-                                    <button class="btn-secondary text-sm" onclick="viewInsuranceDetails(1)">View Details</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Jan 02, 2025</td>
-                                <td>Robert Taylor</td>
-                                <td>Maxicare</td>
-                                <td>MAX-987654321</td>
-                                <td><span class="badge badge-success">Active</span></td>
-                                <td>Maria Santos</td>
-                                <td>
-                                    <button class="btn-secondary text-sm" onclick="viewInsuranceDetails(2)">View Details</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Jan 01, 2025</td>
-                                <td>Linda Martinez</td>
-                                <td>Medicard</td>
-                                <td>MED-456789123</td>
-                                <td><span class="badge badge-danger">Expired</span></td>
-                                <td>Maria Santos</td>
-                                <td>
-                                    <button class="btn-secondary text-sm" onclick="viewInsuranceDetails(3)">View Details</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
             </section>
 
-            <!-- Waiting Room Section -->
+            <!-- Waiting Room -->
             <section id="waiting-room" class="content-section hidden">
                 <h2 class="text-2xl font-semibold mb-6">Waiting Room Management</h2>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                    <div class="stat-card">
-                        <div class="text-sm mb-2" style="color: hsl(var(--muted-foreground));">Current Waiting</div>
-                        <div class="text-3xl font-bold">12</div>
-                        <div class="text-sm mt-1" style="color: hsl(var(--muted-foreground));">Patients</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="text-sm mb-2" style="color: hsl(var(--muted-foreground));">Average Wait Time</div>
-                        <div class="text-3xl font-bold">15</div>
-                        <div class="text-sm mt-1" style="color: hsl(var(--muted-foreground));">Minutes</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="text-sm mb-2" style="color: hsl(var(--muted-foreground));">Longest Wait</div>
-                        <div class="text-3xl font-bold">32</div>
-                        <div class="text-sm mt-1" style="color: hsl(var(--muted-foreground));">Minutes</div>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div class="card p-6">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-lg font-semibold">Waiting Patients</h3>
-                            <button class="btn-secondary text-sm" onclick="refreshWaitingRoom()">Refresh</button>
-                        </div>
-                        <div class="space-y-3">
-                            <div class="patient-card">
-                                <div class="flex items-center justify-between mb-2">
-                                    <div>
-                                        <div class="font-semibold">Emma Davis</div>
-                                        <div class="text-sm" style="color: hsl(var(--muted-foreground));">#PAT002 - Dr. Michael Chen</div>
-                                    </div>
-                                    <span class="badge badge-warning">Waiting</span>
-                                </div>
-                                <div class="flex items-center justify-between text-sm">
-                                    <span style="color: hsl(var(--muted-foreground));">Wait time: 12 mins</span>
-                                    <button class="btn-primary text-sm" onclick="callPatient(2)">Call Patient</button>
-                                </div>
-                            </div>
-
-                            <div class="patient-card">
-                                <div class="flex items-center justify-between mb-2">
-                                    <div>
-                                        <div class="font-semibold">Robert Wilson</div>
-                                        <div class="text-sm" style="color: hsl(var(--muted-foreground));">#PAT004 - Dr. Sarah Johnson</div>
-                                    </div>
-                                    <span class="badge badge-warning">Waiting</span>
-                                </div>
-                                <div class="flex items-center justify-between text-sm">
-                                    <span style="color: hsl(var(--muted-foreground));">Wait time: 8 mins</span>
-                                    <button class="btn-primary text-sm" onclick="callPatient(4)">Call Patient</button>
-                                </div>
-                            </div>
-
-                            <div class="patient-card">
-                                <div class="flex items-center justify-between mb-2">
-                                    <div>
-                                        <div class="font-semibold">Linda Martinez</div>
-                                        <div class="text-sm" style="color: hsl(var(--muted-foreground));">#PAT005 - Dr. Michael Chen</div>
-                                    </div>
-                                    <span class="badge badge-warning">Waiting</span>
-                                </div>
-                                <div class="flex items-center justify-between text-sm">
-                                    <span style="color: hsl(var(--muted-foreground));">Wait time: 5 mins</span>
-                                    <button class="btn-primary text-sm" onclick="callPatient(5)">Call Patient</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card p-6">
-                        <h3 class="text-lg font-semibold mb-4">Queue by Doctor</h3>
-                        <div class="space-y-4">
-                            <div class="p-4 rounded-lg" style="background-color: hsl(var(--secondary));">
-                                <div class="flex items-center justify-between mb-2">
-                                    <div class="font-semibold">Dr. Sarah Johnson</div>
-                                    <span class="badge badge-info">3 waiting</span>
-                                </div>
-                                <div class="text-sm" style="color: hsl(var(--muted-foreground));">
-                                    Avg wait: 15 mins
-                                </div>
-                            </div>
-
-                            <div class="p-4 rounded-lg" style="background-color: hsl(var(--secondary));">
-                                <div class="flex items-center justify-between mb-2">
-                                    <div class="font-semibold">Dr. Michael Chen</div>
-                                    <span class="badge badge-info">5 waiting</span>
-                                </div>
-                                <div class="text-sm" style="color: hsl(var(--muted-foreground));">
-                                    Avg wait: 18 mins
-                                </div>
-                            </div>
-
-                            <div class="p-4 rounded-lg" style="background-color: hsl(var(--secondary));">
-                                <div class="flex items-center justify-between mb-2">
-                                    <div class="font-semibold">Dr. Jennifer Adams</div>
-                                    <span class="badge badge-info">4 waiting</span>
-                                </div>
-                                <div class="text-sm" style="color: hsl(var(--muted-foreground));">
-                                    Avg wait: 12 mins
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="card p-6">
+                    <p style="color: var(--muted-foreground);">Waiting room features coming soon...</p>
                 </div>
             </section>
 
-            <!-- Patient Records Section -->
+            <!-- Patient Records -->
             <section id="patients" class="content-section hidden">
                 <div class="flex items-center justify-between mb-6">
                     <h2 class="text-2xl font-semibold">Patient Records</h2>
+                    <button class="btn-primary" onclick="showSection('registration')">+ Register New Patient</button>
                 </div>
-
+                
                 <div class="card p-6 mb-6">
-                    <div class="flex gap-4 flex-wrap">
-                        <div class="search-box flex-1 min-w-64">
-                            <svg class="search-icon w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                            </svg>
-                            <input type="text" id="patientSearch" placeholder="Search patients..." onkeyup="filterPatients()">
-                        </div>
-                        <select id="patientStatusFilter" onchange="filterPatients()" class="w-48">
-                            <option value="">All Status</option>
-                            <option value="Active">Active</option>
-                            <option value="Inactive">Inactive</option>
-                        </select>
+                    <div class="search-box">
+                        <svg class="search-icon w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                        <input type="text" id="patientSearch" placeholder="Search by name, ID..." onkeyup="searchPatients()">
                     </div>
                 </div>
-
+                
                 <div class="card">
                     <table class="table">
                         <thead>
                             <tr>
                                 <th>Patient ID</th>
-                                <th>Name</th>
-                                <th>Date of Birth</th>
-                                <th>Contact</th>
-                                <th>Last Visit</th>
-                                <th>Status</th>
+                                <th>Patient Name</th>
+                                <th>Contact Number</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody id="patientsTableBody">
+                        <tbody id="patientRecordsTableBody">
                             <tr>
-                                <td>#PAT001</td>
-                                <td>John Smith</td>
-                                <td>Mar 15, 1985</td>
-                                <td>+63 912 345 6789</td>
-                                <td>Jan 02, 2025</td>
-                                <td><span class="badge badge-success">Active</span></td>
-                                <td>
-                                    <div class="flex gap-2">
-                                        <button class="btn-secondary text-sm" onclick="viewPatientRecord(1)">View</button>
-                                        <button class="btn-primary text-sm" onclick="bookAppointment(1)">Book</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>#PAT002</td>
-                                <td>Emma Davis</td>
-                                <td>Jul 22, 1992</td>
-                                <td>+63 917 234 5678</td>
-                                <td>Jan 02, 2025</td>
-                                <td><span class="badge badge-success">Active</span></td>
-                                <td>
-                                    <div class="flex gap-2">
-                                        <button class="btn-secondary text-sm" onclick="viewPatientRecord(2)">View</button>
-                                        <button class="btn-primary text-sm" onclick="bookAppointment(2)">Book</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>#PAT003</td>
-                                <td>Maria Santos</td>
-                                <td>Nov 08, 1978</td>
-                                <td>+63 918 345 6789</td>
-                                <td>Jan 02, 2025</td>
-                                <td><span class="badge badge-success">Active</span></td>
-                                <td>
-                                    <div class="flex gap-2">
-                                        <button class="btn-secondary text-sm" onclick="viewPatientRecord(3)">View</button>
-                                        <button class="btn-primary text-sm" onclick="bookAppointment(3)">Book</button>
-                                    </div>
-                                </td>
+                                <td colspan="4" style="text-align: center; color: var(--muted-foreground);">Loading...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -1072,7 +2085,7 @@
         </main>
     </div>
 
-    <!-- New Appointment Modal -->
+    <!-- Modals -->
     <div id="newAppointmentModal" class="modal">
         <div class="modal-content p-6">
             <div class="flex items-center justify-between mb-6">
@@ -1082,61 +2095,244 @@
             <form onsubmit="scheduleAppointment(event)" class="space-y-4">
                 <div>
                     <label>Patient</label>
-                    <input type="text" id="aptPatient" required placeholder="Search patient name or ID">
+                    <input type="text" required placeholder="Search patient name or ID">
                 </div>
                 <div>
                     <label>Doctor</label>
-                    <select id="aptDoctor" required>
+                    <select required>
                         <option value="">Select doctor</option>
-                        <option value="1">Dr. Sarah Johnson - General Physician</option>
-                        <option value="2">Dr. Michael Chen - Cardiologist</option>
-                        <option value="3">Dr. Jennifer Adams - Pediatrician</option>
+                        <option value="1">Dr. Sarah Johnson</option>
+                        <option value="2">Dr. Michael Chen</option>
                     </select>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label>Date</label>
-                        <input type="date" id="aptDate" required>
+                        <input type="date" required>
                     </div>
                     <div>
                         <label>Time</label>
-                        <input type="time" id="aptTime" required>
+                        <input type="time" required>
                     </div>
                 </div>
-                <div>
-                    <label>Appointment Type</label>
-                    <select id="aptType" required>
-                        <option value="">Select type</option>
-                        <option value="Consultation">Consultation</option>
-                        <option value="Follow-up">Follow-up</option>
-                        <option value="Laboratory">Laboratory</option>
-                        <option value="Procedure">Procedure</option>
-                    </select>
-                </div>
-                <div>
-                    <label>Reason for Visit</label>
-                    <textarea id="aptReason" rows="3" placeholder="Brief description of reason for visit"></textarea>
-                </div>
                 <div class="flex gap-3 mt-6">
-                    <button type="submit" class="btn-primary flex-1">Schedule Appointment</button>
+                    <button type="submit" class="btn-primary flex-1">Schedule</button>
                     <button type="button" class="btn-secondary flex-1" onclick="closeModal('newAppointmentModal')">Cancel</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <script>
-        // Global state
-        let appointments = [];
-        let patients = [];
-        let waitingRoom = [];
+    <div id="addRoomModal" class="modal">
+        <div class="modal-content p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-semibold">Add New Room</h3>
+                <button onclick="closeModal('addRoomModal')" class="text-2xl">&times;</button>
+            </div>
+            <form onsubmit="addNewRoom(event)" class="space-y-4">
+                <div class="form-grid">
+                    <div>
+                        <label>Room Number *</label>
+                        <input type="text" required placeholder="e.g., 401">
+                    </div>
+                    <div>
+                        <label>Floor *</label>
+                        <select required>
+                            <option value="">Select floor</option>
+                            <option value="Ground">Ground Floor</option>
+                            <option value="Fourth">4th Floor</option>
+                            <option value="Fifth">5th Floor</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Room Type *</label>
+                        <select required>
+                            <option value="">Select type</option>
+                            <option value="General">General Ward</option>
+                            <option value="Private">Private</option>
+                            <option value="ICU">ICU</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Number of Beds *</label>
+                        <input type="number" required min="1" max="20" placeholder="1-20">
+                    </div>
+                </div>
+                <div class="flex gap-3 mt-6">
+                    <button type="submit" class="btn-primary flex-1">Add Room</button>
+                    <button type="button" class="btn-secondary flex-1" onclick="closeModal('addRoomModal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-        // Initialize
+    <!-- Replace your existing Appointment List Modal with this -->
+    <div id="appointmentListModal" class="modal">
+        <div class="modal-content p-0" style="max-width: 1200px; max-height: 90vh;">
+            <div class="p-6 border-b" style="border-color: var(--border);">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-xl font-semibold">All Appointments</h3>
+                </div>
+                
+                <!-- Filter Section -->
+                <div class="flex gap-3 flex-wrap">
+                    <div class="search-box flex-1 min-w-64">
+                        <svg class="search-icon w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                        <input type="text" id="modalAppointmentSearch" placeholder="Search by patient, doctor, or ID..." onkeyup="filterModalAppointments()">
+                    </div>
+                    <input type="date" id="modalAppointmentDate" onchange="filterModalAppointments()" class="w-48">
+                </div>
+            </div>
+            
+            <!-- Appointments Table -->
+            <div style="overflow-y: auto; max-height: calc(90vh - 180px);">
+                <table class="table">
+                    <thead style="position: sticky; top: 0; background-color: var(--card); z-index: 10;">
+                        <tr>
+                            <th>Patient Name</th>
+                            <th>Doctor</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Service Type</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="appointmentListTableBody">
+                        <tr>
+                            <td colspan="8" style="text-align: center; color: var(--muted-foreground); padding: 40px;">
+                                Loading appointments... 
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Footer -->
+            <div class="p-4 border-t flex justify-between items-center" style="border-color: var(--border);">
+                <div class="text-sm" style="color: var(--muted-foreground);">
+                    Total: <span id="totalAppointmentsCount">0</span> appointments
+                </div>
+                <button class="btn-secondary" onclick="closeModal('appointmentListModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Menu Modal (Dropdown-style) -->
+    <div id="actionMenuModal" class="modal">
+        <div class="modal-content p-0" style="max-width: 300px;">
+            <div class="p-4 border-b" style="border-color: var(--border);">
+                <h3 class="text-lg font-semibold">Patient Actions</h3>
+            </div>
+            <div class="p-2">
+                <button class="w-full text-left p-3 hover:bg-secondary rounded" onclick="transferDoctor()">
+                    <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
+                    </svg>
+                    Transfer Doctor
+                </button>
+                <button class="w-full text-left p-3 hover:bg-secondary rounded" onclick="transferRoom()">
+                    <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
+                    </svg>
+                    Transfer Room/Bed
+                </button>
+                <button class="w-full text-left p-3 hover:bg-secondary rounded" onclick="updateAdmissionStatus()">
+                    <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                    </svg>
+                    Update Status
+                </button>
+                <button class="w-full text-left p-3 hover:bg-secondary rounded" onclick="viewMedicalRecords()">
+                    <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    View Medical Records
+                </button>
+                <button class="w-full text-left p-3 hover:bg-secondary rounded text-red-400" onclick="initiateDischarge()">
+                    <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                    </svg>
+                    Initiate Discharge
+                </button>
+            </div>
+            <div class="p-3 border-t" style="border-color: var(--border);">
+                <button class="btn-secondary w-full" onclick="closeActionMenu()">Close</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+
+        // Global state
+        let bedData = {
+            generalWard: [],
+            icu: [],
+            maternity: []
+        };
+
+        let conversations = [
+            {
+                id: 1,
+                contact: "Dr. Sarah Johnson",
+                role: "Cardiologist",
+                lastMessage: "Please prepare bed 302 for patient transfer.",
+                timestamp: "5 min ago",
+                unread: 2,
+                messages: [
+                    { id: 1, sender: "Dr. Sarah Johnson", text: "Hello, I need to transfer a patient to bed 302.", timestamp: "10:30 AM", isOwn: false },
+                    { id: 2, sender: "Dr. Sarah Johnson", text: "Please prepare bed 302 for patient transfer.", timestamp: "10:31 AM", isOwn: false }
+                ]
+            },
+            {
+                id: 2,
+                contact: "Billing Department",
+                role: "Department",
+                lastMessage: "Patient John Smith insurance approved.",
+                timestamp: "1 hour ago",
+                unread: 1,
+                messages: [
+                    { id: 1, sender: "Billing Department", text: "Patient John Smith insurance approved.", timestamp: "9:15 AM", isOwn: false }
+                ]
+            },
+            {
+                id: 3,
+                contact: "Dr. Michael Chen",
+                role: "Surgeon",
+                lastMessage: "Thank you for the update",
+                timestamp: "Yesterday",
+                unread: 0,
+                messages: [
+                    { id: 1, sender: "Front Desk", text: "Room 405 is ready for your patient", timestamp: "Yesterday 3:20 PM", isOwn: true },
+                    { id: 2, sender: "Dr. Michael Chen", text: "Thank you for the update", timestamp: "Yesterday 3:25 PM", isOwn: false }
+                ]
+            }
+        ];
+
+        let currentConversation = null;
+
+        let allAppointments = [];
+
+        
+        
         document.addEventListener('DOMContentLoaded', () => {
+            initializeBedStatus();
             setupEventListeners();
-            loadData();
+            renderConversationList();
+            updateUnreadCount();
+            loadAppointments();
+            
+            // Load patient records if on that section
+            if (!document.getElementById('patients').classList.contains('hidden')) {
+                loadPatientRecords();
+                
+            }
         });
 
+        
         function setupEventListeners() {
             window.onclick = function(event) {
                 if (event.target.classList.contains('modal')) {
@@ -1145,11 +2341,7 @@
             }
         }
 
-        function loadData() {
-            // Load initial data here
-        }
-
-        // Navigation
+        
         function showSection(sectionId) {
             document.querySelectorAll('.content-section').forEach(section => {
                 section.classList.add('hidden');
@@ -1165,9 +2357,25 @@
             }
             
             event.target.closest('.nav-item').classList.add('active');
+            
+            // Load data when switching to patient records
+            if (sectionId === 'patients') {
+                loadPatientRecords();
+            }
         }
 
-        // Modal functions
+        function toggleSubmenu(submenuId) {
+            const submenu = document.getElementById(submenuId + '-submenu');
+            const arrow = document.getElementById(submenuId + '-arrow');
+            
+            if (submenu) {
+                submenu.classList.toggle('active');
+                if (arrow) {
+                    arrow.style.transform = submenu.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0deg)';
+                }
+            }
+        }
+
         function openModal(modalId) {
             const modal = document.getElementById(modalId);
             if (modal) {
@@ -1184,55 +2392,814 @@
             }
         }
 
-        // Patient Registration
-        function registerPatient(event) {
+        async function registerPatient(event) {
             event.preventDefault();
-            showAlert('success', 'Success', 'Patient registered successfully!');
-            event.target.reset();
+            
+            const formData = {
+                firstName: document.getElementById('firstName').value,
+                middleName: document.getElementById('middleName').value,
+                lastName: document.getElementById('lastName').value,
+                dob: document.getElementById('dob').value,
+                gender: document.getElementById('gender').value,
+                bloodType: document.getElementById('bloodType').value,
+                civilStatus: document.getElementById('civilStatus').value,
+                email: document.getElementById('email').value,
+                mobile: document.getElementById('mobile').value,
+                address: document.getElementById('address').value,
+                city: document.getElementById('city').value,
+                province: document.getElementById('province').value,
+                emergencyName: document.getElementById('emergencyName').value,
+                emergencyRelation: document.getElementById('emergencyRelation').value,
+                emergencyPhone: document.getElementById('emergencyPhone').value,
+                emergencyEmail: document.getElementById('emergencyEmail').value,
+                allergies: document.getElementById('allergies').value,
+                conditions: document.getElementById('conditions').value,
+                medications: document.getElementById('medications').value,
+                insuranceProvider: document.getElementById('insuranceProvider').value,
+                policyNumber: document.getElementById('policyNumber').value
+            };
+            
+            try {
+                const response = await fetch('/api/patient/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    showAlert('success', 'Success', `Patient registered successfully! Patient ID: ${data.data.patient_id}`);
+                    event.target.reset();
+                    loadPatientRecords();
+                } else {
+                    showAlert('error', 'Error', data.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('error', 'Error', 'Failed to register patient. Please try again.');
+            }
         }
 
         function resetForm() {
-            const forms = document.querySelectorAll('form');
-            forms.forEach(form => form.reset());
+            document.querySelector('#registration form').reset();
         }
 
-        // Appointments
-        function filterAppointments() {
+        async function loadPatientRecords() {
+            try {
+                const response = await fetch('/api/patient/list');
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    renderPatientTable(data.data);
+                }
+            } catch (error) {
+                console.error('Error loading patients:', error);
+                showAlert('error', 'Error', 'Failed to load patient records');
+            }
+        }
+
+        function renderPatientTable(patients) {
+            const tbody = document.getElementById('patientRecordsTableBody');
+            if (!tbody) return;
+            
+            if (patients.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--muted-foreground);">No patients registered yet</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = patients.map(patient => `
+                <tr>
+                    <td>${patient.patient_id}</td>
+                    <td>${patient.full_name}</td>
+                    <td>${patient.mobile}</td>
+                    <td>
+                        <div class="flex gap-2">
+                            <button class="btn-primary text-sm" onclick="viewPatientInfo(${patient.id})">View Info</button>
+                            <button class="btn-secondary text-sm" onclick="editPatient(${patient.id})">Edit</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function viewPatientInfo(patientId) {
+            try {
+                const response = await fetch(`/api/patient/${patientId}`);
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    const patient = data.data;
+                    
+                    const modalContent = `
+                        <div style="max-height: 70vh; overflow-y: auto;">
+                            <h3 class="text-xl font-semibold mb-4">Patient Information</h3>
+                            
+                            <div class="form-section">
+                                <h4 class="form-section-title">Personal Information</h4>
+                                <div class="grid grid-cols-2 gap-4 p-4 rounded-lg" style="background-color: var(--secondary);">
+                                    <div><span style="color: var(--muted-foreground);">Patient ID:</span> <strong>${patient.patient_id}</strong></div>
+                                    <div><span style="color: var(--muted-foreground);">Full Name:</span> <strong>${patient.full_name}</strong></div>
+                                    <div><span style="color: var(--muted-foreground);">Date of Birth:</span> <strong>${patient.date_of_birth}</strong></div>
+                                    <div><span style="color: var(--muted-foreground);">Gender:</span> <strong>${patient.gender}</strong></div>
+                                    <div><span style="color: var(--muted-foreground);">Blood Type:</span> <strong>${patient.blood_type || 'N/A'}</strong></div>
+                                    <div><span style="color: var(--muted-foreground);">Civil Status:</span> <strong>${patient.civil_status || 'N/A'}</strong></div>
+                                    <div><span style="color: var(--muted-foreground);">Registration Date:</span> <strong>${patient.registration_date}</strong></div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-section">
+                                <h4 class="form-section-title">Contact Information</h4>
+                                <div class="grid grid-cols-2 gap-4 p-4 rounded-lg" style="background-color: var(--secondary);">
+                                    <div><span style="color: var(--muted-foreground);">Mobile:</span> <strong>${patient.mobile}</strong></div>
+                                    <div><span style="color: var(--muted-foreground);">Email:</span> <strong>${patient.email || 'N/A'}</strong></div>
+                                    <div class="col-span-2"><span style="color: var(--muted-foreground);">Address:</span> <strong>${patient.address}</strong></div>
+                                    <div><span style="color: var(--muted-foreground);">City:</span> <strong>${patient.city}</strong></div>
+                                    <div><span style="color: var(--muted-foreground);">Province:</span> <strong>${patient.province || 'N/A'}</strong></div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-section">
+                                <h4 class="form-section-title">Medical Information</h4>
+                                <div class="grid grid-cols-2 gap-4 p-4 rounded-lg" style="background-color: var(--secondary);">
+                                    <div class="col-span-2"><span style="color: var(--muted-foreground);">Allergies:</span> <strong>${patient.allergies || 'None'}</strong></div>
+                                    <div class="col-span-2"><span style="color: var(--muted-foreground);">Chronic Conditions:</span> <strong>${patient.chronic_conditions || 'None'}</strong></div>
+                                    <div class="col-span-2"><span style="color: var(--muted-foreground);">Current Medications:</span> <strong>${patient.current_medications || 'None'}</strong></div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-section">
+                                <h4 class="form-section-title">Emergency Contact</h4>
+                                <div class="grid grid-cols-2 gap-4 p-4 rounded-lg" style="background-color: var(--secondary);">
+                                    <div><span style="color: var(--muted-foreground);">Name:</span> <strong>${patient.emergency_contact_name}</strong></div>
+                                    <div><span style="color: var(--muted-foreground);">Relationship:</span> <strong>${patient.emergency_contact_relationship}</strong></div>
+                                    <div><span style="color: var(--muted-foreground);">Phone:</span> <strong>${patient.emergency_contact_phone}</strong></div>
+                                    <div><span style="color: var(--muted-foreground);">Email:</span> <strong>${patient.emergency_contact_email || 'N/A'}</strong></div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-section">
+                                <h4 class="form-section-title">Insurance Information</h4>
+                                <div class="grid grid-cols-2 gap-4 p-4 rounded-lg" style="background-color: var(--secondary);">
+                                    <div><span style="color: var(--muted-foreground);">Provider:</span> <strong>${patient.insurance_provider || 'N/A'}</strong></div>
+                                    <div><span style="color: var(--muted-foreground);">Policy Number:</span> <strong>${patient.policy_number || 'N/A'}</strong></div>
+                                </div>
+                            </div>
+                            
+                            <button class="btn-primary w-full mt-4" onclick="closePatientInfoModal()">Close</button>
+                        </div>
+                    `;
+                    
+                    const modal = document.createElement('div');
+                    modal.id = 'patientInfoModal';
+                    modal.className = 'modal active';
+                    modal.innerHTML = `<div class="modal-content p-6" style="max-width: 900px;">${modalContent}</div>`;
+                    document.body.appendChild(modal);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('error', 'Error', 'Failed to load patient information');
+            }
+        }
+
+        function closePatientInfoModal() {
+            const modal = document.getElementById('patientInfoModal');
+            if (modal) modal.remove();
+        }
+
+        async function editPatient(patientId) {
+            showAlert('info', 'Edit Patient', 'Edit functionality - Coming soon!');
+        }
+
+        function searchPatients() {
+            const searchTerm = document.getElementById('patientSearch').value.toLowerCase();
+            const rows = document.querySelectorAll('#patientRecordsTableBody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        }
+
+        // Messages functionality
+        function renderConversationList() {
+            const list = document.getElementById("conversationList");
+            if (!list) return;
+            
+            list.innerHTML = "";
+
+            conversations.forEach(conv => {
+                const item = document.createElement("div");
+                item.className = "conversation-item";
+                item.style.cssText = `
+                    padding: 16px;
+                    border-bottom: 1px solid var(--border);
+                    cursor: pointer;
+                    transition: background-color 0.2s;
+                    background-color: ${conv.unread > 0 ? 'var(--secondary)' : 'transparent'};
+                `;
+                
+                item.onclick = () => openConversation(conv.id);
+                
+                item.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background-color: var(--primary);">
+                            <span class="font-semibold">${conv.contact.split(' ').map(n => n[0]).join('')}</span>
+                        </div>
+                        <div class="flex-1" style="min-width: 0;">
+                            <div class="flex items-center justify-between mb-1">
+                                <div class="font-semibold">${conv.contact}</div>
+                                ${conv.unread > 0 ? `<span class="badge badge-danger">${conv.unread}</span>` : ''}
+                            </div>
+                            <div class="text-sm" style="color: var(--muted-foreground); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                ${conv.lastMessage}
+                            </div>
+                            <div class="text-xs mt-1" style="color: var(--muted-foreground);">${conv.timestamp}</div>
+                        </div>
+                    </div>
+                `;
+                
+                item.onmouseenter = function() {
+                    if (conv.unread === 0) this.style.backgroundColor = 'var(--secondary)';
+                };
+                item.onmouseleave = function() {
+                    if (conv.unread === 0) this.style.backgroundColor = 'transparent';
+                };
+                
+                list.appendChild(item);
+            });
+        }
+
+        function openConversation(convId) {
+            const conv = conversations.find(c => c.id === convId);
+            if (!conv) return;
+
+            currentConversation = conv;
+            conv.unread = 0;
+            updateUnreadCount();
+
+            document.getElementById("noConversationText").style.display = "none";
+            document.getElementById("chatHeader").style.display = "block";
+            document.getElementById("messagesContainer").style.display = "block";
+            document.getElementById("messageInputContainer").style.display = "block";
+
+            document.getElementById("chatContactInitial").textContent = conv.contact.split(' ').map(n => n[0]).join('');
+            document.getElementById("chatContactName").textContent = conv.contact;
+            document.getElementById("chatContactRole").textContent = conv.role;
+
+            renderMessages();
+            renderConversationList();
+        }
+
+        function renderMessages() {
+            if (!currentConversation) return;
+
+            const container = document.getElementById("messagesContainer");
+            container.innerHTML = "";
+
+            currentConversation.messages.forEach(msg => {
+                const messageDiv = document.createElement("div");
+                messageDiv.className = `mb-4 flex ${msg.isOwn ? 'justify-end' : 'justify-start'}`;
+                
+                messageDiv.innerHTML = `
+                    <div style="max-width: 70%;">
+                        ${!msg.isOwn ? `<div class="text-xs mb-1" style="color: var(--muted-foreground);">${msg.sender}</div>` : ''}
+                        <div class="p-3 rounded-lg" style="background-color: ${msg.isOwn ? 'var(--primary)' : 'var(--secondary)'}; color: ${msg.isOwn ? 'white' : 'var(--foreground)'};">
+                            ${msg.text}
+                        </div>
+                        <div class="text-xs mt-1 ${msg.isOwn ? 'text-right' : ''}" style="color: var(--muted-foreground);">
+                            ${msg.timestamp}
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(messageDiv);
+            });
+
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function closeConversation() {
+            currentConversation = null;
+            document.getElementById("chatHeader").style.display = "none";
+            document.getElementById("messagesContainer").style.display = "none";
+            document.getElementById("messageInputContainer").style.display = "none";
+            document.getElementById("noConversationText").style.display = "flex";
+        }
+
+        function handleMessageKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendChatMessage();
+            }
+        }
+
+        function sendChatMessage() {
+            if (!currentConversation) return;
+
+            const input = document.getElementById("messageInput");
+            const text = input.value.trim();
+            
+            if (!text) return;
+
+            const now = new Date();
+            const timestamp = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+
+            const newMessage = {
+                id: Date.now(),
+                sender: "Front Desk",
+                text: text,
+                timestamp: timestamp,
+                isOwn: true
+            };
+
+            currentConversation.messages.push(newMessage);
+            currentConversation.lastMessage = text;
+            currentConversation.timestamp = "Just now";
+
+            input.value = "";
+            renderMessages();
+            renderConversationList();
+        }
+
+        function openCompose() {
+            document.getElementById("composeModal").classList.add("active");
+            document.getElementById("composeTo").value = "";
+            document.getElementById("composeSubject").value = "";
+            document.getElementById("composeBody").value = "";
+        }
+
+        function closeCompose() {
+            document.getElementById("composeModal").classList.remove("active");
+        }
+
+        function sendNewMessage() {
+            const to = document.getElementById("composeTo").value;
+            const subject = document.getElementById("composeSubject").value;
+            const body = document.getElementById("composeBody").value;
+
+            if (!to || !body) {
+                showAlert('error', 'Error', 'Please fill in recipient and message');
+                return;
+            }
+
+            let conv = conversations.find(c => c.contact === to);
+            
+            if (!conv) {
+                conv = {
+                    id: Date.now(),
+                    contact: to,
+                    role: to.includes('Dr.') ? 'Doctor' : 'Department',
+                    lastMessage: body,
+                    timestamp: "Just now",
+                    unread: 0,
+                    messages: []
+                };
+                conversations.unshift(conv);
+            }
+
+            const now = new Date();
+            const timestamp = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+
+            conv.messages.push({
+                id: Date.now(),
+                sender: "Front Desk",
+                text: subject ? `${subject}: ${body}` : body,
+                timestamp: timestamp,
+                isOwn: true
+            });
+
+            conv.lastMessage = body;
+            conv.timestamp = "Just now";
+
+            closeCompose();
+            renderConversationList();
+            openConversation(conv.id);
+            showAlert('success', 'Sent', 'Message sent successfully');
+        }
+
+        function updateUnreadCount() {
+            const unread = conversations.reduce((sum, conv) => sum + conv.unread, 0);
+            const badge = document.getElementById("unreadCount");
+            if (badge) {
+                badge.innerText = unread;
+            }
+        }
+
+        
+        // BED STATUS MANAGEMENT
+        function initializeBedStatus() {
+            // Initialize General Ward beds (32 beds)
+            bedData.generalWard = [];
+            for (let i = 1; i <= 32; i++) {
+                const status = i <= 28 ? 'occupied' : (i === 29 ? 'reserved' : (i === 30 ? 'maintenance' : 'available'));
+                bedData.generalWard.push({
+                    id: `GW-${i}`,
+                    number: i,
+                    status: status,
+                    patient: status === 'occupied' ? `Patient ${i}` : null,
+                    floor: 4
+                });
+            }
+            
+            // Initialize ICU beds (12 beds)
+            bedData.icu = [];
+            for (let i = 1; i <= 12; i++) {
+                const status = i <= 10 ? 'occupied' : 'available';
+                bedData.icu.push({
+                    id: `ICU-${i}`,
+                    number: i,
+                    status: status,
+                    patient: status === 'occupied' ? `Patient ICU-${i}` : null,
+                    floor: 5
+                });
+            }
+            
+            // Initialize Maternity Ward beds (24 beds)
+            bedData.maternity = [];
+            for (let i = 1; i <= 24; i++) {
+                const status = i <= 22 ? 'occupied' : 'available';
+                bedData.maternity.push({
+                    id: `MAT-${i}`,
+                    number: i,
+                    status: status,
+                    patient: status === 'occupied' ? `Patient MAT-${i}` : null,
+                    floor: 4
+                });
+            }
+            
+            renderBedStatus();
+        }
+
+        function renderBedStatus() {
+            const generalWardContainer = document.getElementById('generalWardBeds');
+            if (generalWardContainer) {
+                generalWardContainer.innerHTML = bedData.generalWard.map(bed => createBedCard(bed)).join('');
+            }
+            
+            const icuContainer = document.getElementById('icuBeds');
+            if (icuContainer) {
+                icuContainer.innerHTML = bedData.icu.map(bed => createBedCard(bed)).join('');
+            }
+            
+            const maternityContainer = document.getElementById('maternityBeds');
+            if (maternityContainer) {
+                maternityContainer.innerHTML = bedData.maternity.map(bed => createBedCard(bed)).join('');
+            }
+        }
+
+        function createBedCard(bed) {
+            return `
+                <div class="bed-card ${bed.status}" onclick="manageBed('${bed.id}')">
+                    <div class="text-lg font-bold mb-2">Bed ${bed.number}</div>
+                    <div class="text-sm capitalize">${bed.status}</div>
+                    ${bed.patient ? `<div class="text-xs mt-1" style="color: var(--muted-foreground);">${bed.patient}</div>` : ''}
+                </div>
+            `;
+        }
+
+        function manageBed(bedId) {
+            showAlert('info', 'Bed Management', `Managing bed: ${bedId}`);
+        }
+
+        function refreshBedStatus() {
+            renderBedStatus();
+            showAlert('success', 'Refreshed', 'Bed status updated successfully');
+        }
+
+        function filterBedStatus() {
+            const floor = document.getElementById('bedFloorFilter').value;
+            showAlert('info', 'Filter Applied', `Filtering by floor: ${floor || 'All'}`);
+        }
+
+        
+        // ADMISSION & TRANSFER FUNCTIONS
+        function approveAdmission(uhid) {
+            if (confirm(`Approve admission request for patient ${uhid}?`)) {
+                showAlert('success', 'Approved', 'Admission request approved. Proceed to patient admission.');
+            }
+        }
+
+        function viewAdmissionDetails(uhid) {
+            showAlert('info', 'View Details', `Viewing details for patient ${uhid}`);
+        }
+
+        function admitPatient(event) {
+            event.preventDefault();
+            showAlert('success', 'Success', 'Patient admitted successfully!');
+            event.target.reset();
+        }
+
+        function resetAdmissionForm() {
+            document.querySelector('#patient-admission form').reset();
+        }
+
+        function searchAdmission() {
+            document.getElementById('patientInfoSection').style.display = 'block';
+            document.getElementById('transferPatientName').textContent = 'John Smith';
+            document.getElementById('transferCurrentDoctor').textContent = 'Dr. Sarah Johnson';
+            document.getElementById('transferWardRoom').textContent = 'Ward 4 - Room 201';
+            showAlert('success', 'Found', 'Patient information loaded');
+        }
+
+        function transferDoctor(event) {
+            event.preventDefault();
+            showAlert('success', 'Success', 'Doctor transfer completed successfully!');
+            event.target.reset();
+            document.getElementById('patientInfoSection').style.display = 'none';
+        }
+
+        function resetTransferForm() {
+            document.querySelector('#doctor-transfer form').reset();
+            document.getElementById('patientInfoSection').style.display = 'none';
+        }
+
+        function searchAdmissionForTransfer() {
+            document.getElementById('currentRoomInfo').style.display = 'block';
+            document.getElementById('roomTransferPatientName').textContent = 'Emma Davis';
+            document.getElementById('roomTransferCurrentWard').textContent = 'General Ward';
+            document.getElementById('roomTransferCurrentRoom').textContent = 'Room 201';
+            document.getElementById('roomTransferCurrentBed').textContent = 'Bed 3';
+            showAlert('success', 'Found', 'Patient information loaded');
+        }
+
+        function transferRoom(event) {
+            event.preventDefault();
+            showAlert('success', 'Success', 'Room transfer completed successfully!');
+            event.target.reset();
+            document.getElementById('currentRoomInfo').style.display = 'none';
+        }
+
+        function resetRoomTransferForm() {
+            document.querySelector('#room-transfer form').reset();
+            document.getElementById('currentRoomInfo').style.display = 'none';
+        }
+
+        function searchPatientForDischarge() {
+            const admissionNo = document.getElementById('dischargeAdmissionNo').value;
+            if (!admissionNo) {
+                showAlert('error', 'Error', 'Please enter admission number');
+                return;
+            }
+            
+            document.getElementById('dischargePatientInfo').style.display = 'block';
+            document.getElementById('dischargePatientName').textContent = 'Robert Taylor';
+            document.getElementById('dischargeAdmissionDate').textContent = 'Dec 28, 2024';
+            document.getElementById('dischargeWardRoom').textContent = 'Ward 4 - Room 302';
+            document.getElementById('dischargeDoctor').textContent = 'Dr. Michael Chen';
+            showAlert('success', 'Found', 'Patient information loaded');
+        }
+
+        function dischargePatient(event) {
+            event.preventDefault();
+            if (confirm('Are you sure you want to discharge this patient?')) {
+                showAlert('success', 'Success', 'Patient discharged successfully!');
+                event.target.reset();
+                document.getElementById('dischargePatientInfo').style.display = 'none';
+            }
+        }
+
+        function resetDischargeForm() {
+            document.querySelector('#patient-discharge form').reset();
+            document.getElementById('dischargePatientInfo').style.display = 'none';
+        }
+
+        
+        // WARD/ROOM MANAGEMENT
+        function selectFloor(floor) {
+            document.querySelectorAll('.floor-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            showAlert('info', 'Floor Selected', `Viewing ${floor} floor rooms`);
+        }
+
+        function viewRoomDetails(roomId) {
+            showAlert('info', 'Room Details', `Viewing details for room ${roomId}`);
+        }
+
+        function manageRoom(roomId) {
+            showAlert('info', 'Manage Room', `Managing room ${roomId}`);
+        }
+
+        function addNewRoom(event) {
+            event.preventDefault();
+            showAlert('success', 'Success', 'New room added successfully!');
+            closeModal('addRoomModal');
+        }
+
+        async function loadAppointments() {
+            try {
+                const response = await fetch('/api/frontdesk/appointments');
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    allAppointments = data.data || [];
+                    renderPendingModal();
+                    renderAppointmentSection();
+                } else {
+                    console.error('Failed to load appointments:', data.message);
+                    showAlert('error', 'Error', 'Failed to load appointments');
+                }
+            } catch (error) {
+                console.error('Error loading appointments:', error);
+                showAlert('error', 'Error', 'Failed to load appointments');
+            }
+        }
+
+        function renderPendingModal() {
+            const tbody = document.getElementById('appointmentListTableBody');
+            if (!tbody) return;
+            
+            tbody.innerHTML = '';
+
+            // Only show Pending appointments in the modal
+            const pending = allAppointments.filter(a => a.status === 'Pending');
+
+            if (pending.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; color: var(--muted-foreground); padding: 40px;">No pending appointments</td></tr>`;
+                document.getElementById('totalAppointmentsCount').textContent = '0';
+                return;
+            }
+
+            tbody.innerHTML = pending.map(a => `
+                <tr>
+                    <td>${a.patient_name}</td>
+                    <td>${a.doctor}</td>
+                    <td>${a.appointment_date}</td>
+                    <td>${a.appointment_time}</td>
+                    <td>${a.service_type}</td>
+                    <td><span class="badge badge-warning">Pending</span></td>
+                    <td>
+                        <div class="flex gap-2">
+                            <button class="btn-success text-sm" onclick="acceptAppointment(${a.id})">Accept</button>
+                            <button class="btn-danger text-sm" onclick="rejectAppointment(${a.id})">Reject</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+
+            document.getElementById('totalAppointmentsCount').textContent = pending.length;
+        }
+
+        function renderAppointmentSection() {
+            const tbody = document.getElementById('appointmentsTableBody');
+            if (!tbody) return;
+            
+            tbody.innerHTML = '';
+
+            // Only show "Waiting to Approved" status in the main appointment section
+            const waitingApproved = allAppointments.filter(a => a.status === 'Waiting to Approved');
+
+            if (waitingApproved.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color: var(--muted-foreground); padding: 40px;">No appointments waiting for approval</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = waitingApproved.map(a => `
+                <tr>
+                    <td>${a.patient_name}</td>
+                    <td>${a.doctor}</td>
+                    <td>${a.appointment_date} ${a.appointment_time}</td>
+                    <td>${a.service_type}</td>
+                    <td><span class="badge badge-info">Waiting to Approved</span></td>
+                    <td>
+                        <button class="btn-secondary text-sm" onclick="viewAppointmentDetails(${a.id})">View Details</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function acceptAppointment(id) {
+            if (!confirm('Accept this appointment?')) return;
+            
+            try {
+                const response = await fetch(`/api/frontdesk/appointment/accept/${id}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    showAlert('success', 'Success', 'Appointment accepted and moved to Waiting to Approved');
+                    loadAppointments(); // Refresh the lists
+                } else {
+                    showAlert('error', 'Error', data.message || 'Failed to accept appointment');
+                }
+            } catch (error) {
+                console.error('Error accepting appointment:', error);
+                showAlert('error', 'Error', 'Failed to accept appointment');
+            }
+        }
+
+        async function rejectAppointment(id) {
+            if (!confirm('Reject this appointment?')) return;
+            
+            try {
+                const response = await fetch(`/api/frontdesk/appointment/reject/${id}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    showAlert('success', 'Success', 'Appointment rejected');
+                    loadAppointments(); // Refresh the lists
+                } else {
+                    showAlert('error', 'Error', data.message || 'Failed to reject appointment');
+                }
+            } catch (error) {
+                console.error('Error rejecting appointment:', error);
+                showAlert('error', 'Error', 'Failed to reject appointment');
+            }
+        }
+
+        async function viewAppointmentDetails(id) {
+            try {
+                const response = await fetch(`/api/frontdesk/appointment/${id}`);
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    const apt = data.data;
+                    
+                    const modalContent = `
+                        <div style="max-height: 70vh; overflow-y: auto;">
+                            <h3 class="text-xl font-semibold mb-4">Appointment Details</h3>
+                            
+                            <div class="form-section">
+                                <h4 class="form-section-title">Appointment Information</h4>
+                                <div class="grid grid-cols-2 gap-4 p-4 rounded-lg" style="background-color: var(--secondary);">
+                                    <div><span style="color: var(--muted-foreground);">Status:</span> <strong>${apt.status}</strong></div>
+                                    <div><span style="color: var(--muted-foreground);">Patient:</span> <strong>${apt.patient_name}</strong></div>
+                                    <div><span style="color: var(--muted-foreground);">Doctor:</span> <strong>${apt.doctor}</strong></div>
+                                    <div><span style="color: var(--muted-foreground);">Date:</span> <strong>${apt.appointment_date}</strong></div>
+                                    <div><span style="color: var(--muted-foreground);">Time:</span> <strong>${apt.appointment_time}</strong></div>
+                                    <div><span style="color: var(--muted-foreground);">Service Type:</span> <strong>${apt.service_type}</strong></div>
+                                    <div><span style="color: var(--muted-foreground);">Department:</span> <strong>${apt.department || 'N/A'}</strong></div>
+                                    <div class="col-span-2"><span style="color: var(--muted-foreground);">Reason:</span> <strong>${apt.reason}</strong></div>
+                                    ${apt.room_type ? `<div><span style="color: var(--muted-foreground);">Room Type:</span> <strong>${apt.room_type}</strong></div>` : ''}
+                                    ${apt.duration ? `<div><span style="color: var(--muted-foreground);">Duration:</span> <strong>${apt.duration} day(s)</strong></div>` : ''}
+                                </div>
+                            </div>
+                            
+                            <button class="btn-primary w-full mt-4" onclick="closeAppointmentDetailsModal()">Close</button>
+                        </div>
+                    `;
+                    
+                    const modal = document.createElement('div');
+                    modal.id = 'appointmentDetailsModal';
+                    modal.className = 'modal active';
+                    modal.innerHTML = `<div class="modal-content p-6" style="max-width: 800px;">${modalContent}</div>`;
+                    document.body.appendChild(modal);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('error', 'Error', 'Failed to load appointment details');
+            }
+        }
+
+        function closeAppointmentDetailsModal() {
+            const modal = document.getElementById('appointmentDetailsModal');
+            if (modal) modal.remove();
+        }
+
+        // Filter functions for appointments
+        function filterAppointmentsSection() {
             const searchTerm = document.getElementById('appointmentSearch').value.toLowerCase();
-            const statusFilter = document.getElementById('appointmentStatus').value.toLowerCase();
+            const dateFilter = document.getElementById('appointmentDate').value;
             
             const rows = document.querySelectorAll('#appointmentsTableBody tr');
             
             rows.forEach(row => {
                 const text = row.textContent.toLowerCase();
-                const matchesSearch = text.includes(searchTerm);
-                const matchesStatus = !statusFilter || text.includes(statusFilter);
+                const dateMatch = !dateFilter || text.includes(dateFilter);
+                const searchMatch = !searchTerm || text.includes(searchTerm);
                 
-                row.style.display = (matchesSearch && matchesStatus) ? '' : 'none';
+                row.style.display = (dateMatch && searchMatch) ? '' : 'none';
             });
         }
 
-        function scheduleAppointment(event) {
-            event.preventDefault();
-            showAlert('success', 'Success', 'Appointment scheduled successfully!');
-            closeModal('newAppointmentModal');
+        function filterModalAppointments() {
+            const searchTerm = document.getElementById('modalAppointmentSearch').value.toLowerCase();
+            const dateFilter = document.getElementById('modalAppointmentDate').value;
+            
+            const rows = document.querySelectorAll('#appointmentListTableBody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                const dateMatch = !dateFilter || text.includes(dateFilter);
+                const searchMatch = !searchTerm || text.includes(searchTerm);
+                
+                row.style.display = (dateMatch && searchMatch) ? '' : 'none';
+            });
         }
 
-        function viewAppointment(id) {
-            showAlert('info', 'Coming Soon', 'View appointment details');
-        }
-
-        function rescheduleAppointment(id) {
-            showAlert('info', 'Coming Soon', 'Reschedule appointment');
-        }
-
-        function cancelAppointment(id) {
-            if (confirm('Are you sure you want to cancel this appointment?')) {
-                showAlert('success', 'Success', 'Appointment cancelled successfully!');
-            }
-        }
-
-        // Check-in/Check-out
+        
+        // CHECK-IN/CHECK-OUT
         function performCheckin() {
             const search = document.getElementById('checkinSearch').value;
             if (!search) {
@@ -1253,73 +3220,32 @@
             document.getElementById('checkoutSearch').value = '';
         }
 
-        function checkoutPatient(id) {
-            if (confirm('Check out this patient?')) {
-                showAlert('success', 'Success', 'Patient checked out successfully!');
-            }
-        }
-
-        // Insurance
-        function verifyInsurance() {
-            const patient = document.getElementById('insurancePatientSearch').value;
-            const provider = document.getElementById('insuranceProviderVerify').value;
-            const policy = document.getElementById('insurancePolicyVerify').value;
-            
-            if (!patient || !provider || !policy) {
-                showAlert('error', 'Error', 'Please fill in all fields');
+        
+        // LOGOUT - CONNECTED TO API
+        async function logout() {
+            if (!confirm('Are you sure you want to logout?')) {
                 return;
             }
             
-            showAlert('success', 'Success', 'Insurance coverage verified!');
-        }
-
-        function viewInsuranceDetails(id) {
-            showAlert('info', 'Coming Soon', 'View insurance details');
-        }
-
-        // Waiting Room
-        function refreshWaitingRoom() {
-            showAlert('info', 'Refreshed', 'Waiting room data updated');
-        }
-
-        function callPatient(id) {
-            if (confirm('Call this patient to consultation room?')) {
-                showAlert('success', 'Success', 'Patient notification sent!');
-            }
-        }
-
-        // Patient Records
-        function filterPatients() {
-            const searchTerm = document.getElementById('patientSearch').value.toLowerCase();
-            const statusFilter = document.getElementById('patientStatusFilter').value.toLowerCase();
-            
-            const rows = document.querySelectorAll('#patientsTableBody tr');
-            
-            rows.forEach(row => {
-                const text = row.textContent.toLowerCase();
-                const matchesSearch = text.includes(searchTerm);
-                const matchesStatus = !statusFilter || text.includes(statusFilter);
+            try {
+                const response = await fetch('/api/logout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
                 
-                row.style.display = (matchesSearch && matchesStatus) ? '' : 'none';
-            });
-        }
-
-        function viewPatientRecord(id) {
-            showAlert('info', 'Coming Soon', 'View patient full record');
-        }
-
-        function bookAppointment(id) {
-            openModal('newAppointmentModal');
-        }
-
-        // Logout
-        function logout() {
-            if (confirm('Are you sure you want to logout?')) {
-                window.location.href = '/';
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    window.location.href = data.redirect;
+                }
+            } catch (err) {
+                console.error('Logout error:', err);
+                window.location.href = '/IMS';
             }
         }
 
-        // Alert System
+        
+        // ALERT SYSTEM
         function showAlert(type, title, message) {
             const alert = document.createElement('div');
             alert.className = `custom-alert ${type}`;
@@ -1357,7 +3283,8 @@
             }, 3000);
         }
 
-        // Add animation keyframes
+        
+        // ANIMATION STYLES
         const style = document.createElement('style');
         style.textContent = `
             @keyframes slideIn {
@@ -1380,6 +3307,26 @@
                     transform: translateX(100%);
                     opacity: 0;
                 }
+            }
+            
+            .alert-content {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+            
+            .alert-icon {
+                font-size: 24px;
+            }
+            
+            .alert-text strong {
+                display: block;
+                margin-bottom: 4px;
+            }
+            
+            .alert-text p {
+                margin: 0;
+                font-size: 14px;
             }
         `;
         document.head.appendChild(style);

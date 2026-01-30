@@ -1,0 +1,2271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Billing System - Enhanced</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f5f5; }
+        .container { display: flex; height: 100vh; }
+        
+        /* Sidebar */
+        .sidebar { width: 250px; background: #2c3e50; color: white; padding: 20px 0; }
+        .sidebar-header { padding: 0 20px 20px; border-bottom: 1px solid #34495e; }
+        .sidebar-header h2 { font-size: 20px; margin-bottom: 5px; }
+        .sidebar-header p { font-size: 12px; color: #bdc3c7; }
+        .nav-menu { list-style: none; padding: 20px 0; }
+        .nav-item { padding: 15px 20px; cursor: pointer; transition: background 0.3s; display: flex; align-items: center; gap: 10px; }
+        .nav-item:hover { background: #34495e; }
+        .nav-item.active { background: #3498db; border-left: 4px solid #2980b9; }
+        
+        /* Main Content */
+        .main-content { flex: 1; overflow-y: auto; padding: 30px; }
+        .page-section { display: none; }
+        .page-section.active { display: block; }
+        .page-header { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; }
+        .page-header h1 { color: #2c3e50; font-size: 28px; }
+        .card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        
+        /* Form Elements */
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 500; color: #2c3e50; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
+        .required::after { content: " *"; color: #e74c3c; }
+        
+        /* Buttons */
+        .btn { padding: 12px 24px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: 500; transition: background 0.3s; }
+        .btn-primary { background: #3498db; color: white; }
+        .btn-primary:hover { background: #2980b9; }
+        .btn-success { background: #27ae60; color: white; }
+        .btn-success:hover { background: #229954; }
+        .btn-danger { background: #e74c3c; color: white; }
+        .btn-danger:hover { background: #c0392b; }
+        .btn-warning { background: #f39c12; color: white; }
+        .btn-warning:hover { background: #e67e22; }
+        .btn-info { background: #16a085; color: white; }
+        .btn-info:hover { background: #138d75; }
+        .btn-sm { padding: 6px 12px; font-size: 12px; }
+        .btn-secondary { background: #95a5a6; color: white; }
+        .btn-secondary:hover { background: #7f8c8d; }
+        
+        /* Table */
+        .table-container { overflow-x: auto; margin-top: 15px; }
+        table { width: 100%; border-collapse: collapse; background: white; }
+        thead { background: #34495e; color: white; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        tbody tr:hover { background: #f8f9fa; }
+        .badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 500; }
+        .badge-success { background: #d4edda; color: #155724; }
+        .badge-secondary { background: #e2e3e5; color: #383d41; }
+        
+        /* Tabs */
+        .tabs { display: flex; gap: 5px; margin-bottom: 20px; border-bottom: 2px solid #eee; flex-wrap: wrap; }
+        .tab { padding: 10px 15px; cursor: pointer; border: none; background: none; color: #7f8c8d; font-weight: 500; border-bottom: 3px solid transparent; font-size: 13px; }
+        .tab.active { color: #3498db; border-bottom-color: #3498db; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        /* Treatment Styles */
+        .treatment-section { margin-bottom: 25px; padding: 20px; background: #f8f9fa; border-radius: 8px; }
+        .treatment-section h3 { color: #2c3e50; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #3498db; }
+        .treatment-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .treatment-title { margin: 0; padding: 0; border: none; }
+        .vital-signs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 15px; }
+        .vital-item { background: white; padding: 15px; border-radius: 6px; border-left: 3px solid #3498db; }
+        .vital-item label { display: block; font-size: 12px; color: #7f8c8d; margin-bottom: 5px; }
+        .vital-item input { border: 1px solid #ddd; padding: 8px; border-radius: 4px; width: 100%; margin-top: 5px; }
+        .detail-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #ddd; }
+        .detail-row:last-child { border-bottom: none; }
+        .detail-label { font-weight: 500; color: #7f8c8d; }
+        .detail-value { color: #2c3e50; font-weight: 500; }
+        
+        /* Billing */
+        .bill-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; }
+        .bill-item:hover { background: #f8f9fa; }
+        .bill-total { margin-top: 20px; padding-top: 20px; border-top: 2px solid #2c3e50; }
+        .bill-total-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 16px; }
+        .bill-total-row.grand { font-size: 20px; font-weight: bold; color: #3498db; }
+        
+        /* Misc */
+        .order-type-btns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+        .info-box { background: #e8f4f8; border-left: 4px solid #3498db; padding: 15px; margin-bottom: 20px; border-radius: 4px; }
+        .info-box p { margin: 0; color: #2c3e50; font-size: 14px; }
+        .department-section { margin-bottom: 20px; }
+        .department-header { background: #ecf0f1; padding: 10px 15px; font-weight: bold; border-radius: 4px; margin-bottom: 10px; }
+        .action-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+        .checkbox-group { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; }
+        .checkbox-item { display: flex; align-items: center; gap: 8px; }
+        .checkbox-item input[type="checkbox"] { width: auto; }
+
+        /* Modal */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); overflow-y: auto; }
+        .modal.active { display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .modal-content { background: white; padding: 30px; border-radius: 8px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #eee; }
+        .modal-header h2 { color: #2c3e50; }
+        .close-btn { cursor: pointer; font-size: 28px; color: #7f8c8d; background: none; border: none; }
+        .close-btn:hover { color: #2c3e50; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>🏥 Hospital Billing</h2>
+                <p>Management System</p>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item active" onclick="showPage('admission')">
+                    <span>👤</span><span>Patient Admission</span>
+                </li>
+                <li class="nav-item" onclick="showPage('orders')">
+                    <span>📋</span><span>Doctor's Orders</span>
+                </li>
+                <li class="nav-item" onclick="showPage('billing')">
+                    <span>💵</span><span>Billing & Discharge</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Patient Admission Section -->
+            <div id="admission" class="page-section active">
+                <div class="page-header">
+                    <h1>Patient Admission</h1>
+                </div>
+                
+                <div class="card">
+                    <h3 style="margin-bottom: 20px;">New Patient Admission Form</h3>
+                    <form id="admissionForm">
+                        <div class="form-group">
+                            <label>Patient Name *</label>
+                            <input type="text" id="patientName" required>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Attending Physician *</label>
+                                <select id="patientDoctor">
+                                    <option value="1">Dr. Maria Santos - Internal Medicine (PF: ₱1,500)</option>
+                                    <option value="2">Dr. Juan dela Cruz - Surgery (PF: ₱3,000)</option>
+                                    <option value="3">Dr. Ana Reyes - Pediatrics (PF: ₱1,200)</option>
+                                    <option value="4">Dr. Roberto Garcia - Cardiology (PF: ₱2,500)</option>
+                                    <option value="5">Dr. Elena Mendoza - Orthopedics (PF: ₱2,000)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Gender</label>
+                                <select id="patientGender">
+                                    <option>Male</option>
+                                    <option>Female</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Room Type</label>
+                            <select id="roomType">
+                                <option value="General Ward">General Ward - ₱2,000/day</option>
+                                <option value="Semi-Private">Semi-Private - ₱4,000/day</option>
+                                <option value="Private Room">Private Room - ₱8,000/day</option>
+                                <option value="ICU">ICU - ₱15,000/day</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Deposit Amount</label>
+                            <input type="number" id="depositAmount" value="5000">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Admit Patient</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Doctor's Orders Section -->
+            <div id="orders" class="page-section">
+                <div class="page-header">
+                    <h1>Doctor's Orders</h1>
+                </div>
+                
+                <div class="card">
+                    <!-- Search Bar -->
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <input type="text" id="patientSearchInput" placeholder="🔍 Search patient by name..." 
+                               style="max-width: 500px; font-size: 15px;" oninput="filterPatientsByName()">
+                    </div>
+
+                    <!-- Status Filter Buttons -->
+                    <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+                        <button class="btn status-filter-btn" style="background: #5cb85c;" onclick="filterByStatus('new')" id="btnNewPatient">
+                            New Patient (<span id="countNewPatient">0</span>)
+                        </button>
+                        <button class="btn status-filter-btn" style="background: #f0ad4e;" onclick="filterByStatus('nurse')" id="btnNurseSeen">
+                            Nurse Seen (<span id="countNurseSeen">0</span>)
+                        </button>
+                        <button class="btn status-filter-btn" style="background: #5bc0de;" onclick="filterByStatus('doctor')" id="btnDoctorSeen">
+                            Doctor Seen (<span id="countDoctorSeen">0</span>)
+                        </button>
+                        <button class="btn status-filter-btn" style="background: #f39c12;" onclick="filterByStatus('complete')" id="btnVisitComplete">
+                            Visit Complete (<span id="countVisitComplete">0</span>)
+                        </button>
+                        <button class="btn btn-secondary" onclick="filterByStatus('all')" id="btnAllPatients">
+                            All Patients
+                        </button>
+                    </div>
+
+                    <h3 style="margin-bottom: 20px;">Admitted Patients</h3>
+                    <div class="table-container">
+                        <table id="patientsTable">
+                            <thead>
+                                <tr>
+                                    <th>Patient Name</th>
+                                    <th>Room</th>
+                                    <th>Doctor</th>
+                                    <th>Days</th>
+                                    <th>Visit Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="patientsTableBody">
+                                <tr>
+                                    <td colspan="6" style="text-align: center; color: #7f8c8d;">No admitted patients</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Billing & Discharge Section -->
+            <div id="billing" class="page-section">
+                <div class="page-header">
+                    <h1>Billing & Discharge</h1>
+                </div>
+                
+                <div class="card">
+                    <h3 style="margin-bottom: 20px;">Admitted Patients</h3>
+                    <div class="table-container">
+                        <table id="billingTable">
+                            <thead>
+                                <tr>
+                                    <th>Patient Name</th>
+                                    <th>Doctor</th>
+                                    <th>Days Admitted</th>
+                                    <th>Total Bill</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="billingTableBody">
+                                <tr>
+                                    <td colspan="6" style="text-align: center; color: #7f8c8d;">No admitted patients</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Patient Orders Page (Simplified - No Diagnosis) -->
+            <div id="patientOrdersPage" class="page-section">
+                <div class="page-header">
+                    <h1 id="ordersPageTitle">Patient Orders</h1>
+                    <button class="btn btn-secondary" onclick="showPage('orders')">← Back to List</button>
+                </div>
+
+                <div class="card">
+                    <div class="tabs">
+                        <button class="tab active" onclick="switchOrdersTab('addOrders')">Add Orders</button>
+                        <button class="tab" onclick="switchOrdersTab('runningBill')">Running Bill</button>
+                    </div>
+
+                    <!-- Add Orders Tab -->
+                    <div id="addOrders" class="tab-content active">
+                        <div class="info-box">
+                            <p>Orders will automatically be added to the patient's running bill</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Order Type</label>
+                            <div class="order-type-btns">
+                                <button class="btn btn-primary" onclick="selectOrderType('laboratory')">Laboratory</button>
+                                <button class="btn btn-primary" onclick="selectOrderType('pharmacy')">Pharmacy</button>
+                                <button class="btn btn-primary" onclick="selectOrderType('procedures')">Procedures</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Select Service</label>
+                            <select id="serviceSelect">
+                                <option value="">-- Select Order Type First --</option>
+                            </select>
+                        </div>
+
+                        <button class="btn btn-primary" onclick="addOrderToBill()">Add Order to Bill</button>
+
+                        <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #eee;">
+                            <button class="btn btn-warning" onclick="addHospitalDay()">Add Hospital Day</button>
+                            <p style="margin-top: 10px; font-size: 12px; color: #7f8c8d;">Adds room charge for the next day</p>
+                        </div>
+                    </div>
+
+                    <!-- Running Bill Tab -->
+                    <div id="runningBill" class="tab-content">
+                        <div class="info-box">
+                            <p>This bill updates automatically as new orders are added</p>
+                        </div>
+                        <div id="billItemsList"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Medical Records Page (Comprehensive) -->
+            <div id="medicalRecordsPage" class="page-section">
+                <div class="page-header">
+                    <h1 id="medicalRecordsTitle">Patient Medical Records</h1>
+                    <button class="btn btn-secondary" onclick="showPage('orders')">← Back to List</button>
+                </div>
+
+                <div class="card">
+                    <div class="tabs">
+                        <button class="tab active" onclick="switchMainTab('patientInfo')">Patient Info</button>
+                        <button class="tab" onclick="switchMainTab('vitals')">Vital Signs</button>
+                        <button class="tab" onclick="switchMainTab('allergies')">Allergies</button>
+                        <button class="tab" onclick="switchMainTab('currentMedication')">Current Medication</button>
+                        <button class="tab" onclick="switchMainTab('complaint')">Presenting Complaint</button>
+                        <button class="tab" onclick="switchMainTab('history')">History & Examination</button>
+                        <button class="tab" onclick="switchMainTab('diagnosis')">Diagnosis</button>
+                        <button class="tab" onclick="switchMainTab('investigation')">Investigation</button>
+                        <button class="tab" onclick="switchMainTab('prescription')">Prescription</button>
+                        <button class="tab" onclick="switchMainTab('advice')">Advice</button>
+                        <button class="tab" onclick="switchMainTab('certificate')">Medical Certificate</button>
+                        <button class="tab" onclick="switchMainTab('referral')">Refer to Doctor</button>
+                        <button class="tab" onclick="switchMainTab('billingTab')">Billing</button>
+                    </div>
+
+                    <!-- Patient Info Tab -->
+                    <div id="patientInfo" class="tab-content active">
+                        <div class="treatment-section">
+                            <h3>📋 Patient Information</h3>
+                            <div class="detail-row">
+                                <span class="detail-label">Name:</span>
+                                <span class="detail-value" id="mr-name">-</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Admission Date:</span>
+                                <span class="detail-value" id="mr-admission">-</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Days Admitted:</span>
+                                <span class="detail-value" id="mr-days">-</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Room Type:</span>
+                                <span class="detail-value" id="mr-room">-</span>
+                            </div>
+                        </div>
+
+                        <div class="treatment-section">
+                            <h3>👨‍⚕️ Attending Physician</h3>
+                            <div class="detail-row">
+                                <span class="detail-label">Doctor:</span>
+                                <span class="detail-value" id="mr-doctor">-</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Specialty:</span>
+                                <span class="detail-value" id="mr-specialty">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Vital Signs Tab -->
+                    <div id="vitals" class="tab-content">
+                        <div class="treatment-section">
+                            <div class="treatment-header">
+                                <h3 class="treatment-title">💓 Vital Signs</h3>
+                                <button class="btn btn-success" onclick="saveVitalSigns()">
+                                    <span>💾</span> Save Vital Signs
+                                </button>
+                            </div>
+                            <div class="vital-signs-grid">
+                                <div class="vital-item">
+                                    <label>Temperature</label>
+                                    <input type="text" id="mr-temp" placeholder="36.5°C">
+                                </div>
+                                <div class="vital-item">
+                                    <label>Blood Pressure</label>
+                                    <input type="text" id="mr-bp" placeholder="120/80">
+                                </div>
+                                <div class="vital-item">
+                                    <label>Heart Rate</label>
+                                    <input type="text" id="mr-hr" placeholder="72 bpm">
+                                </div>
+                                <div class="vital-item">
+                                    <label>Respiratory Rate</label>
+                                    <input type="text" id="mr-rr" placeholder="16/min">
+                                </div>
+                                <div class="vital-item">
+                                    <label>Oxygen Saturation</label>
+                                    <input type="text" id="mr-o2" placeholder="98%">
+                                </div>
+                                <div class="vital-item">
+                                    <label>Weight</label>
+                                    <input type="text" id="mr-weight" placeholder="70 kg">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Allergies Tab -->
+                    <div id="allergies" class="tab-content">
+                        <div class="treatment-section">
+                            <div class="treatment-header">
+                                <h3 class="treatment-title">🚨 Allergies</h3>
+                                <button class="btn btn-primary" onclick="addAllergy()">
+                                    <span>+</span> Add Allergy
+                                </button>
+                            </div>
+
+                            <div class="form-row-3">
+                                <div class="form-group">
+                                    <label class="required">Allergy Type</label>
+                                    <select id="allergyType">
+                                        <option>Select</option>
+                                        <option>Drug Allergy</option>
+                                        <option>Food Allergy</option>
+                                        <option>Environmental</option>
+                                        <option>Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="required">Allergen</label>
+                                    <input type="text" id="allergen" placeholder="Enter allergen">
+                                </div>
+                                <div class="form-group">
+                                    <label class="required">Reaction</label>
+                                    <input type="text" id="allergyReaction" placeholder="Describe reaction">
+                                </div>
+                            </div>
+
+                            <div class="table-container">
+                                <table id="allergiesTable">
+                                    <thead>
+                                        <tr>
+                                            <th>SN</th>
+                                            <th>Allergy Type</th>
+                                            <th>Allergen</th>
+                                            <th>Reaction</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="allergiesTableBody">
+                                        <tr>
+                                            <td colspan="5" style="text-align: center; color: #7f8c8d;">No allergies recorded</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Current Medication Tab -->
+                    <div id="currentMedication" class="tab-content">
+                        <div class="treatment-section">
+                            <h3>💊 Current Medication</h3>
+                            <div class="info-box">
+                                <p><strong>Note:</strong> List all medications the patient is currently taking from outside, including dosage and frequency.</p>
+                            </div>
+
+                            <div class="form-row-3">
+                                <div class="form-group">
+                                    <label class="required">Medicine Name</label>
+                                    <input type="text" id="currentMedName" placeholder="Enter medicine name">
+                                </div>
+                                <div class="form-group">
+                                    <label class="required">Dosage</label>
+                                    <input type="text" id="currentMedDosage" placeholder="e.g., 500mg">
+                                </div>
+                                <div class="form-group">
+                                    <label class="required">Frequency</label>
+                                    <input type="text" id="currentMedFrequency" placeholder="e.g., Twice daily">
+                                </div>
+                            </div>
+
+                            <button class="btn btn-primary" onclick="addCurrentMedication()">
+                                <span>+</span> Add Medication
+                            </button>
+
+                            <div class="table-container">
+                                <table id="currentMedicationTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Medicine Name</th>
+                                            <th>Dosage</th>
+                                            <th>Frequency</th>
+                                            <th>Prescribed By</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="currentMedicationTableBody">
+                                        <tr>
+                                            <td colspan="5" style="text-align: center; color: #7f8c8d;">No current medications recorded</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Presenting Complaint Tab -->
+                    <div id="complaint" class="tab-content">
+                        <div class="treatment-section">
+                            <div class="treatment-header">
+                                <h3 class="treatment-title">📝 Presenting Complaint</h3>
+                                <button class="btn btn-success" onclick="saveComplaint()">
+                                    <span>💾</span> Save
+                                </button>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="required">Chief Complaint</label>
+                                <textarea id="chiefComplaint" placeholder="What brought the patient to the hospital? Describe the main symptoms..."></textarea>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Duration</label>
+                                    <input type="text" id="complaintDuration" placeholder="e.g., 3 days, 2 weeks">
+                                </div>
+                                <div class="form-group">
+                                    <label>Severity</label>
+                                    <select id="complaintSeverity">
+                                        <option>Select severity</option>
+                                        <option>Mild</option>
+                                        <option>Moderate</option>
+                                        <option>Severe</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Associated Symptoms</label>
+                                <textarea id="associatedSymptoms" placeholder="Any other symptoms related to the chief complaint..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- History & Examination Tab -->
+                    <div id="history" class="tab-content">
+                        <div class="treatment-section">
+                            <div class="treatment-header">
+                                <h3 class="treatment-title">📚 History and Examination</h3>
+                                <button class="btn btn-success" onclick="saveHistory()">
+                                    <span>💾</span> Save
+                                </button>
+                            </div>
+
+                            <div class="form-group">
+                                <label>History of Present Illness (HPI)</label>
+                                <textarea id="hpi" placeholder="Detailed description of the current illness..."></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Past Medical History</label>
+                                <textarea id="pastHistory" placeholder="Previous illnesses, surgeries, hospitalizations..."></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Family History</label>
+                                <textarea id="familyHistory" placeholder="Relevant family medical history..."></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Social History</label>
+                                <textarea id="socialHistory" placeholder="Smoking, alcohol, occupation, living situation..."></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Physical Examination</label>
+                                <textarea id="physicalExam" placeholder="General appearance, system examination findings..."></textarea>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Cardiovascular System</label>
+                                    <textarea id="cardiovascular" placeholder="Heart sounds, murmurs, etc..."></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label>Respiratory System</label>
+                                    <textarea id="respiratory" placeholder="Breath sounds, respiratory pattern..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Abdomen</label>
+                                    <textarea id="abdomen" placeholder="Inspection, palpation, bowel sounds..."></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label>Neurological</label>
+                                    <textarea id="neurological" placeholder="Mental status, reflexes, motor/sensory..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Diagnosis Tab -->
+                    <div id="diagnosis" class="tab-content">
+                        <div class="treatment-section">
+                            <div class="treatment-header">
+                                <h3 class="treatment-title">🩺 Diagnosis</h3>
+                                <button class="btn btn-primary" onclick="addDiagnosis()">
+                                    <span>+</span> Add Diagnosis
+                                </button>
+                            </div>
+
+                            <div class="form-row-3">
+                                <div class="form-group">
+                                    <label>Attendance</label>
+                                    <select id="diagAttendance">
+                                        <option>Emergency/Acute</option>
+                                        <option>Routine/Scheduled</option>
+                                        <option>Follow-up</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Type</label>
+                                    <select id="diagType">
+                                        <option>Provisional</option>
+                                        <option>Confirmed</option>
+                                        <option>Differential</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Category</label>
+                                    <select id="diagCategory">
+                                        <option>Primary</option>
+                                        <option>Secondary</option>
+                                        <option>Tertiary</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-row-3">
+                                <div class="form-group">
+                                    <label class="required">Diagnosis</label>
+                                    <input type="text" id="diagnosisName" placeholder="Search diagnosis name">
+                                </div>
+                                <div class="form-group">
+                                    <label>ICD-10 Code</label>
+                                    <input type="text" id="icd10Code" placeholder="ICD-10 code">
+                                </div>
+                                <div class="form-group">
+                                    <label>Country Code</label>
+                                    <input type="text" id="countryCode" placeholder="Country code">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Remarks</label>
+                                <textarea id="diagRemarks" placeholder="Additional notes about the diagnosis..."></textarea>
+                            </div>
+
+                            <div class="table-container">
+                                <table id="diagnosisTable">
+                                    <thead>
+                                        <tr>
+                                            <th>SN</th>
+                                            <th>Attendance</th>
+                                            <th>Type</th>
+                                            <th>Category</th>
+                                            <th>Diagnosis</th>
+                                            <th>ICD-10</th>
+                                            <th>Remarks</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="diagnosisTableBody">
+                                        <tr>
+                                            <td colspan="8" style="text-align: center; color: #7f8c8d;">No diagnosis recorded</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Investigation Tab -->
+                    <div id="investigation" class="tab-content">
+                        <div class="treatment-section">
+                            <div class="treatment-header">
+                                <h3 class="treatment-title">🔬 Investigation/Procedure</h3>
+                                <button class="btn btn-primary" onclick="addInvestigation()">
+                                    <span>+</span> Order Investigation
+                                </button>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="required">Investigation/Procedure</label>
+                                <select id="investigationSelect">
+                                    <option value="">-- Select Service --</option>
+                                </select>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Units</label>
+                                    <input type="number" id="investigationUnits" value="1" min="1">
+                                </div>
+                                <div class="form-group">
+                                    <label>STAT (Urgent)</label>
+                                    <select id="investigationStat">
+                                        <option>No</option>
+                                        <option>Yes</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Remarks</label>
+                                <textarea id="investigationRemarks" placeholder="Special instructions..."></textarea>
+                            </div>
+
+                            <div class="table-container">
+                                <table id="investigationTable">
+                                    <thead>
+                                        <tr>
+                                            <th>SN</th>
+                                            <th>Order Date</th>
+                                            <th>Investigation</th>
+                                            <th>Units</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                            <th>STAT</th>
+                                            <th>Remarks</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="investigationTableBody">
+                                        <tr>
+                                            <td colspan="9" style="text-align: center; color: #7f8c8d;">No investigations ordered</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Prescription Tab -->
+                    <div id="prescription" class="tab-content">
+                        <div class="treatment-section">
+                            <div class="treatment-header">
+                                <h3 class="treatment-title">💊 Prescription Medicine</h3>
+                                <button class="btn btn-primary" onclick="addPrescription()">
+                                    <span>+</span> Add Prescription
+                                </button>
+                            </div>
+
+                            <div class="form-row-3">
+                                <div class="form-group">
+                                    <label class="required">Medicine</label>
+                                    <select id="medicineSelect">
+                                        <option value="">-- Select Medicine --</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="required">Dosage</label>
+                                    <input type="text" id="medicineDosage" placeholder="e.g., 500mg">
+                                </div>
+                                <div class="form-group">
+                                    <label class="required">Frequency</label>
+                                    <select id="medicineFrequency">
+                                        <option>Once daily</option>
+                                        <option>Twice daily</option>
+                                        <option>Three times daily</option>
+                                        <option>Four times daily</option>
+                                        <option>Every 4 hours</option>
+                                        <option>Every 6 hours</option>
+                                        <option>As needed</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-row-3">
+                                <div class="form-group">
+                                    <label class="required">No. of Days</label>
+                                    <input type="number" id="medicineDays" value="7" min="1">
+                                </div>
+                                <div class="form-group">
+                                    <label>Food Relation</label>
+                                    <select id="medicineFoodRelation">
+                                        <option>Not specified</option>
+                                        <option>Before meals</option>
+                                        <option>After meals</option>
+                                        <option>With food</option>
+                                        <option>On empty stomach</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="required">Route</label>
+                                    <select id="medicineRoute">
+                                        <option>Oral</option>
+                                        <option>Intravenous (IV)</option>
+                                        <option>Intramuscular (IM)</option>
+                                        <option>Subcutaneous (SC)</option>
+                                        <option>Topical</option>
+                                        <option>Inhalation</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Special Instructions</label>
+                                <textarea id="medicineInstructions" placeholder="Special instructions for the patient..."></textarea>
+                            </div>
+
+                            <div class="table-container">
+                                <table id="prescriptionTable">
+                                    <thead>
+                                        <tr>
+                                            <th>SN</th>
+                                            <th>Order Date</th>
+                                            <th>Medicine</th>
+                                            <th>Dosage</th>
+                                            <th>Frequency</th>
+                                            <th>Duration</th>
+                                            <th>Route</th>
+                                            <th>Instructions</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="prescriptionTableBody">
+                                        <tr>
+                                            <td colspan="9" style="text-align: center; color: #7f8c8d;">No prescriptions ordered</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Advice Tab -->
+                    <div id="advice" class="tab-content">
+                        <div class="treatment-section">
+                            <div class="treatment-header">
+                                <h3 class="treatment-title">📋 Advice</h3>
+                                <button class="btn btn-success" onclick="saveAdvice()">
+                                    <span>💾</span> Save
+                                </button>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Advice</label>
+                                <textarea id="patientAdvice" placeholder="Enter advice for the patient..."></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Follow-up Date</label>
+                                <input type="date" id="followUpDate">
+                            </div>
+
+                            <div class="checkbox-group">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="referEmergency">
+                                    <label for="referEmergency">Refer to Emergency</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="referAdmission">
+                                    <label for="referAdmission">Refer to Admission</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="surgeryRequest">
+                                    <label for="surgeryRequest">Surgery Request</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="referOutside">
+                                    <label for="referOutside">Refer to Outside Hospital</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Medical Certificate Tab -->
+                    <div id="certificate" class="tab-content">
+                        <div class="treatment-section">
+                            <div class="treatment-header">
+                                <h3 class="treatment-title">📄 Medical Certificate</h3>
+                                <button class="btn btn-success" onclick="generateCertificate()">
+                                    <span>📥</span> Generate Certificate
+                                </button>
+                            </div>
+
+                            <div class="form-row-3">
+                                <div class="form-group">
+                                    <label class="required">Certificate Type</label>
+                                    <select id="certificateType">
+                                        <option>Medical Leave Certificate</option>
+                                        <option>Fitness Certificate</option>
+                                        <option>General Medical Certificate</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="required">From Date</label>
+                                    <input type="date" id="certificateFromDate">
+                                </div>
+                                <div class="form-group">
+                                    <label class="required">To Date</label>
+                                    <input type="date" id="certificateToDate">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="required">Reason</label>
+                                <textarea id="certificateReason" placeholder="Reason for medical certificate..."></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Additional Notes</label>
+                                <textarea id="certificateNotes" placeholder="Any additional information..."></textarea>
+                            </div>
+
+                            <div class="table-container">
+                                <table id="certificateTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Date Issued</th>
+                                            <th>Certificate Type</th>
+                                            <th>From Date</th>
+                                            <th>To Date</th>
+                                            <th>Issued By</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="certificateTableBody">
+                                        <tr>
+                                            <td colspan="6" style="text-align: center; color: #7f8c8d;">No certificates issued</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Referral Tab -->
+                    <div id="referral" class="tab-content">
+                        <div class="treatment-section">
+                            <div class="treatment-header">
+                                <h3 class="treatment-title">👨‍⚕️ Refer to Doctor</h3>
+                                <button class="btn btn-success" onclick="saveReferral()">
+                                    <span>💾</span> Save Referral
+                                </button>
+                            </div>
+
+                            <div class="form-row-3">
+                                <div class="form-group">
+                                    <label class="required">Refer To</label>
+                                    <select id="referToDoctor">
+                                        <option>Select Doctor/Specialist</option>
+                                        <option>Dr. John Smith - Cardiology</option>
+                                        <option>Dr. Sarah Johnson - Neurology</option>
+                                        <option>Dr. Michael Brown - Orthopedics</option>
+                                        <option>External Specialist</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="required">Specialty</label>
+                                    <select id="referSpecialty">
+                                        <option>Select Specialty</option>
+                                        <option>Cardiology</option>
+                                        <option>Neurology</option>
+                                        <option>Orthopedics</option>
+                                        <option>Gastroenterology</option>
+                                        <option>Endocrinology</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Urgency</label>
+                                    <select id="referUrgency">
+                                        <option>Routine</option>
+                                        <option>Urgent</option>
+                                        <option>Emergency</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="required">Reason for Referral</label>
+                                <textarea id="referReason" placeholder="Explain why the patient needs to see a specialist..."></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Clinical Summary</label>
+                                <textarea id="referSummary" placeholder="Brief summary of patient's condition, relevant findings, and current treatment..."></textarea>
+                            </div>
+
+                            <div class="table-container">
+                                <table id="referralTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Referred To</th>
+                                            <th>Specialty</th>
+                                            <th>Urgency</th>
+                                            <th>Reason</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="referralTableBody">
+                                        <tr>
+                                            <td colspan="7" style="text-align: center; color: #7f8c8d;">No referrals made</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Billing Tab in Medical Records -->
+                    <div id="billingTab" class="tab-content">
+                        <div class="treatment-section">
+                            <div class="treatment-header">
+                                <h3 class="treatment-title">💵 Running Bill</h3>
+                                <button class="btn btn-warning" onclick="addHospitalDayFromTreatment()">
+                                    <span>+</span> Add Hospital Day
+                                </button>
+                            </div>
+
+                            <div class="info-box">
+                                <p>This bill updates automatically as new orders are added</p>
+                            </div>
+                            <div id="treatmentBillItemsList"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Patient Discharge Page -->
+            <div id="dischargePage" class="page-section">
+                <div class="page-header">
+                    <h1 id="dischargePageTitle">Patient Discharge</h1>
+                    <button class="btn btn-secondary" onclick="showPage('billing')">← Back to List</button>
+                </div>
+
+                <div class="card">
+                    <div id="dischargeSummary"></div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Insurance Coverage</label>
+                            <input type="number" id="insuranceAmount" value="0" oninput="updateFinalBalance()">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Additional Payment</label>
+                            <input type="number" id="additionalPayment" value="0" oninput="updateFinalBalance()">
+                        </div>
+                    </div>
+
+                    <div id="finalBalance" class="bill-total"></div>
+
+                    <div style="margin-top: 20px; display: flex; gap: 10px;">
+                        <button class="btn btn-success" onclick="processDischarge()">Process Discharge</button>
+                        <button class="btn btn-secondary" onclick="showPage('billing')">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    
+    
+    <script>
+// Data structures
+const doctors = [
+    { id: 1, name: 'Dr. Maria Santos', specialty: 'Internal Medicine', pfFee: 1500 },
+    { id: 2, name: 'Dr. Juan dela Cruz', specialty: 'Surgery', pfFee: 3000 },
+    { id: 3, name: 'Dr. Ana Reyes', specialty: 'Pediatrics', pfFee: 1200 },
+    { id: 4, name: 'Dr. Roberto Garcia', specialty: 'Cardiology', pfFee: 2500 },
+    { id: 5, name: 'Dr. Elena Mendoza', specialty: 'Orthopedics', pfFee: 2000 }
+];
+
+const servicePrices = {
+    laboratory: {
+        'CBC': 500,
+        'Urinalysis': 300,
+        'Blood Chemistry': 800,
+        'X-ray': 1200,
+        'CT Scan': 5000,
+        'Ultrasound': 1500
+    },
+    pharmacy: {
+        'Paracetamol': 50,
+        'Antibiotics': 300,
+        'IV Fluids': 500,
+        'Pain Relievers': 150,
+        'Vitamins': 100
+    },
+    procedures: {
+        'Minor Surgery': 10000,
+        'Wound Dressing': 500,
+        'Blood Transfusion': 3000,
+        'Physical Therapy': 800
+    },
+    room: {
+        'General Ward': 2000,
+        'Semi-Private': 4000,
+        'Private Room': 8000,
+        'ICU': 15000
+    }
+};
+
+let patients = [];
+let currentPatient = null;
+let currentOrderType = 'laboratory';
+
+// Initialize patient data structure with medical records
+function initializePatientMedicalRecords(patient) {
+    patient.medicalRecords = {
+        vitalSigns: {
+            temperature: '',
+            bloodPressure: '',
+            heartRate: '',
+            respiratoryRate: '',
+            oxygenSaturation: '',
+            weight: ''
+        },
+        allergies: [],
+        currentMedications: [],
+        complaint: {
+            chief: '',
+            duration: '',
+            severity: '',
+            associated: ''
+        },
+        history: {
+            hpi: '',
+            past: '',
+            family: '',
+            social: '',
+            physical: '',
+            cardiovascular: '',
+            respiratory: '',
+            abdomen: '',
+            neurological: ''
+        },
+        diagnoses: [],
+        investigations: [],
+        prescriptions: [],
+        advice: {
+            text: '',
+            followUp: '',
+            referEmergency: false,
+            referAdmission: false,
+            surgeryRequest: false,
+            referOutside: false
+        },
+        certificates: [],
+        referrals: []
+    };
+}
+
+// Navigation
+function showPage(pageId) {
+    document.querySelectorAll('.page-section').forEach(section => {
+        section.classList.remove('active');
+    });
+    document.getElementById(pageId).classList.add('active');
+
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(item => {
+        if (item.textContent.includes('Admission') && pageId === 'admission') {
+            item.classList.add('active');
+        } else if (item.textContent.includes("Doctor's Orders") && pageId === 'orders') {
+            item.classList.add('active');
+        } else if (item.textContent.includes('Billing') && pageId === 'billing') {
+            item.classList.add('active');
+        }
+    });
+
+    if (pageId === 'orders' || pageId === 'billing') {
+        renderTables();
+    }
+}
+
+// Admission Form - FIXED: No age field
+document.getElementById('admissionForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const doctorId = parseInt(document.getElementById('patientDoctor').value);
+    const doctor = doctors.find(d => d.id === doctorId);
+    const roomType = document.getElementById('roomType').value;
+
+    const patient = {
+        id: Date.now(),
+        phid: 'SHH-19-' + Date.now().toString().slice(-6),
+        name: document.getElementById('patientName').value,
+        gender: document.getElementById('patientGender').value,
+        doctorId: doctorId,
+        doctorName: doctor.name,
+        doctorSpecialty: doctor.specialty,
+        doctorPfFee: doctor.pfFee,
+        roomType: roomType,
+        deposit: parseInt(document.getElementById('depositAmount').value),
+        admissionDate: new Date().toISOString(),
+        status: 'admitted',
+        daysAdmitted: 1,
+        billItems: [
+            {
+                id: Date.now(),
+                department: 'Admissions',
+                description: 'Admission Fee',
+                amount: 1000,
+                date: new Date().toISOString()
+            },
+            {
+                id: Date.now() + 1,
+                department: 'Doctors',
+                description: `Professional Fee - ${doctor.name} (${doctor.specialty})`,
+                amount: doctor.pfFee,
+                date: new Date().toISOString()
+            },
+            {
+                id: Date.now() + 2,
+                department: 'Room',
+                description: `${roomType} - Day 1`,
+                amount: servicePrices.room[roomType],
+                date: new Date().toISOString()
+            }
+        ]
+    };
+
+    initializePatientMedicalRecords(patient);
+    patients.push(patient);
+    alert('Patient admitted successfully!');
+    document.getElementById('admissionForm').reset();
+});
+
+// Render Tables - FIXED: Match HTML table columns
+function renderTables() {
+    const ordersBody = document.getElementById('patientsTableBody');
+    const billingBody = document.getElementById('billingTableBody');
+
+    const admittedPatients = patients.filter(p => p.status === 'admitted');
+
+    if (admittedPatients.length === 0) {
+        ordersBody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #7f8c8d;">No admitted patients</td></tr>';
+        billingBody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #7f8c8d;">No admitted patients</td></tr>';
+        return;
+    }
+
+    // Orders table - FIXED: 6 columns (removed Age/Gender column)
+    ordersBody.innerHTML = admittedPatients.map(p => `
+        <tr>
+            <td>${p.name}</td>
+            <td>${p.roomType}</td>
+            <td>${p.doctorName}</td>
+            <td>${p.daysAdmitted}</td>
+            <td><span class="badge badge-success">${p.status}</span></td>
+            <td>
+                <div class="action-btns">
+                    <button class="btn btn-info btn-sm" onclick="openMedicalRecordsPage(${p.id})">Medical Records</button>
+                    <button class="btn btn-primary btn-sm" onclick="openOrdersPage(${p.id})">Orders</button>
+                </div>
+            </td>
+        </tr>
+    `).join('');
+
+    // Billing table
+    billingBody.innerHTML = admittedPatients.map(p => {
+        const total = calculateTotal(p);
+        return `
+            <tr>
+                <td>${p.name}</td>
+                <td>${p.doctorName}</td>
+                <td>${p.daysAdmitted} days</td>
+                <td>₱${total.toLocaleString()}</td>
+                <td><span class="badge badge-success">${p.status}</span></td>
+                <td>
+                    <div class="action-btns">
+                        <button class="btn btn-primary btn-sm" onclick="openOrdersPage(${p.id})">View Bill</button>
+                        <button class="btn btn-danger btn-sm" onclick="openDischargeModal(${p.id})">Discharge</button>
+                    </div>
+                </td>
+            </tr>
+        `;
+    }).join('');
+}
+
+// Calculate total
+function calculateTotal(patient) {
+    return patient.billItems.reduce((sum, item) => sum + item.amount, 0);
+}
+
+// Open Orders Page
+function openOrdersPage(patientId) {
+    currentPatient = patients.find(p => p.id === patientId);
+    if (!currentPatient) return;
+
+    document.getElementById('ordersPageTitle').textContent = `${currentPatient.name} - Orders`;
+    updateRunningBill();
+    selectOrderType('laboratory');
+    showPage('patientOrdersPage');
+}
+
+// Open Medical Records Page - FIXED: No age/gender display
+function openMedicalRecordsPage(patientId) {
+    currentPatient = patients.find(p => p.id === patientId);
+    if (!currentPatient) return;
+
+    document.getElementById('medicalRecordsTitle').textContent = `${currentPatient.name} - Medical Records`;
+    
+    // Fill patient information - FIXED: removed mr-phid and mr-age-gender
+    document.getElementById('mr-name').textContent = currentPatient.name;
+    document.getElementById('mr-admission').textContent = new Date(currentPatient.admissionDate).toLocaleString();
+    document.getElementById('mr-days').textContent = `${currentPatient.daysAdmitted} days`;
+    document.getElementById('mr-room').textContent = currentPatient.roomType;
+    
+    // Fill doctor information
+    document.getElementById('mr-doctor').textContent = currentPatient.doctorName;
+    document.getElementById('mr-specialty').textContent = currentPatient.doctorSpecialty;
+    
+    // Fill vital signs
+    const vs = currentPatient.medicalRecords.vitalSigns;
+    document.getElementById('mr-temp').value = vs.temperature || '';
+    document.getElementById('mr-bp').value = vs.bloodPressure || '';
+    document.getElementById('mr-hr').value = vs.heartRate || '';
+    document.getElementById('mr-rr').value = vs.respiratoryRate || '';
+    document.getElementById('mr-o2').value = vs.oxygenSaturation || '';
+    document.getElementById('mr-weight').value = vs.weight || '';
+
+    // Fill complaint
+    const c = currentPatient.medicalRecords.complaint;
+    document.getElementById('chiefComplaint').value = c.chief || '';
+    document.getElementById('complaintDuration').value = c.duration || '';
+    document.getElementById('complaintSeverity').value = c.severity || 'Select severity';
+    document.getElementById('associatedSymptoms').value = c.associated || '';
+
+    // Fill history
+    const h = currentPatient.medicalRecords.history;
+    document.getElementById('hpi').value = h.hpi || '';
+    document.getElementById('pastHistory').value = h.past || '';
+    document.getElementById('familyHistory').value = h.family || '';
+    document.getElementById('socialHistory').value = h.social || '';
+    document.getElementById('physicalExam').value = h.physical || '';
+    document.getElementById('cardiovascular').value = h.cardiovascular || '';
+    document.getElementById('respiratory').value = h.respiratory || '';
+    document.getElementById('abdomen').value = h.abdomen || '';
+    document.getElementById('neurological').value = h.neurological || '';
+
+    // Fill advice
+    const adv = currentPatient.medicalRecords.advice;
+    document.getElementById('patientAdvice').value = adv.text || '';
+    document.getElementById('followUpDate').value = adv.followUp || '';
+    document.getElementById('referEmergency').checked = adv.referEmergency || false;
+    document.getElementById('referAdmission').checked = adv.referAdmission || false;
+    document.getElementById('surgeryRequest').checked = adv.surgeryRequest || false;
+    document.getElementById('referOutside').checked = adv.referOutside || false;
+
+    // Populate investigation and medicine dropdowns
+    populateInvestigationSelect();
+    populateMedicineSelect();
+
+    // Render tables
+    renderAllergiesTable();
+    renderCurrentMedicationTable();
+    renderDiagnosisTable();
+    renderInvestigationTable();
+    renderPrescriptionTable();
+    renderCertificateTable();
+    renderReferralTable();
+    updateTreatmentBill();
+
+    showPage('medicalRecordsPage');
+}
+
+// Switch tabs in Orders page
+function switchOrdersTab(tabName) {
+    document.querySelectorAll('#patientOrdersPage .tab').forEach(tab => tab.classList.remove('active'));
+    document.querySelectorAll('#patientOrdersPage .tab-content').forEach(content => content.classList.remove('active'));
+    
+    event.target.classList.add('active');
+    document.getElementById(tabName).classList.add('active');
+}
+
+// Switch tabs in Medical Records page
+function switchMainTab(tabName) {
+    document.querySelectorAll('#medicalRecordsPage .tab').forEach(tab => tab.classList.remove('active'));
+    document.querySelectorAll('#medicalRecordsPage .tab-content').forEach(content => content.classList.remove('active'));
+    
+    event.target.classList.add('active');
+    document.getElementById(tabName).classList.add('active');
+}
+
+// Save Vital Signs
+function saveVitalSigns() {
+    if (!currentPatient) return;
+    
+    currentPatient.medicalRecords.vitalSigns = {
+        temperature: document.getElementById('mr-temp').value,
+        bloodPressure: document.getElementById('mr-bp').value,
+        heartRate: document.getElementById('mr-hr').value,
+        respiratoryRate: document.getElementById('mr-rr').value,
+        oxygenSaturation: document.getElementById('mr-o2').value,
+        weight: document.getElementById('mr-weight').value
+    };
+    
+    alert('Vital signs saved successfully!');
+}
+
+// Allergies functions
+function addAllergy() {
+    if (!currentPatient) return;
+
+    const type = document.getElementById('allergyType').value;
+    const allergen = document.getElementById('allergen').value;
+    const reaction = document.getElementById('allergyReaction').value;
+
+    if (type === 'Select' || !allergen || !reaction) {
+        alert('Please fill all required fields');
+        return;
+    }
+
+    const allergy = {
+        id: Date.now(),
+        type,
+        allergen,
+        reaction,
+        date: new Date().toISOString()
+    };
+
+    currentPatient.medicalRecords.allergies.push(allergy);
+    renderAllergiesTable();
+
+    // Clear form
+    document.getElementById('allergyType').value = 'Select';
+    document.getElementById('allergen').value = '';
+    document.getElementById('allergyReaction').value = '';
+}
+
+function renderAllergiesTable() {
+    if (!currentPatient) return;
+
+    const tbody = document.getElementById('allergiesTableBody');
+    const allergies = currentPatient.medicalRecords.allergies;
+
+    if (allergies.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #7f8c8d;">No allergies recorded</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = allergies.map((a, index) => `
+        <tr>
+            <td>${index + 1}</td>
+            <td>${a.type}</td>
+            <td>${a.allergen}</td>
+            <td>${a.reaction}</td>
+            <td>
+                <button class="btn btn-danger btn-sm" onclick="deleteAllergy(${a.id})">Delete</button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function deleteAllergy(id) {
+    if (!currentPatient) return;
+    currentPatient.medicalRecords.allergies = currentPatient.medicalRecords.allergies.filter(a => a.id !== id);
+    renderAllergiesTable();
+}
+
+// Current Medication functions
+function addCurrentMedication() {
+    if (!currentPatient) return;
+
+    const name = document.getElementById('currentMedName').value;
+    const dosage = document.getElementById('currentMedDosage').value;
+    const frequency = document.getElementById('currentMedFrequency').value;
+
+    if (!name || !dosage || !frequency) {
+        alert('Please fill all required fields');
+        return;
+    }
+
+    const medication = {
+        id: Date.now(),
+        name,
+        dosage,
+        frequency,
+        prescribedBy: 'External',
+        date: new Date().toISOString()
+    };
+
+    currentPatient.medicalRecords.currentMedications.push(medication);
+    renderCurrentMedicationTable();
+
+    // Clear form
+    document.getElementById('currentMedName').value = '';
+    document.getElementById('currentMedDosage').value = '';
+    document.getElementById('currentMedFrequency').value = '';
+}
+
+function renderCurrentMedicationTable() {
+    if (!currentPatient) return;
+
+    const tbody = document.getElementById('currentMedicationTableBody');
+    const meds = currentPatient.medicalRecords.currentMedications;
+
+    if (meds.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #7f8c8d;">No current medications recorded</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = meds.map(m => `
+        <tr>
+            <td>${m.name}</td>
+            <td>${m.dosage}</td>
+            <td>${m.frequency}</td>
+            <td>${m.prescribedBy}</td>
+            <td>
+                <button class="btn btn-danger btn-sm" onclick="deleteCurrentMedication(${m.id})">Delete</button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function deleteCurrentMedication(id) {
+    if (!currentPatient) return;
+    currentPatient.medicalRecords.currentMedications = currentPatient.medicalRecords.currentMedications.filter(m => m.id !== id);
+    renderCurrentMedicationTable();
+}
+
+// Save Complaint
+function saveComplaint() {
+    if (!currentPatient) return;
+
+    currentPatient.medicalRecords.complaint = {
+        chief: document.getElementById('chiefComplaint').value,
+        duration: document.getElementById('complaintDuration').value,
+        severity: document.getElementById('complaintSeverity').value,
+        associated: document.getElementById('associatedSymptoms').value
+    };
+
+    alert('Complaint saved successfully!');
+}
+
+// Save History
+function saveHistory() {
+    if (!currentPatient) return;
+
+    currentPatient.medicalRecords.history = {
+        hpi: document.getElementById('hpi').value,
+        past: document.getElementById('pastHistory').value,
+        family: document.getElementById('familyHistory').value,
+        social: document.getElementById('socialHistory').value,
+        physical: document.getElementById('physicalExam').value,
+        cardiovascular: document.getElementById('cardiovascular').value,
+        respiratory: document.getElementById('respiratory').value,
+        abdomen: document.getElementById('abdomen').value,
+        neurological: document.getElementById('neurological').value
+    };
+
+    alert('History and examination saved successfully!');
+}
+
+// Diagnosis functions
+function addDiagnosis() {
+    if (!currentPatient) return;
+
+    const name = document.getElementById('diagnosisName').value;
+    if (!name) {
+        alert('Please enter a diagnosis');
+        return;
+    }
+
+    const diagnosis = {
+        id: Date.now(),
+        attendance: document.getElementById('diagAttendance').value,
+        type: document.getElementById('diagType').value,
+        category: document.getElementById('diagCategory').value,
+        name: name,
+        icd10: document.getElementById('icd10Code').value,
+        countryCode: document.getElementById('countryCode').value,
+        remarks: document.getElementById('diagRemarks').value,
+        date: new Date().toISOString()
+    };
+
+    currentPatient.medicalRecords.diagnoses.push(diagnosis);
+    renderDiagnosisTable();
+
+    // Clear form
+    document.getElementById('diagnosisName').value = '';
+    document.getElementById('icd10Code').value = '';
+    document.getElementById('countryCode').value = '';
+    document.getElementById('diagRemarks').value = '';
+}
+
+function renderDiagnosisTable() {
+    if (!currentPatient) return;
+
+    const tbody = document.getElementById('diagnosisTableBody');
+    const diagnoses = currentPatient.medicalRecords.diagnoses;
+
+    if (diagnoses.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: #7f8c8d;">No diagnosis recorded</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = diagnoses.map((d, index) => `
+        <tr>
+            <td>${index + 1}</td>
+            <td>${d.attendance}</td>
+            <td>${d.type}</td>
+            <td>${d.category}</td>
+            <td>${d.name}</td>
+            <td>${d.icd10 || '-'}</td>
+            <td>${d.remarks || '-'}</td>
+            <td>
+                <button class="btn btn-danger btn-sm" onclick="deleteDiagnosis(${d.id})">Delete</button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function deleteDiagnosis(id) {
+    if (!currentPatient) return;
+    currentPatient.medicalRecords.diagnoses = currentPatient.medicalRecords.diagnoses.filter(d => d.id !== id);
+    renderDiagnosisTable();
+}
+
+// Investigation functions
+function populateInvestigationSelect() {
+    const select = document.getElementById('investigationSelect');
+    select.innerHTML = '<option value="">-- Select Service --</option>';
+    
+    Object.keys(servicePrices.laboratory).forEach(service => {
+        const option = document.createElement('option');
+        option.value = service;
+        option.textContent = `${service} - ₱${servicePrices.laboratory[service]}`;
+        select.appendChild(option);
+    });
+}
+
+function addInvestigation() {
+    if (!currentPatient) return;
+
+    const service = document.getElementById('investigationSelect').value;
+    if (!service) {
+        alert('Please select an investigation');
+        return;
+    }
+
+    const units = parseInt(document.getElementById('investigationUnits').value) || 1;
+    const amount = servicePrices.laboratory[service] * units;
+
+    const investigation = {
+        id: Date.now(),
+        service: service,
+        units: units,
+        amount: amount,
+        stat: document.getElementById('investigationStat').value,
+        remarks: document.getElementById('investigationRemarks').value,
+        status: 'Pending',
+        date: new Date().toISOString()
+    };
+
+    currentPatient.medicalRecords.investigations.push(investigation);
+
+    // Add to bill
+    const billItem = {
+        id: Date.now(),
+        department: 'Laboratory',
+        description: service + (units > 1 ? ` (x${units})` : ''),
+        amount: amount,
+        date: new Date().toISOString()
+    };
+    currentPatient.billItems.push(billItem);
+
+    renderInvestigationTable();
+    updateTreatmentBill();
+
+    // Clear form
+    document.getElementById('investigationSelect').value = '';
+    document.getElementById('investigationUnits').value = '1';
+    document.getElementById('investigationStat').value = 'No';
+    document.getElementById('investigationRemarks').value = '';
+}
+
+function renderInvestigationTable() {
+    if (!currentPatient) return;
+
+    const tbody = document.getElementById('investigationTableBody');
+    const investigations = currentPatient.medicalRecords.investigations;
+
+    if (investigations.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; color: #7f8c8d;">No investigations ordered</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = investigations.map((inv, index) => `
+        <tr>
+            <td>${index + 1}</td>
+            <td>${new Date(inv.date).toLocaleDateString()}</td>
+            <td>${inv.service}</td>
+            <td>${inv.units}</td>
+            <td>₱${inv.amount.toLocaleString()}</td>
+            <td><span class="badge badge-secondary">${inv.status}</span></td>
+            <td>${inv.stat}</td>
+            <td>${inv.remarks || '-'}</td>
+            <td>
+                <button class="btn btn-danger btn-sm" onclick="deleteInvestigation(${inv.id})">Delete</button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function deleteInvestigation(id) {
+    if (!currentPatient) return;
+    currentPatient.medicalRecords.investigations = currentPatient.medicalRecords.investigations.filter(i => i.id !== id);
+    currentPatient.billItems = currentPatient.billItems.filter(b => b.id !== id);
+    renderInvestigationTable();
+    updateTreatmentBill();
+}
+
+// Prescription functions
+function populateMedicineSelect() {
+    const select = document.getElementById('medicineSelect');
+    select.innerHTML = '<option value="">-- Select Medicine --</option>';
+    
+    Object.keys(servicePrices.pharmacy).forEach(medicine => {
+        const option = document.createElement('option');
+        option.value = medicine;
+        option.textContent = `${medicine} - ₱${servicePrices.pharmacy[medicine]}`;
+        select.appendChild(option);
+    });
+}
+
+function addPrescription() {
+    if (!currentPatient) return;
+
+    const medicine = document.getElementById('medicineSelect').value;
+    const dosage = document.getElementById('medicineDosage').value;
+    const frequency = document.getElementById('medicineFrequency').value;
+    const days = parseInt(document.getElementById('medicineDays').value);
+
+    if (!medicine || !dosage || !frequency) {
+        alert('Please fill all required fields');
+        return;
+    }
+
+    const amount = servicePrices.pharmacy[medicine] * days;
+
+    const prescription = {
+        id: Date.now(),
+        medicine: medicine,
+        dosage: dosage,
+        frequency: frequency,
+        days: days,
+        foodRelation: document.getElementById('medicineFoodRelation').value,
+        route: document.getElementById('medicineRoute').value,
+        instructions: document.getElementById('medicineInstructions').value,
+        date: new Date().toISOString()
+    };
+
+    currentPatient.medicalRecords.prescriptions.push(prescription);
+
+    // Add to bill
+    const billItem = {
+        id: Date.now(),
+        department: 'Pharmacy',
+        description: `${medicine} - ${days} days`,
+        amount: amount,
+        date: new Date().toISOString()
+    };
+    currentPatient.billItems.push(billItem);
+
+    renderPrescriptionTable();
+    updateTreatmentBill();
+
+    // Clear form
+    document.getElementById('medicineSelect').value = '';
+    document.getElementById('medicineDosage').value = '';
+    document.getElementById('medicineFrequency').value = 'Once daily';
+    document.getElementById('medicineDays').value = '7';
+    document.getElementById('medicineFoodRelation').value = 'Not specified';
+    document.getElementById('medicineRoute').value = 'Oral';
+    document.getElementById('medicineInstructions').value = '';
+}
+
+function renderPrescriptionTable() {
+    if (!currentPatient) return;
+
+    const tbody = document.getElementById('prescriptionTableBody');
+    const prescriptions = currentPatient.medicalRecords.prescriptions;
+
+    if (prescriptions.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; color: #7f8c8d;">No prescriptions ordered</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = prescriptions.map((p, index) => `
+        <tr>
+            <td>${index + 1}</td>
+            <td>${new Date(p.date).toLocaleDateString()}</td>
+            <td>${p.medicine}</td>
+            <td>${p.dosage}</td>
+            <td>${p.frequency}</td>
+            <td>${p.days} days</td>
+            <td>${p.route}</td>
+            <td>${p.instructions || '-'}</td>
+            <td>
+                <button class="btn btn-danger btn-sm" onclick="deletePrescription(${p.id})">Delete</button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function deletePrescription(id) {
+    if (!currentPatient) return;
+    currentPatient.medicalRecords.prescriptions = currentPatient.medicalRecords.prescriptions.filter(p => p.id !== id);
+    currentPatient.billItems = currentPatient.billItems.filter(b => b.id !== id);
+    renderPrescriptionTable();
+    updateTreatmentBill();
+}
+
+// Save Advice
+function saveAdvice() {
+    if (!currentPatient) return;
+
+    currentPatient.medicalRecords.advice = {
+        text: document.getElementById('patientAdvice').value,
+        followUp: document.getElementById('followUpDate').value,
+        referEmergency: document.getElementById('referEmergency').checked,
+        referAdmission: document.getElementById('referAdmission').checked,
+        surgeryRequest: document.getElementById('surgeryRequest').checked,
+        referOutside: document.getElementById('referOutside').checked
+    };
+
+    alert('Advice saved successfully!');
+}
+
+// Certificate functions
+function generateCertificate() {
+    if (!currentPatient) return;
+
+    const type = document.getElementById('certificateType').value;
+    const fromDate = document.getElementById('certificateFromDate').value;
+    const toDate = document.getElementById('certificateToDate').value;
+    const reason = document.getElementById('certificateReason').value;
+
+    if (!fromDate || !toDate || !reason) {
+        alert('Please fill all required fields');
+        return;
+    }
+
+    const certificate = {
+        id: Date.now(),
+        type: type,
+        fromDate: fromDate,
+        toDate: toDate,
+        reason: reason,
+        notes: document.getElementById('certificateNotes').value,
+        issuedBy: currentPatient.doctorName,
+        dateIssued: new Date().toISOString()
+    };
+
+    currentPatient.medicalRecords.certificates.push(certificate);
+    renderCertificateTable();
+
+    alert('Certificate generated successfully!');
+
+    // Clear form
+    document.getElementById('certificateFromDate').value = '';
+    document.getElementById('certificateToDate').value = '';
+    document.getElementById('certificateReason').value = '';
+    document.getElementById('certificateNotes').value = '';
+}
+
+function renderCertificateTable() {
+    if (!currentPatient) return;
+
+    const tbody = document.getElementById('certificateTableBody');
+    const certificates = currentPatient.medicalRecords.certificates;
+
+    if (certificates.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #7f8c8d;">No certificates issued</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = certificates.map(c => `
+        <tr>
+            <td>${new Date(c.dateIssued).toLocaleDateString()}</td>
+            <td>${c.type}</td>
+            <td>${c.fromDate}</td>
+            <td>${c.toDate}</td>
+            <td>${c.issuedBy}</td>
+            <td>
+                <button class="btn btn-info btn-sm" onclick="viewCertificate(${c.id})">View</button>
+                <button class="btn btn-danger btn-sm" onclick="deleteCertificate(${c.id})">Delete</button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function viewCertificate(id) {
+    const cert = currentPatient.medicalRecords.certificates.find(c => c.id === id);
+    if (!cert) return;
+    alert(`Certificate Details:\n\nType: ${cert.type}\nFrom: ${cert.fromDate}\nTo: ${cert.toDate}\nReason: ${cert.reason}\nNotes: ${cert.notes || 'None'}`);
+}
+
+function deleteCertificate(id) {
+    if (!currentPatient) return;
+    currentPatient.medicalRecords.certificates = currentPatient.medicalRecords.certificates.filter(c => c.id !== id);
+    renderCertificateTable();
+}
+
+// Referral functions
+function saveReferral() {
+    if (!currentPatient) return;
+
+    const doctor = document.getElementById('referToDoctor').value;
+    const specialty = document.getElementById('referSpecialty').value;
+    const reason = document.getElementById('referReason').value;
+
+    if (doctor === 'Select Doctor/Specialist' || specialty === 'Select Specialty' || !reason) {
+        alert('Please fill all required fields');
+        return;
+    }
+
+    const referral = {
+        id: Date.now(),
+        doctor: doctor,
+        specialty: specialty,
+        urgency: document.getElementById('referUrgency').value,
+        reason: reason,
+        summary: document.getElementById('referSummary').value,
+        status: 'Pending',
+        date: new Date().toISOString()
+    };
+
+    currentPatient.medicalRecords.referrals.push(referral);
+    renderReferralTable();
+
+    alert('Referral saved successfully!');
+
+    // Clear form
+    document.getElementById('referToDoctor').value = 'Select Doctor/Specialist';
+    document.getElementById('referSpecialty').value = 'Select Specialty';
+    document.getElementById('referUrgency').value = 'Routine';
+    document.getElementById('referReason').value = '';
+    document.getElementById('referSummary').value = '';
+}
+
+function renderReferralTable() {
+    if (!currentPatient) return;
+
+    const tbody = document.getElementById('referralTableBody');
+    const referrals = currentPatient.medicalRecords.referrals;
+
+    if (referrals.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #7f8c8d;">No referrals made</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = referrals.map(r => `
+        <tr>
+            <td>${new Date(r.date).toLocaleDateString()}</td>
+            <td>${r.doctor}</td>
+            <td>${r.specialty}</td>
+            <td>${r.urgency}</td>
+            <td>${r.reason.substring(0, 50)}...</td>
+            <td><span class="badge badge-secondary">${r.status}</span></td>
+            <td>
+                <button class="btn btn-info btn-sm" onclick="viewReferral(${r.id})">View</button>
+                <button class="btn btn-danger btn-sm" onclick="deleteReferral(${r.id})">Delete</button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function viewReferral(id) {
+    const ref = currentPatient.medicalRecords.referrals.find(r => r.id === id);
+    if (!ref) return;
+    alert(`Referral Details:\n\nDoctor: ${ref.doctor}\nSpecialty: ${ref.specialty}\nUrgency: ${ref.urgency}\nReason: ${ref.reason}\nSummary: ${ref.summary || 'None'}`);
+}
+
+function deleteReferral(id) {
+    if (!currentPatient) return;
+    currentPatient.medicalRecords.referrals = currentPatient.medicalRecords.referrals.filter(r => r.id !== id);
+    renderReferralTable();
+}
+
+// Update treatment bill
+function updateTreatmentBill() {
+    if (!currentPatient) return;
+
+    const grouped = currentPatient.billItems.reduce((acc, item) => {
+        if (!acc[item.department]) acc[item.department] = [];
+        acc[item.department].push(item);
+        return acc;
+    }, {});
+
+    let html = '';
+    Object.keys(grouped).forEach(dept => {
+        html += `<div class="department-section">
+            <div class="department-header">${dept}</div>`;
+        grouped[dept].forEach(item => {
+            html += `<div class="bill-item">
+                <div>
+                    <div style="font-weight: 500;">${item.description}</div>
+                    <div style="font-size: 12px; color: #7f8c8d;">${new Date(item.date).toLocaleDateString()}</div>
+                </div>
+                <div style="font-weight: bold;">₱${item.amount.toLocaleString()}</div>
+            </div>`;
+        });
+        html += `</div>`;
+    });
+
+    const total = calculateTotal(currentPatient);
+    const balance = total - currentPatient.deposit;
+
+    html += `<div class="bill-total">
+        <div class="bill-total-row">
+            <span>Total Charges:</span>
+            <span>₱${total.toLocaleString()}</span>
+        </div>
+        <div class="bill-total-row">
+            <span>Deposit:</span>
+            <span>-₱${currentPatient.deposit.toLocaleString()}</span>
+        </div>
+        <div class="bill-total-row grand">
+            <span>Balance Due:</span>
+            <span>₱${balance.toLocaleString()}</span>
+        </div>
+    </div>`;
+
+    document.getElementById('treatmentBillItemsList').innerHTML = html;
+}
+
+// Add hospital day from treatment page
+function addHospitalDayFromTreatment() {
+    if (!currentPatient) return;
+
+    currentPatient.daysAdmitted++;
+    const newItem = {
+        id: Date.now(),
+        department: 'Room',
+        description: `${currentPatient.roomType} - Day ${currentPatient.daysAdmitted}`,
+        amount: servicePrices.room[currentPatient.roomType],
+        date: new Date().toISOString()
+    };
+
+    currentPatient.billItems.push(newItem);
+    updateTreatmentBill();
+    renderTables();
+    
+    // Update days displayed in patient info
+    document.getElementById('mr-days').textContent = `${currentPatient.daysAdmitted} days`;
+    
+    alert(`Day ${currentPatient.daysAdmitted} added!`);
+}
+
+// Select order type
+function selectOrderType(type) {
+    currentOrderType = type;
+    const select = document.getElementById('serviceSelect');
+    select.innerHTML = '<option value="">-- Select Service --</option>';
+    
+    Object.keys(servicePrices[type]).forEach(service => {
+        const option = document.createElement('option');
+        option.value = service;
+        option.textContent = `${service} - ₱${servicePrices[type][service]}`;
+        select.appendChild(option);
+    });
+}
+
+// Add order to bill
+function addOrderToBill() {
+    const service = document.getElementById('serviceSelect').value;
+    if (!service || !currentPatient) return;
+
+    const newItem = {
+        id: Date.now(),
+        department: currentOrderType.charAt(0).toUpperCase() + currentOrderType.slice(1),
+        description: service,
+        amount: servicePrices[currentOrderType][service],
+        date: new Date().toISOString()
+    };
+
+    currentPatient.billItems.push(newItem);
+    updateRunningBill();
+    alert('Order added to bill!');
+    document.getElementById('serviceSelect').value = '';
+}
+
+// Add hospital day
+function addHospitalDay() {
+    if (!currentPatient) return;
+
+    currentPatient.daysAdmitted++;
+    const newItem = {
+        id: Date.now(),
+        department: 'Room',
+        description: `${currentPatient.roomType} - Day ${currentPatient.daysAdmitted}`,
+        amount: servicePrices.room[currentPatient.roomType],
+        date: new Date().toISOString()
+    };
+
+    currentPatient.billItems.push(newItem);
+    updateRunningBill();
+    renderTables();
+    alert(`Day ${currentPatient.daysAdmitted} added!`);
+}
+
+// Update running bill
+function updateRunningBill() {
+    if (!currentPatient) return;
+
+    const grouped = currentPatient.billItems.reduce((acc, item) => {
+        if (!acc[item.department]) acc[item.department] = [];
+        acc[item.department].push(item);
+        return acc;
+    }, {});
+
+    let html = '';
+    Object.keys(grouped).forEach(dept => {
+        html += `<div class="department-section">
+            <div class="department-header">${dept}</div>`;
+        grouped[dept].forEach(item => {
+            html += `<div class="bill-item">
+                <div>
+                    <div style="font-weight: 500;">${item.description}</div>
+                    <div style="font-size: 12px; color: #7f8c8d;">${new Date(item.date).toLocaleDateString()}</div>
+                </div>
+                <div style="font-weight: bold;">₱${item.amount.toLocaleString()}</div>
+            </div>`;
+        });
+        html += `</div>`;
+    });
+
+    const total = calculateTotal(currentPatient);
+    const balance = total - currentPatient.deposit;
+
+    html += `<div class="bill-total">
+        <div class="bill-total-row">
+            <span>Total Charges:</span>
+            <span>₱${total.toLocaleString()}</span>
+        </div>
+        <div class="bill-total-row">
+            <span>Deposit:</span>
+            <span>-₱${currentPatient.deposit.toLocaleString()}</span>
+        </div>
+        <div class="bill-total-row grand">
+            <span>Balance Due:</span>
+            <span>₱${balance.toLocaleString()}</span>
+        </div>
+    </div>`;
+
+    document.getElementById('billItemsList').innerHTML = html;
+}
+
+// Open discharge page
+function openDischargeModal(patientId) {
+    currentPatient = patients.find(p => p.id === patientId);
+    
+    document.getElementById('dischargePageTitle').textContent = `${currentPatient.name} - Discharge`;
+    
+    const total = calculateTotal(currentPatient);
+    const balance = total - currentPatient.deposit;
+
+    const summary = `
+        <div class="info-box">
+            <p><strong>Patient:</strong> ${currentPatient.name}</p>
+            <p><strong>Doctor:</strong> ${currentPatient.doctorName} (${currentPatient.doctorSpecialty})</p>
+            <p><strong>Days Admitted:</strong> ${currentPatient.daysAdmitted}</p>
+        </div>
+
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 4px; margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                <span>Total Charges:</span>
+                <span style="font-weight: bold;">₱${total.toLocaleString()}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+                <span>Deposit Paid:</span>
+                <span>-₱${currentPatient.deposit.toLocaleString()}</span>
+            </div>
+        </div>
+    `;
+
+    document.getElementById('dischargeSummary').innerHTML = summary;
+    document.getElementById('insuranceAmount').value = 0;
+    document.getElementById('additionalPayment').value = 0;
+    updateFinalBalance();
+    showPage('dischargePage');
+}
+
+// Update final balance
+function updateFinalBalance() {
+    if (!currentPatient) return;
+
+    const total = calculateTotal(currentPatient);
+    const insurance = parseInt(document.getElementById('insuranceAmount').value) || 0;
+    const additional = parseInt(document.getElementById('additionalPayment').value) || 0;
+    const balance = total - currentPatient.deposit - insurance - additional;
+
+    const balanceColor = balance > 0 ? '#e74c3c' : '#27ae60';
+
+    document.getElementById('finalBalance').innerHTML = `
+        <div class="bill-total-row">
+            <span>Insurance Coverage:</span>
+            <span>-₱${insurance.toLocaleString()}</span>
+        </div>
+        <div class="bill-total-row">
+            <span>Additional Payment:</span>
+            <span>-₱${additional.toLocaleString()}</span>
+        </div>
+        <div class="bill-total-row grand" style="color: ${balanceColor};">
+            <span>Final Balance:</span>
+            <span>₱${balance.toLocaleString()}</span>
+        </div>
+    `;
+}
+
+// Process discharge
+function processDischarge() {
+    if (!currentPatient) return;
+
+    const total = calculateTotal(currentPatient);
+    const insurance = parseInt(document.getElementById('insuranceAmount').value) || 0;
+    const additional = parseInt(document.getElementById('additionalPayment').value) || 0;
+    const balance = total - currentPatient.deposit - insurance - additional;
+
+    if (balance > 0) {
+        alert(`Cannot discharge. Remaining balance: ₱${balance.toLocaleString()}. Please settle payment.`);
+        return;
+    }
+
+    currentPatient.status = 'discharged';
+    currentPatient.dischargeDate = new Date().toISOString();
+    currentPatient.insurance = insurance;
+    currentPatient.finalPayment = additional;
+
+    alert('Patient discharged successfully!');
+    showPage('billing');
+    renderTables();
+}
+
+// Initialize order type select on page load
+selectOrderType('laboratory');
+    </script>
+</body>
+</html>
