@@ -84,31 +84,45 @@
                     
                     <form id="signupForm">
                         <div class="form-group">
-                            <label for="signupName">Full Name</label>
+                            <label for="signupFirstName">First Name *</label>
                             <div class="input-wrapper">
                                 <span class="input-icon">👤</span>
-                                <input type="text" id="signupName" placeholder="Enter your full name" required>
+                                <input type="text" id="signupFirstName" placeholder="Enter your first name" required>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="signupUsername">Username</label>
+                            <label for="signupMiddleName">Middle Name (Optional)</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">👤</span>
+                                <input type="text" id="signupMiddleName" placeholder="Enter your middle name">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="signupLastName">Last Name *</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">👤</span>
+                                <input type="text" id="signupLastName" placeholder="Enter your last name" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="signupUsername">Username *</label>
                             <div class="input-wrapper">
                                 <span class="input-icon">📝</span>
                                 <input type="text" id="signupUsername" placeholder="Choose a username" required>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="signupPhone">Phone Number</label>
+                            <label for="signupPhone">Phone Number *</label>
                             <div class="input-wrapper">
                                 <span class="input-icon">📱</span>
                                 <input type="tel" id="signupPhone" placeholder="Enter your phone number" required>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="signupPassword">Password</label>
+                            <label for="signupPassword">Password *</label>
                             <div class="input-wrapper">
                                 <span class="input-icon">🔒</span>
-                                <input type="password" id="signupPassword" placeholder="Create a strong password" required>
+                                <input type="password" id="signupPassword" placeholder="Create a strong password (min. 6 characters)" required>
                             </div>
                         </div>
                         <button type="submit" class="submit-btn">Create Account</button>
@@ -170,14 +184,23 @@
             }
         });
 
-        // SIGNUP - Modified to use username
+        // SIGNUP - Updated to handle separate name fields
         document.getElementById('signupForm').addEventListener('submit', async function (e) {
             e.preventDefault();
 
-            const name = document.getElementById('signupName').value.trim();
+            // Get individual name fields
+            const firstName = document.getElementById('signupFirstName').value.trim();
+            const middleName = document.getElementById('signupMiddleName').value.trim();
+            const lastName = document.getElementById('signupLastName').value.trim();
             const username = document.getElementById('signupUsername').value.trim();
             const phone = document.getElementById('signupPhone').value.trim();
             const password = document.getElementById('signupPassword').value;
+
+            // Validate first name and last name
+            if (!firstName || !lastName) {
+                alert('First name and last name are required');
+                return;
+            }
 
             // Basic validation
             if (username.length < 3) {
@@ -190,19 +213,32 @@
                 return;
             }
 
+            // Validate phone number (basic check)
+            if (phone.length < 10) {
+                alert('Please enter a valid phone number');
+                return;
+            }
+
             try {
                 const response = await fetch('/api/signup', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ name, username, phone, password })
+                    body: JSON.stringify({ 
+                        firstName, 
+                        middleName, 
+                        lastName, 
+                        username, 
+                        phone, 
+                        password 
+                    })
                 });
 
                 const data = await response.json();
 
                 if (response.ok && data.status === 'success') {
-                    alert('Account created successfully! You can now log in.');
+                    alert(data.message || 'Account created successfully! You can now log in.');
                     this.reset();
                     showLogin();
                 } else {

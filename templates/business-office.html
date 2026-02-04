@@ -719,45 +719,6 @@
                     </div>
                 </div>
                 
-                <!-- Service Management System -->
-                <div id="service" class="page-section">
-                    <h2 class="page-title">Service Inventory System</h2>
-                    <!-- Services Tab -->
-                    <div id="servicesTab">
-                        <div class="services-management">
-                            <div class="section">
-                                <h2>⚙️ Manage Services & Pricing</h2>
-                                
-                                <div id="servicesList">
-                                    <!-- Services will be populated here -->
-                                </div>
-            
-                                <div class="add-service-form">
-                                    <h3 style="margin-bottom: 10px; color: #2d3561; font-size: 16px;">➕ Add New Service</h3>
-                                    <input type="text" id="newServiceName" placeholder="Service name (e.g., MRI Scan)">
-                                    <input type="number" id="newServicePrice" placeholder="Price in ₱">
-                                    <select id="newServiceCategory">
-                                        <option value="Room">Room</option>
-                                        <option value="Diagnostic">Diagnostic</option>
-                                        <option value="Procedure">Procedure</option>
-                                        <option value="Professional">Professional Fee</option>
-                                        <option value="Medication">Medication</option>
-                                        <option value="Other">Other</option>
-                                    </select>
-                                    <button class="btn" onclick="addNewService()">Add Service</button>
-                                </div>
-                            </div>
-        
-                            <div class="section">
-                                <h2>📦 Service Inventory</h2>
-                                <div class="inventory-list" id="inventoryList">
-                                    <!-- Inventory will be populated here -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Financial Reports Page -->
                 <div id="reports" class="page-section">
                     <h2 class="page-title">Financial Reports</h2>
@@ -920,6 +881,79 @@
                             </table>
                         </div>
                     </div>
+                </div>
+
+                <!-- Service Inventory System -->
+                <div id="service" class="page-section">
+                    <h2 class="page-title">Service Inventory System</h2>
+                    
+                    <!-- Service Statistics -->
+                    <div class="stats-grid" style="margin-top: 32px;">
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <span class="stat-label">Total Services</span>
+                                <div class="stat-icon" style="background-color: rgba(20, 184, 166, 0.2); color: #14b8a6;">📋</div>
+                            </div>
+                            <div class="stat-value" id="totalServices">0</div>
+                            <div class="stat-change">Active services</div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <span class="stat-label">Room Services</span>
+                                <div class="stat-icon" style="background-color: rgba(59, 130, 246, 0.2); color: #3b82f6;">🏥</div>
+                            </div>
+                            <div class="stat-value" id="roomServices">0</div>
+                            <div class="stat-change">Available room types</div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <span class="stat-label">Diagnostic Services</span>
+                                <div class="stat-icon" style="background-color: rgba(168, 85, 247, 0.2); color: #a855f7;">🔬</div>
+                            </div>
+                            <div class="stat-value" id="diagnosticServices">0</div>
+                            <div class="stat-change">Lab & imaging</div>
+                        </div>
+
+                    </div>
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Hospital Services & Pricing</h3>
+                            <button class="btn btn-primary" onclick="openServiceModal()">Add Service</button>
+                        </div>
+
+                        <div class="filter-bar">
+                            <input type="text" class="search-input" placeholder="Search services..." id="serviceSearch" onkeyup="filterServiceTable()">
+                            <select class="form-select" style="width: auto;" id="serviceCategoryFilter" onchange="filterServiceTable()">
+                                <option>All Categories</option>
+                                <option>Room</option>
+                                <option>Diagnostic</option>
+                                <option>Procedure</option>
+                                <option>Professional Fee</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+
+                        <div class="table-container">
+                            <table id="serviceTable">
+                                <thead>
+                                    <tr>
+                                        <th>Service Name</th>
+                                        <th>Category</th>
+                                        <th>Price (₱)</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="serviceTableBody">
+                                    <!-- Will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    
                 </div>
 
                 <!-- Inventory Management Page -->
@@ -1121,6 +1155,95 @@
         </div>
     </div>
 
+    <!-- Service Modal -->
+    <div id="serviceModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add/Edit Service</h3>
+                <button class="close-btn" onclick="closeModal('serviceModal')">&times;</button>
+            </div>
+            <form id="serviceForm" onsubmit="submitService(event)">
+                <div class="form-group">
+                    <label class="form-label">Service Name *</label>
+                    <input type="text" name="service_name" class="form-input" placeholder="e.g., MRI Scan, CT Scan" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Category *</label>
+                    <select name="category" class="form-select" required>
+                        <option value="">Select category</option>
+                        <option value="Room">Room</option>
+                        <option value="Diagnostic">Diagnostic</option>
+                        <option value="Procedure">Procedure</option>
+                        <option value="Professional Fee">Professional Fee</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Price (₱) *</label>
+                    <input type="number" name="price" class="form-input" step="0.01" min="0.01" placeholder="0.00" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea name="description" class="form-textarea" placeholder="Optional service description" rows="3"></textarea>
+                </div>
+                <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('serviceModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Service</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Inventory Modal -->
+    <div id="inventoryModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add/Edit Product</h3>
+                <button class="close-btn" onclick="closeModal('inventoryModal')">&times;</button>
+            </div>
+            <form id="inventoryForm" onsubmit="submitInventory(event)">
+                <div class="form-group">
+                    <label class="form-label">Product Name *</label>
+                    <input type="text" name="product_name" class="form-input" placeholder="Enter product name..." required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Category *</label>
+                    <select name="category" class="form-select" placeholder="Select category" required>
+                        <option value="">Select category</option>
+                        <option>All Categories</option>
+                        <option>Medication</option>
+                        <option>Medical Supplies</option>
+                        <option>Personal Care</option>
+                        <option>Supplements</option>
+                        <option>Vitamins</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Current Stock *</label>
+                    <input type="number" name="current_stock" class="form-input" min="0" value="0" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Reorder Level *</label>
+                    <input type="number" name="reorder_level" class="form-input" min="1" value="50" required>
+                </div>
+                <div style="display: flex; gap: 16px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label class="form-label">Cost Price (₱) *</label>
+                        <input type="number" name="cost_price" class="form-input" step="0.01" min="0.01" required>
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label class="form-label">Selling Price (₱) *</label>
+                        <input type="number" name="selling_price" class="form-input" step="0.01" min="0.01" required>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('inventoryModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Discharge Billing Modal -->
     <div id="dischargeModal" class="modal">
         <div class="modal-content">
@@ -1268,214 +1391,279 @@
         </div>
     </div>
 
-    <!-- Inventory Modal -->
-    <div id="inventoryModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Add/Edit Product</h3>
-                <button class="close-btn" onclick="closeModal('inventoryModal')">&times;</button>
-            </div>
-            <form id="inventoryForm" onsubmit="submitInventory(event)">
-                <div class="form-group">
-                    <label class="form-label">Product Name *</label>
-                    <input type="text" name="product_name" class="form-input" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Category *</label>
-                    <select name="category" class="form-select" required>
-                        <option value="">Select category</option>
-                        <option>All Categories</option>
-                        <option>Medicines</option>
-                        <option>Medical Supplies</option>
-                        <option>Personal Care</option>
-                        <option>Supplements</option>
-                        <option>Vitamins</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Current Stock *</label>
-                    <input type="number" name="current_stock" class="form-input" min="0" value="0" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Reorder Level *</label>
-                    <input type="number" name="reorder_level" class="form-input" min="1" value="50" required>
-                </div>
-                <div style="display: flex; gap: 16px;">
-                    <div class="form-group" style="flex: 1;">
-                        <label class="form-label">Cost Price (₱) *</label>
-                        <input type="number" name="cost_price" class="form-input" step="0.01" min="0.01" required>
-                    </div>
-                    <div class="form-group" style="flex: 1;">
-                        <label class="form-label">Selling Price (₱) *</label>
-                        <input type="number" name="selling_price" class="form-input" step="0.01" min="0.01" required>
-                    </div>
-                </div>
-                <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px;">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('inventoryModal')">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save Product</button>
-                </div>
-            </form>
-        </div>
-    </div>
+    
     
     
     <script>
-        
-        // Sample data    
-        let paymentData = [
-            { id: 'PAY-001', date: '2024-01-04', patient: 'Michael Chen', invoice: 'INV-2024-001', amount: 8500.00, method: 'Credit Card', status: 'completed' },
-            { id: 'PAY-002', date: '2024-01-04', patient: 'Sarah Johnson', invoice: 'INV-2024-002', amount: 350.00, method: 'Cash', status: 'completed' },
-            { id: 'PAY-003', date: '2024-01-03', patient: 'James Wilson', invoice: 'INV-2024-005', amount: 2500.00, method: 'Insurance', status: 'processing' }
-        ];
-
-        let claimData = [
-            { id: 'CLM-001', patient: 'Michael Chen', provider: 'Blue Cross', serviceDate: '2024-01-02', claimAmount: 8500.00, approvedAmount: 7650.00, status: 'approved' },
-            { id: 'CLM-002', patient: 'James Wilson', provider: 'Aetna', serviceDate: '2024-01-01', claimAmount: 2500.00, approvedAmount: 0, status: 'pending' },
-            { id: 'CLM-003', patient: 'Maria Garcia', provider: 'Cigna', serviceDate: '2023-12-28', claimAmount: 3200.00, approvedAmount: 0, status: 'rejected' }
-        ];
-
+        let servicesData = [];
+        let currentEditingService = null;
         let inventoryData = [];
         let currentEditingProduct = null;
 
-
-        let salesData = [
-            { date: '2024-01-04', transactionId: 'TXN-001', product: 'Paracetamol 500mg', quantity: 2, unitPrice: 5.00, total: 10.00, method: 'Cash', cashier: 'John Doe' },
-            { date: '2024-01-04', transactionId: 'TXN-002', product: 'Amoxicillin 250mg', quantity: 1, unitPrice: 15.00, total: 15.00, method: 'Card', cashier: 'Jane Smith' },
-            { date: '2024-01-04', transactionId: 'TXN-003', product: 'Ibuprofen 400mg', quantity: 3, unitPrice: 6.00, total: 18.00, method: 'Cash', cashier: 'John Doe' }
-        ];
-
-        // Navigation
-        function showPage(pageId) {
-            // Hide all pages
-            document.querySelectorAll('.page-section').forEach(page => {
-                page.classList.remove('active');
-            });
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            populateBillingTable();
+            populatePaymentTable();
+            populateClaimTable();
+            populateSalesTable();
+            loadInventoryData();
             
-            // Remove active class from all nav items
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
+            // Load services when Service Inventory page is shown on load
+            const serviceSection = document.getElementById('service');
+            if (serviceSection && serviceSection.classList.contains('active')) {
+                loadServicesFromDB();
+            }
             
-            // Show selected page
-            document.getElementById(pageId).classList.add('active');
+            // Add event listener for inventory search
+            const searchInput = document.getElementById('inventorySearch');
+            if (searchInput) {
+                searchInput.addEventListener('keyup', filterInventoryTable);
+            }
             
-            // Add active class to clicked nav item
-            event.target.closest('.nav-item').classList.add('active');
-        }
+            // Add event listener for category filter
+            const categorySelect = document.querySelector('#inventory .form-select');
+            if (categorySelect) {
+                categorySelect.addEventListener('change', filterInventoryTable);
+            }
+        });
 
-        // Modal functions
-        function openModal(modalId) {
-            document.getElementById(modalId).classList.add('show');
-        }
 
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('show');
-        }
 
-        // Table filter function
-        function filterTable(tableId, searchId) {
-            const input = document.getElementById(searchId);
-            const filter = input.value.toUpperCase();
-            const table = document.getElementById(tableId);
-            const tr = table.getElementsByTagName('tr');
-
-            for (let i = 1; i < tr.length; i++) {
-                let txtValue = tr[i].textContent || tr[i].innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = '';
+        // Load services from database
+        async function loadServicesFromDB() {
+            try {
+                const response = await fetch('/api/services/list');
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    servicesData = result.data;
+                    populateServiceTable();
+                    updateServiceStats();
                 } else {
-                    tr[i].style.display = 'none';
+                    showNotification('Failed to load services', 'error');
+                }
+            } catch (error) {
+                console.error('Error loading services:', error);
+                showNotification('Error loading services', 'error');
+            }
+        }
+
+        // Populate service table
+        function populateServiceTable() {
+            const tbody = document.getElementById('serviceTableBody');
+            if (!tbody) return;
+            
+            tbody.innerHTML = '';
+            
+            if (servicesData.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 40px; color: #888;">
+                            No services found. Click "Add Service" to create your first service.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            servicesData.forEach(service => {
+                const statusClass = service.status === 'Active' ? 'badge-success' : 'badge-danger';
+                const statusText = service.status === 'Active' ? 'Active' : 'Inactive';
+                
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${escapeHtml(service.service_name)}</td>
+                        <td>${escapeHtml(service.category)}</td>
+                        <td>₱${parseFloat(service.price).toLocaleString('en-PH', {minimumFractionDigits: 2})}</td>
+                        <td><span class="badge ${statusClass}">${statusText}</span></td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="btn btn-sm btn-secondary" onclick="editService(${service.id})">Edit</button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteService(${service.id})">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // Update service statistics
+        function updateServiceStats() {
+            const totalServices = servicesData.filter(s => s.status === 'Active').length;
+            const roomServices = servicesData.filter(s => s.category === 'Room' && s.status === 'Active').length;
+            const diagnosticServices = servicesData.filter(s => s.category === 'Diagnostic' && s.status === 'Active').length;
+            
+            const activeServices = servicesData.filter(s => s.status === 'Active');
+            const avgPrice = activeServices.length > 0 
+                ? activeServices.reduce((sum, s) => sum + parseFloat(s.price), 0) / activeServices.length 
+                : 0;
+
+            const totalServicesEl = document.getElementById('totalServices');
+            const roomServicesEl = document.getElementById('roomServices');
+            const diagnosticServicesEl = document.getElementById('diagnosticServices');
+            const avgServicePriceEl = document.getElementById('avgServicePrice');
+            
+            if (totalServicesEl) totalServicesEl.textContent = totalServices;
+            if (roomServicesEl) roomServicesEl.textContent = roomServices;
+            if (diagnosticServicesEl) diagnosticServicesEl.textContent = diagnosticServices;
+            if (avgServicePriceEl) avgServicePriceEl.textContent = '₱' + avgPrice.toLocaleString('en-PH', {minimumFractionDigits: 2});
+        }
+
+        // Open service modal
+        function openServiceModal() {
+            currentEditingService = null;
+            const modal = document.getElementById('serviceModal');
+            const form = document.getElementById('serviceForm');
+            const modalTitle = modal.querySelector('.modal-title');
+            
+            modalTitle.textContent = 'Add Service';
+            form.reset();
+            
+            openModal('serviceModal');
+        }
+
+        // Edit service
+        function editService(serviceId) {
+            const service = servicesData.find(s => s.id === serviceId);
+            if (!service) {
+                showNotification('Service not found', 'error');
+                return;
+            }
+            
+            currentEditingService = service;
+            
+            const modal = document.getElementById('serviceModal');
+            const modalTitle = modal.querySelector('.modal-title');
+            const form = document.getElementById('serviceForm');
+            
+            modalTitle.textContent = 'Edit Service';
+            
+            // Populate form fields
+            form.querySelector('input[name="service_name"]').value = service.service_name;
+            form.querySelector('select[name="category"]').value = service.category;
+            form.querySelector('input[name="price"]').value = parseFloat(service.price);
+            
+            const descriptionField = form.querySelector('textarea[name="description"]');
+            if (descriptionField) {
+                descriptionField.value = service.description || '';
+            }
+            
+            openModal('serviceModal');
+        }
+
+        // Submit service form
+        async function submitService(event) {
+            event.preventDefault();
+            
+            const form = event.target;
+            const formData = new FormData(form);
+            
+            const serviceData = {
+                service_name: formData.get('service_name'),
+                category: formData.get('category'),
+                price: parseFloat(formData.get('price')),
+                description: formData.get('description') || ''
+            };
+            
+            try {
+                let url, method;
+                
+                if (currentEditingService) {
+                    // Update existing service
+                    url = `/api/services/update/${currentEditingService.id}`;
+                    method = 'PUT';
+                } else {
+                    // Create new service
+                    url = '/api/services/create';
+                    method = 'POST';
+                }
+                
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(serviceData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    showNotification(result.message, 'success');
+                    closeModal('serviceModal');
+                    form.reset();
+                    currentEditingService = null;
+                    await loadServicesFromDB(); // Reload from database
+                } else {
+                    showNotification(result.message || 'Failed to save service', 'error');
+                }
+                
+            } catch (error) {
+                console.error('Error submitting service:', error);
+                showNotification('Error saving service. Please try again.', 'error');
+            }
+        }
+
+        // Delete service
+        async function deleteService(serviceId) {
+            const service = servicesData.find(s => s.id === serviceId);
+            if (!service) return;
+            
+            if (!confirm(`Are you sure you want to delete "${service.service_name}"?\n\nThis action cannot be undone.`)) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/services/delete/${serviceId}`, {
+                    method: 'DELETE'
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    showNotification('Service deleted successfully', 'success');
+                    await loadServicesFromDB(); // Reload from database
+                } else {
+                    showNotification(result.message || 'Failed to delete service', 'error');
+                }
+                
+            } catch (error) {
+                console.error('Error deleting service:', error);
+                showNotification('Error deleting service. Please try again.', 'error');
+            }
+        }
+
+        // Filter service table
+        function filterServiceTable() {
+            const searchInput = document.getElementById('serviceSearch');
+            const categorySelect = document.getElementById('serviceCategoryFilter');
+            
+            if (!searchInput || !categorySelect) return;
+            
+            const searchTerm = searchInput.value.toLowerCase();
+            const selectedCategory = categorySelect.value;
+            
+            const tbody = document.getElementById('serviceTableBody');
+            const rows = tbody.getElementsByTagName('tr');
+            
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                const text = row.textContent.toLowerCase();
+                const categoryCell = row.cells[1]?.textContent || '';
+                
+                const matchesSearch = text.includes(searchTerm);
+                const matchesCategory = selectedCategory === 'All Categories' || categoryCell === selectedCategory;
+                
+                if (matchesSearch && matchesCategory) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
                 }
             }
         }
 
-        // Populate tables
-        function populateBillingTable() {
-            const tbody = document.getElementById('billingTableBody');
-            tbody.innerHTML = '';
-            
-            billingData.forEach(bill => {
-                const statusClass = bill.status === 'paid' ? 'badge-success' : bill.status === 'pending' ? 'badge-warning' : 'badge-danger';
-                const statusText = bill.status.charAt(0).toUpperCase() + bill.status.slice(1);
-                
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${bill.id}</td>
-                        <td>${bill.patientName}</td>
-                        <td>${bill.admissionDate}</td>
-                        <td>${bill.dischargeDate}</td>
-                        <td>$${bill.amount.toFixed(2)}</td>
-                        <td><span class="badge ${statusClass}">${statusText}</span></td>
-                        <td>
-                            <div class="action-btns">
-                                <button class="btn btn-sm btn-secondary" onclick="viewReceipt('${bill.id}')">View</button>
-                                <button class="btn btn-sm btn-primary" onclick="printReceipt('${bill.id}')">Print</button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
 
-        function populatePaymentTable() {
-            const tbody = document.getElementById('paymentTableBody');
-            tbody.innerHTML = '';
-            
-            paymentData.forEach(payment => {
-                const statusClass = payment.status === 'completed' ? 'badge-success' : 'badge-warning';
-                const statusText = payment.status.charAt(0).toUpperCase() + payment.status.slice(1);
-                
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${payment.id}</td>
-                        <td>${payment.date}</td>
-                        <td>${payment.patient}</td>
-                        <td>${payment.invoice}</td>
-                        <td>$${payment.amount.toFixed(2)}</td>
-                        <td>${payment.method}</td>
-                        <td><span class="badge ${statusClass}">${statusText}</span></td>
-                        <td>
-                            <div class="action-btns">
-                                <button class="btn btn-sm btn-secondary" onclick="viewPayment('${payment.id}')">View</button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-
-        function populateClaimTable() {
-            const tbody = document.getElementById('claimTableBody');
-            tbody.innerHTML = '';
-            
-            claimData.forEach(claim => {
-                let statusClass = 'badge-warning';
-                if (claim.status === 'approved') statusClass = 'badge-success';
-                if (claim.status === 'rejected') statusClass = 'badge-danger';
-                const statusText = claim.status.charAt(0).toUpperCase() + claim.status.slice(1);
-                
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${claim.id}</td>
-                        <td>${claim.patient}</td>
-                        <td>${claim.provider}</td>
-                        <td>${claim.serviceDate}</td>
-                        <td>$${claim.claimAmount.toFixed(2)}</td>
-                        <td>$${claim.approvedAmount.toFixed(2)}</td>
-                        <td><span class="badge ${statusClass}">${statusText}</span></td>
-                        <td>
-                            <div class="action-btns">
-                                <button class="btn btn-sm btn-secondary" onclick="viewClaim('${claim.id}')">View</button>
-                                <button class="btn btn-sm btn-primary" onclick="editClaim('${claim.id}')">Edit</button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-
-
-        // Inventory Management JavaScript
+        // INVENTORY MANAGEMENT
         // Load inventory data from API
         async function loadInventoryData() {
             try {
@@ -1490,7 +1678,9 @@
                 }
             } catch (error) {
                 console.error('Error loading inventory:', error);
-                showNotification('Error loading inventory data', 'error');
+                // Use sample data for demo
+                inventoryData = [];
+                populateInventoryTable();
             }
         }
 
@@ -1761,9 +1951,9 @@
             }
         }
 
+
         // Show notification
         function showNotification(message, type = 'info') {
-            // You can customize this based on your notification system
             if (type === 'success') {
                 alert('✓ ' + message);
             } else if (type === 'error') {
@@ -1780,56 +1970,196 @@
             return div.innerHTML;
         }
 
-        // Load inventory stats
-        async function loadInventoryStats() {
+        // Logout function
+        async function logout() {
+            if (!confirm('Are you sure you want to logout?')) {
+                return;
+            }
+            
             try {
-                const response = await fetch('/api/inventory/stats');
-                const result = await response.json();
+                const response = await fetch('/api/logout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
                 
-                if (result.status === 'success') {
-                    // Update any stats displays you have
-                    console.log('Inventory Stats:', result.data);
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    window.location.href = data.redirect;
                 }
-            } catch (error) {
-                console.error('Error loading inventory stats:', error);
+            } catch (err) {
+                console.error('Logout error:', err);
+                window.location.href = '/IMS';
             }
         }
 
-        // Initialize inventory management
-        document.addEventListener('DOMContentLoaded', function() {
-            // Load inventory data when page loads
-            loadInventoryData();
-            loadInventoryStats();
-            
-            // Add event listener for inventory search
-            const searchInput = document.getElementById('inventorySearch');
-            if (searchInput) {
-                searchInput.addEventListener('keyup', filterInventoryTable);
-            }
-            
-            // Add event listener for category filter
-            const categorySelect = document.querySelector('#inventory .form-select');
-            if (categorySelect) {
-                categorySelect.addEventListener('change', filterInventoryTable);
-            }
-            
-            // Update the modal button click handler
-            const addProductBtn = document.querySelector('#inventory .btn-primary');
-            if (addProductBtn) {
-                addProductBtn.onclick = openInventoryModal;
-            }
-        });
-
+        
         // Export functions for use in HTML
         window.editInventory = editInventory;
         window.restockProduct = restockProduct;
         window.deleteInventory = deleteInventory;
         window.submitInventory = submitInventory;
+        window.editService = editService;
+        window.deleteService = deleteService;
+        window.submitService = submitService;
+        window.openServiceModal = openServiceModal;
+        window.filterServiceTable = filterServiceTable;
+        window.showPage = showPage;
 
 
+        // ================================
+        // EXISTING CODE - PAYMENT, CLAIMS, SALES DATA
+        // ================================
+        let paymentData = [
+            { id: 'PAY-001', date: '2024-01-04', patient: 'Michael Chen', invoice: 'INV-2024-001', amount: 8500.00, method: 'Credit Card', status: 'completed' },
+            { id: 'PAY-002', date: '2024-01-04', patient: 'Sarah Johnson', invoice: 'INV-2024-002', amount: 350.00, method: 'Cash', status: 'completed' },
+            { id: 'PAY-003', date: '2024-01-03', patient: 'James Wilson', invoice: 'INV-2024-005', amount: 2500.00, method: 'Insurance', status: 'processing' }
+        ];
 
+        let claimData = [
+            { id: 'CLM-001', patient: 'Michael Chen', provider: 'Blue Cross', serviceDate: '2024-01-02', claimAmount: 8500.00, approvedAmount: 7650.00, status: 'approved' },
+            { id: 'CLM-002', patient: 'James Wilson', provider: 'Aetna', serviceDate: '2024-01-01', claimAmount: 2500.00, approvedAmount: 0, status: 'pending' },
+            { id: 'CLM-003', patient: 'Maria Garcia', provider: 'Cigna', serviceDate: '2023-12-28', claimAmount: 3200.00, approvedAmount: 0, status: 'rejected' }
+        ];
+
+        let salesData = [
+            { date: '2024-01-04', transactionId: 'TXN-001', product: 'Paracetamol 500mg', quantity: 2, unitPrice: 5.00, total: 10.00, method: 'Cash', cashier: 'John Doe' },
+            { date: '2024-01-04', transactionId: 'TXN-002', product: 'Amoxicillin 250mg', quantity: 1, unitPrice: 15.00, total: 15.00, method: 'Card', cashier: 'Jane Smith' },
+            { date: '2024-01-04', transactionId: 'TXN-003', product: 'Ibuprofen 400mg', quantity: 3, unitPrice: 6.00, total: 18.00, method: 'Cash', cashier: 'John Doe' }
+        ];
+
+        // Navigation
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page-section').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Remove active class from all nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+            
+            // Add active class to clicked nav item
+            event.target.closest('.nav-item').classList.add('active');
+            
+            // Load data when switching to service page
+            if (pageId === 'service') {
+                loadServicesFromDB();
+            }
+            
+            // Load inventory data when switching to inventory page
+            if (pageId === 'inventory') {
+                loadInventoryData();
+            }
+        }
+
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('show');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
+        }
+
+        // Table filter function
+        function filterTable(tableId, searchId) {
+            const input = document.getElementById(searchId);
+            const filter = input.value.toUpperCase();
+            const table = document.getElementById(tableId);
+            const tr = table.getElementsByTagName('tr');
+
+            for (let i = 1; i < tr.length; i++) {
+                let txtValue = tr[i].textContent || tr[i].innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = '';
+                } else {
+                    tr[i].style.display = 'none';
+                }
+            }
+        }
+
+        // Populate tables
+        function populateBillingTable() {
+            const tbody = document.getElementById('billingTableBody');
+            tbody.innerHTML = '';
+            
+            // Add sample data or empty state
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 40px; color: #888;">
+                        No admitted patients
+                    </td>
+                </tr>
+            `;
+        }
+
+        function populatePaymentTable() {
+            const tbody = document.getElementById('paymentTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            
+            paymentData.forEach(payment => {
+                const statusClass = payment.status === 'completed' ? 'badge-success' : 'badge-warning';
+                const statusText = payment.status.charAt(0).toUpperCase() + payment.status.slice(1);
+                
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${payment.id}</td>
+                        <td>${payment.date}</td>
+                        <td>${payment.patient}</td>
+                        <td>${payment.invoice}</td>
+                        <td>$${payment.amount.toFixed(2)}</td>
+                        <td>${payment.method}</td>
+                        <td><span class="badge ${statusClass}">${statusText}</span></td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="btn btn-sm btn-secondary" onclick="viewPayment('${payment.id}')">View</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function populateClaimTable() {
+            const tbody = document.getElementById('claimTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            
+            claimData.forEach(claim => {
+                let statusClass = 'badge-warning';
+                if (claim.status === 'approved') statusClass = 'badge-success';
+                if (claim.status === 'rejected') statusClass = 'badge-danger';
+                const statusText = claim.status.charAt(0).toUpperCase() + claim.status.slice(1);
+                
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${claim.id}</td>
+                        <td>${claim.patient}</td>
+                        <td>${claim.provider}</td>
+                        <td>${claim.serviceDate}</td>
+                        <td>$${claim.claimAmount.toFixed(2)}</td>
+                        <td>$${claim.approvedAmount.toFixed(2)}</td>
+                        <td><span class="badge ${statusClass}">${statusText}</span></td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="btn btn-sm btn-secondary" onclick="viewClaim('${claim.id}')">View</button>
+                                <button class="btn btn-sm btn-primary" onclick="editClaim('${claim.id}')">Edit</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+        
         function populateSalesTable() {
             const tbody = document.getElementById('salesTableBody');
+            if (!tbody) return;
             tbody.innerHTML = '';
             
             salesData.forEach(sale => {
@@ -1870,7 +2200,6 @@
             event.target.reset();
         }
 
-
         // Action functions
         function viewReceipt(id) {
             alert('Viewing receipt: ' + id);
@@ -1910,334 +2239,7 @@
             alert(`Filtering sales from ${startDate} to ${endDate}`);
         }
 
-        async function logout() {
-            if (!confirm('Are you sure you want to logout?')) {
-                return;
-            }
-            
-            try {
-                const response = await fetch('/api/logout', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' }
-                });
-                
-                const data = await response.json();
-                
-                if (data.status === 'success') {
-                    window.location.href = data.redirect;
-                }
-            } catch (err) {
-                console.error('Logout error:', err);
-                window.location.href = '/IMS';
-            }
-        }
 
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            populateBillingTable();
-            populatePaymentTable();
-            populateClaimTable();
-            populateInventoryTable();
-            populateSalesTable();
-        });
-
-        let services = {
-            'Ward Room': { price: 1500, category: 'Room' },
-            'Semi-Private Room': { price: 3000, category: 'Room' },
-            'Private Room': { price: 5000, category: 'Room' },
-            'ICU Room': { price: 8000, category: 'Room' },
-            'Doctor Consultation': { price: 5000, category: 'Professional' },
-            'Laboratory Tests': { price: 2000, category: 'Diagnostic' },
-            'Complete Blood Count': { price: 500, category: 'Diagnostic' },
-            'X-Ray': { price: 1500, category: 'Diagnostic' },
-            'CT Scan': { price: 5000, category: 'Diagnostic' },
-            'MRI': { price: 8000, category: 'Diagnostic' },
-            'Ultrasound': { price: 2500, category: 'Diagnostic' },
-            'Surgery (Minor)': { price: 15000, category: 'Procedure' },
-            'Surgery (Major)': { price: 50000, category: 'Procedure' },
-            'Medications': { price: 1500, category: 'Medication' },
-            'IV Fluids': { price: 800, category: 'Medication' }
-        };
-
-        let patients = [];
-        let patientIdCounter = 1;
-
-        function switchTab(tab) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            
-            if (tab === 'services') {
-                document.querySelector('.tab:nth-child(1)').classList.add('active');
-                document.getElementById('servicesTab').classList.add('active');
-            } else {
-                document.querySelector('.tab:nth-child(2)').classList.add('active');
-                document.getElementById('patientsTab').classList.add('active');
-            }
-        }
-
-        function updateServicesList() {
-            const servicesList = document.getElementById('servicesList');
-            servicesList.innerHTML = Object.entries(services).map(([name, data]) => `
-                <div class="service-item">
-                    <label>${name}<span class="category-badge">${data.category}</span></label>
-                    <input type="number" value="${data.price}" id="price-${name}" min="0">
-                    <button onclick="updateServicePrice('${name}')">Update</button>
-                </div>
-            `).join('');
-        }
-
-        function updateInventory() {
-            const inventoryList = document.getElementById('inventoryList');
-            const grouped = {};
-            
-            Object.entries(services).forEach(([name, data]) => {
-                if (!grouped[data.category]) grouped[data.category] = [];
-                grouped[data.category].push({ name, ...data });
-            });
-
-            inventoryList.innerHTML = Object.entries(grouped).map(([category, items]) => `
-                <div style="margin-bottom: 20px;">
-                    <h3 style="color: #667eea; font-size: 16px; margin-bottom: 10px;">${category}</h3>
-                    ${items.map(item => `
-                        <div class="inventory-item">
-                            <span class="name">${item.name}</span>
-                            <span class="price">₱${item.price.toLocaleString('en-PH', {minimumFractionDigits: 2})}</span>
-                        </div>
-                    `).join('')}
-                </div>
-            `).join('');
-        }
-
-        function updateServiceSelector() {
-            const selector = document.getElementById('serviceSelector');
-            selector.innerHTML = Object.entries(services).map(([name, data]) => `
-                <div class="service-checkbox">
-                    <input type="checkbox" id="service-${name}" value="${name}">
-                    <label for="service-${name}">${name}</label>
-                    <span style="color: #667eea; font-weight: bold;">₱${data.price.toLocaleString()}</span>
-                </div>
-            `).join('');
-        }
-
-        function updateServicePrice(serviceName) {
-            const newPrice = parseFloat(document.getElementById(`price-${serviceName}`).value);
-            if (newPrice >= 0) {
-                services[serviceName].price = newPrice;
-                updateServicesList();
-                updateInventory();
-                updateServiceSelector();
-                alert(`${serviceName} price updated to ₱${newPrice.toLocaleString()}`);
-            }
-        }
-
-        function addNewService() {
-            const name = document.getElementById('newServiceName').value.trim();
-            const price = parseFloat(document.getElementById('newServicePrice').value);
-            const category = document.getElementById('newServiceCategory').value;
-
-            if (!name || !price) {
-                alert('Please enter service name and price');
-                return;
-            }
-
-            if (services[name]) {
-                alert('Service already exists!');
-                return;
-            }
-
-            services[name] = { price, category };
-            document.getElementById('newServiceName').value = '';
-            document.getElementById('newServicePrice').value = '';
-            
-            updateServicesList();
-            updateInventory();
-            updateServiceSelector();
-            alert(`${name} added successfully!`);
-        }
-
-        function calculateDaysBetween(date1, date2) {
-            const d1 = new Date(date1);
-            const d2 = new Date(date2);
-            const diffTime = Math.abs(d2 - d1);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            return diffDays === 0 ? 1 : diffDays;
-        }
-
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-        }
-
-        function addPatient() {
-            const name = document.getElementById('patientName').value.trim();
-            const age = document.getElementById('patientAge').value;
-            const admissionDate = document.getElementById('admissionDate').value;
-            const insurance = parseFloat(document.getElementById('insurance').value) || 0;
-
-            if (!name || !age || !admissionDate) {
-                alert('Please fill in all patient information');
-                return;
-            }
-
-            const selectedServices = [];
-            Object.keys(services).forEach(serviceName => {
-                const checkbox = document.getElementById(`service-${serviceName}`);
-                if (checkbox && checkbox.checked) {
-                    selectedServices.push({
-                        name: serviceName,
-                        price: services[serviceName].price
-                    });
-                }
-            });
-
-            if (selectedServices.length === 0) {
-                alert('Please select at least one service');
-                return;
-            }
-
-            const patient = {
-                id: 'P' + String(patientIdCounter).padStart(4, '0'),
-                name,
-                age,
-                admissionDate,
-                dischargeDate: null,
-                insurance,
-                services: selectedServices,
-                status: 'Admitted'
-            };
-
-            patients.push(patient);
-            patientIdCounter++;
-
-            document.getElementById('patientName').value = '';
-            document.getElementById('patientAge').value = '';
-            document.querySelectorAll('#serviceSelector input[type="checkbox"]').forEach(cb => cb.checked = false);
-
-            updatePatientsDisplay();
-            switchTab('patients');
-        }
-
-        function calculateBill(patient) {
-            const days = patient.dischargeDate ? 
-                calculateDaysBetween(patient.admissionDate, patient.dischargeDate) : 1;
-
-            let subtotal = 0;
-            const roomService = patient.services.find(s => s.name.includes('Room'));
-            const otherServices = patient.services.filter(s => !s.name.includes('Room'));
-
-            if (roomService) {
-                subtotal += roomService.price * days;
-            }
-
-            otherServices.forEach(service => {
-                subtotal += service.price;
-            });
-
-            const insuranceAmount = subtotal * (patient.insurance / 100);
-            const total = subtotal - insuranceAmount;
-
-            return { days, subtotal, insuranceAmount, total, roomService };
-        }
-
-        function showDischargeForm(id) {
-            const patient = patients.find(p => p.id === id);
-            if (!patient) return;
-
-            const today = new Date().toISOString().split('T')[0];
-            const dischargeDate = prompt(`Enter discharge date (Format: YYYY-MM-DD)\nAdmission: ${patient.admissionDate}`, today);
-            
-            if (dischargeDate && new Date(dischargeDate) >= new Date(patient.admissionDate)) {
-                patient.dischargeDate = dischargeDate;
-                patient.status = 'Discharged';
-                updatePatientsDisplay();
-            }
-        }
-
-        function deletePatient(id) {
-            if (confirm('Delete this patient record?')) {
-                patients = patients.filter(p => p.id !== id);
-                updatePatientsDisplay();
-            }
-        }
-
-        function updatePatientsDisplay() {
-            const list = document.getElementById('patientsList');
-            
-            if (patients.length === 0) {
-                list.innerHTML = `
-                    <div style="text-align: center; padding: 40px; color: #999;">
-                        <p style="font-size: 48px;">🏥</p>
-                        <p>No patients added yet</p>
-                    </div>
-                `;
-            } else {
-                list.innerHTML = patients.map(patient => {
-                    const bill = calculateBill(patient);
-                    return `
-                        <div class="patient-card">
-                            <div class="patient-header">
-                                <div>
-                                    <h3 style="color: #2d3561; font-size: 18px;">${patient.name}</h3>
-                                    <p style="color: #666; font-size: 12px;">ID: ${patient.id} | Age: ${patient.age}</p>
-                                </div>
-                                <span class="status-badge status-${patient.status.toLowerCase()}">${patient.status}</span>
-                            </div>
-
-                            <div class="date-info">
-                                <strong>Admitted:</strong> ${formatDate(patient.admissionDate)}<br>
-                                ${patient.dischargeDate ? `<strong>Discharged:</strong> ${formatDate(patient.dischargeDate)}<br>` : ''}
-                                <strong>Total Days:</strong> ${bill.days} day(s)
-                            </div>
-
-                            <div class="bill-details">
-                                ${bill.roomService ? `
-                                    <div class="bill-item">
-                                        <span>${bill.roomService.name} × ${bill.days}</span>
-                                        <span>₱${(bill.roomService.price * bill.days).toLocaleString('en-PH', {minimumFractionDigits: 2})}</span>
-                                    </div>
-                                ` : ''}
-                                ${patient.services.filter(s => !s.name.includes('Room')).map(service => `
-                                    <div class="bill-item">
-                                        <span>${service.name}</span>
-                                        <span>₱${service.price.toLocaleString('en-PH', {minimumFractionDigits: 2})}</span>
-                                    </div>
-                                `).join('')}
-                                ${patient.insurance > 0 ? `
-                                    <div class="bill-item">
-                                        <span>Insurance (${patient.insurance}%)</span>
-                                        <span style="color: #4caf50;">-₱${bill.insuranceAmount.toLocaleString('en-PH', {minimumFractionDigits: 2})}</span>
-                                    </div>
-                                ` : ''}
-                            </div>
-
-                            <div class="total-amount">
-                                <span style="font-weight: bold; color: #2d3561;">TOTAL BILL</span>
-                                <span>₱${bill.total.toLocaleString('en-PH', {minimumFractionDigits: 2})}</span>
-                            </div>
-
-                            <div class="action-buttons">
-                                ${patient.status === 'Admitted' ? 
-                                    `<button class="action-btn btn-discharge" onclick="showDischargeForm('${patient.id}')">Discharge</button>` : 
-                                    `<button class="action-btn btn-discharge" disabled style="opacity: 0.5;">Discharged</button>`
-                                }
-                                <button class="action-btn btn-delete" onclick="deletePatient('${patient.id}')">Delete</button>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-            }
-
-            document.getElementById('totalPatients').textContent = patients.length;
-            document.getElementById('admittedPatients').textContent = patients.filter(p => p.status === 'Admitted').length;
-            const totalRevenue = patients.reduce((sum, p) => sum + calculateBill(p).total, 0);
-            document.getElementById('totalRevenue').textContent = '₱' + totalRevenue.toLocaleString('en-PH', {minimumFractionDigits: 2});
-        }
-
-        document.getElementById('admissionDate').valueAsDate = new Date();
-        updateServicesList();
-        updateInventory();
-        updateServiceSelector();
     </script>
 </body>
 </html>

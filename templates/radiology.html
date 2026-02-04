@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laboratory Module - St. Andrew Hospital</title>
+    <title>Radiology Module - St. Andrew Hospital</title>
     <style>
         * {
             margin: 0;
@@ -304,29 +304,29 @@
             font-weight: 500;
         }
 
-        .badge-pending {
-            background-color: #fef3c7;
-            color: #92400e;
-        }
-
-        .badge-validated {
+        .badge-scheduled {
             background-color: #dbeafe;
             color: #1e40af;
         }
 
-        .badge-collected {
+        .badge-arrived {
             background-color: #e0e7ff;
             color: #4338ca;
         }
 
-        .badge-processing {
+        .badge-prepared {
             background-color: #fce7f3;
             color: #9f1239;
         }
 
-        .badge-entered {
+        .badge-imaging {
             background-color: #fed7aa;
             color: #7c2d12;
+        }
+
+        .badge-reporting {
+            background-color: #fef3c7;
+            color: #92400e;
         }
 
         .badge-verified {
@@ -366,7 +366,7 @@
         .modal-content {
             background-color: var(--card);
             border-radius: 8px;
-            max-width: 800px;
+            max-width: 900px;
             width: 90%;
             max-height: 90vh;
             overflow-y: auto;
@@ -434,12 +434,12 @@
                     </svg>
                 </div>
                 <div class="header-title">
-                    <h1>🔬 Laboratory Module</h1>
+                    <h1>🩻 Radiology Module</h1>
                     <p>St. Andrew Hospital</p>
                 </div>
             </div>
             <div class="header-right">
-                <span class="header-user">Laboratorists: <span id="currentUserName">{{ user_info.full_name }}</span></span>
+                <span class="header-user">Radiologist: <span id="currentUserName">{{ user_info.full_name }}</span></span>
                 <button class="btn-secondary" onclick="logout()">Logout</button>
             </div>
         </div>
@@ -448,24 +448,30 @@
     <div class="main-layout">
         <aside>
             <nav>
-                <div class="nav-item active" onclick="showSection('worklist')">
+                <div class="nav-item active" onclick="showSection('schedule')">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                     </svg>
-                    <span>Worklist</span>
+                    <span>Today's Schedule</span>
                 </div>
-                <div class="nav-item" onclick="showSection('pending')">
+                <div class="nav-item" onclick="showSection('orders')">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                     </svg>
-                    <span>Pending Orders</span>
-                    <span class="status-badge badge-pending" style="margin-left: auto; font-size: 11px;">5</span>
+                    <span>Imaging Orders</span>
+                    <span class="status-badge badge-scheduled" style="margin-left: auto; font-size: 11px;">3</span>
                 </div>
-                <div class="nav-item" onclick="showSection('processing')">
+                <div class="nav-item" onclick="showSection('imaging')">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                     </svg>
-                    <span>In Process</span>
+                    <span>In Imaging</span>
+                </div>
+                <div class="nav-item" onclick="showSection('reporting')">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    <span>For Reporting</span>
                 </div>
                 <div class="nav-item" onclick="showSection('completed')">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -477,10 +483,10 @@
         </aside>
 
         <main>
-            <!-- Worklist Section -->
-            <section id="worklist" class="content-section">
+            <!-- Today's Schedule Section -->
+            <section id="schedule" class="content-section">
                 <div class="dashboard-filters">
-                    <h2>Laboratory Worklist</h2>
+                    <h2>Today's Radiology Schedule - January 31, 2026</h2>
                 </div>
 
                 <div class="dashboard-table-container">
@@ -488,89 +494,93 @@
                         <table>
                             <thead>
                                 <tr>
+                                    <th>Time Slot</th>
                                     <th>Order ID</th>
                                     <th>Patient</th>
-                                    <th>Test Name</th>
-                                    <th>Ordered By</th>
+                                    <th>Study Type</th>
+                                    <th>Body Part</th>
                                     <th>Priority</th>
                                     <th>Status</th>
-                                    <th>Date/Time</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td><strong>LAB-2026-0001</strong></td>
+                                    <td><strong>09:00 AM</strong></td>
+                                    <td>RAD-2026-0001</td>
                                     <td>
                                         <div>
-                                            <strong>Juan Dela Cruz</strong><br>
+                                            <strong>Maria Santos</strong><br>
+                                            <span style="color: var(--muted-foreground); font-size: 12px;">PHID-24-001234</span>
                                         </div>
                                     </td>
-                                    <td>Complete Blood Count (CBC)</td>
-                                    <td>Dr. Maria Santos</td>
-                                    <td><span class="status-badge badge-stat">STAT</span></td>
-                                    <td><span class="status-badge badge-pending">Pending</span></td>
-                                    <td>01/31/2026 10:30 AM</td>
+                                    <td>Chest X-Ray</td>
+                                    <td>Chest (PA & Lateral)</td>
+                                    <td><span class="status-badge" style="background-color: #dbeafe; color: #1e40af;">Routine</span></td>
+                                    <td><span class="status-badge badge-scheduled">Scheduled</span></td>
                                     <td>
                                         <div class="action-buttons">
-                                            <button class="btn-primary btn-small" onclick="validateOrder(1)">Validate</button>
+                                            <button class="btn-success btn-small" onclick="markArrived(1)">Mark Arrived</button>
                                             <button class="btn-secondary btn-small" onclick="viewOrder(1)">View</button>
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td><strong>LAB-2026-0002</strong></td>
+                                    <td><strong>10:30 AM</strong></td>
+                                    <td>RAD-2026-0002</td>
                                     <td>
                                         <div>
-                                            <strong>Maria Santos</strong><br>
+                                            <strong>Juan Dela Cruz</strong><br>
+                                            <span style="color: var(--muted-foreground); font-size: 12px;">PHID-24-001235</span>
                                         </div>
                                     </td>
-                                    <td>Urinalysis</td>
-                                    <td>Dr. John Smith</td>
-                                    <td><span class="status-badge" style="background-color: #dbeafe; color: #1e40af;">Routine</span></td>
-                                    <td><span class="status-badge badge-validated">Validated</span></td>
-                                    <td>01/31/2026 09:15 AM</td>
+                                    <td>CT Scan</td>
+                                    <td>Abdomen with Contrast</td>
+                                    <td><span class="status-badge badge-stat">STAT</span></td>
+                                    <td><span class="status-badge badge-arrived">Patient Arrived</span></td>
                                     <td>
                                         <div class="action-buttons">
-                                            <button class="btn-success btn-small" onclick="collectSpecimen(2)">Collect Specimen</button>
+                                            <button class="btn-primary btn-small" onclick="startPreparation(2)">Start Prep</button>
                                             <button class="btn-secondary btn-small" onclick="viewOrder(2)">View</button>
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td><strong>LAB-2026-0003</strong></td>
+                                    <td><strong>02:00 PM</strong></td>
+                                    <td>RAD-2026-0003</td>
                                     <td>
                                         <div>
                                             <strong>Pedro Reyes</strong><br>
+                                            <span style="color: var(--muted-foreground); font-size: 12px;">PHID-24-001236</span>
                                         </div>
                                     </td>
-                                    <td>Lipid Profile</td>
-                                    <td>Dr. Sarah Lee</td>
+                                    <td>MRI</td>
+                                    <td>Brain without Contrast</td>
                                     <td><span class="status-badge" style="background-color: #dbeafe; color: #1e40af;">Routine</span></td>
-                                    <td><span class="status-badge badge-collected">Specimen Collected</span></td>
-                                    <td>01/31/2026 08:00 AM</td>
+                                    <td><span class="status-badge badge-scheduled">Scheduled</span></td>
                                     <td>
                                         <div class="action-buttons">
-                                            <button class="btn-warning btn-small" onclick="startProcessing(3)">Start Processing</button>
+                                            <button class="btn-success btn-small" onclick="markArrived(3)">Mark Arrived</button>
                                             <button class="btn-secondary btn-small" onclick="viewOrder(3)">View</button>
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td><strong>LAB-2026-0004</strong></td>
+                                    <td><strong>08:00 AM</strong></td>
+                                    <td>RAD-2026-0004</td>
                                     <td>
                                         <div>
-                                            <strong>Ana Garcia</strong><br>
+                                            <strong>Sarah Johnson</strong><br>
+                                            <span style="color: var(--muted-foreground); font-size: 12px;">PHID-24-001237</span>
                                         </div>
                                     </td>
-                                    <td>Blood Chemistry</td>
-                                    <td>Dr. Robert Brown</td>
+                                    <td>X-Ray</td>
+                                    <td>Left Knee (AP & Lateral)</td>
                                     <td><span class="status-badge" style="background-color: #dbeafe; color: #1e40af;">Routine</span></td>
-                                    <td><span class="status-badge badge-entered">Results Entered</span></td>
-                                    <td>01/31/2026 07:30 AM</td>
+                                    <td><span class="status-badge badge-imaging">Imaging Complete</span></td>
                                     <td>
                                         <div class="action-buttons">
-                                            <button class="btn-success btn-small" onclick="openCompleteModal(4)">Complete Test</button>
+                                            <button class="btn-success btn-small" onclick="openCompleteModal(4)">Complete Study</button>
                                             <button class="btn-secondary btn-small" onclick="viewOrder(4)">View</button>
                                         </div>
                                     </td>
@@ -581,15 +591,15 @@
                 </div>
             </section>
 
-            <!-- Pending Orders Section -->
-            <section id="pending" class="content-section hidden">
+            <!-- Imaging Orders Section -->
+            <section id="orders" class="content-section hidden">
                 <div class="dashboard-filters">
-                    <h2>Pending Laboratory Orders</h2>
+                    <h2>Pending Imaging Orders</h2>
                 </div>
 
                 <div class="dashboard-table-container">
                     <div class="info-box">
-                        <p>🔔 These orders are waiting for validation</p>
+                        <p>📋 These orders need to be scheduled</p>
                     </div>
                     <div class="table-container">
                         <table>
@@ -597,21 +607,16 @@
                                 <tr>
                                     <th>Order ID</th>
                                     <th>Patient</th>
-                                    <th>Test Name</th>
+                                    <th>Study Type</th>
+                                    <th>Ordered By</th>
                                     <th>Priority</th>
-                                    <th>Ordered Time</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td><strong>LAB-2026-0001</strong></td>
-                                    <td>Juan Dela Cruz</td>
-                                    <td>Complete Blood Count (CBC)</td>
-                                    <td><span class="status-badge badge-stat">STAT</span></td>
-                                    <td>01/31/2026 10:30 AM</td>
-                                    <td>
-                                        <button class="btn-primary btn-small" onclick="validateOrder(1)">Validate Order</button>
+                                    <td colspan="6" style="text-align: center; color: var(--muted-foreground); padding: 40px;">
+                                        No unscheduled orders
                                     </td>
                                 </tr>
                             </tbody>
@@ -620,10 +625,10 @@
                 </div>
             </section>
 
-            <!-- Processing Section -->
-            <section id="processing" class="content-section hidden">
+            <!-- In Imaging Section -->
+            <section id="imaging" class="content-section hidden">
                 <div class="dashboard-filters">
-                    <h2>Tests In Process</h2>
+                    <h2>Currently In Imaging</h2>
                 </div>
 
                 <div class="dashboard-table-container">
@@ -633,16 +638,47 @@
                                 <tr>
                                     <th>Order ID</th>
                                     <th>Patient</th>
-                                    <th>Test Name</th>
-                                    <th>Status</th>
-                                    <th>Technician</th>
+                                    <th>Study Type</th>
+                                    <th>Technologist</th>
+                                    <th>Start Time</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td colspan="6" style="text-align: center; color: var(--muted-foreground); padding: 40px;">
-                                        No tests currently in process
+                                        No studies currently in progress
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- For Reporting Section -->
+            <section id="reporting" class="content-section hidden">
+                <div class="dashboard-filters">
+                    <h2>Awaiting Radiologist Report</h2>
+                </div>
+
+                <div class="dashboard-table-container">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Patient</th>
+                                    <th>Study Type</th>
+                                    <th>Completed</th>
+                                    <th>Radiologist</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="6" style="text-align: center; color: var(--muted-foreground); padding: 40px;">
+                                        No studies awaiting report
                                     </td>
                                 </tr>
                             </tbody>
@@ -654,7 +690,7 @@
             <!-- Completed Section -->
             <section id="completed" class="content-section hidden">
                 <div class="dashboard-filters">
-                    <h2>Completed Tests</h2>
+                    <h2>Completed Studies</h2>
                 </div>
 
                 <div class="dashboard-table-container">
@@ -664,8 +700,8 @@
                                 <tr>
                                     <th>Order ID</th>
                                     <th>Patient</th>
-                                    <th>Test Name</th>
-                                    <th>Status</th>
+                                    <th>Study Type</th>
+                                    <th>Radiologist</th>
                                     <th>Completed Date</th>
                                     <th>Actions</th>
                                 </tr>
@@ -673,7 +709,7 @@
                             <tbody>
                                 <tr>
                                     <td colspan="6" style="text-align: center; color: var(--muted-foreground); padding: 40px;">
-                                        No completed tests
+                                        No completed studies
                                     </td>
                                 </tr>
                             </tbody>
@@ -684,75 +720,16 @@
         </main>
     </div>
 
-    <!-- Complete Test Modal -->
-    <div class="modal" id="completeModal">
+    <!-- Preparation Modal -->
+    <div class="modal" id="prepModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>✅ Complete Laboratory Test</h3>
-                <button class="btn-secondary btn-small" onclick="closeCompleteModal()">✕ Close</button>
+                <h3>🏥 Patient Preparation</h3>
+                <button class="btn-secondary btn-small" onclick="closePrepModal()">✕ Close</button>
             </div>
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Order ID</label>
-                    <input type="text" id="completeOrderId" value="LAB-2026-0004" readonly>
-                </div>
-                <div class="form-group">
-                    <label>Patient Name</label>
-                    <input type="text" value="Ana Garcia" readonly>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>Test Name</label>
-                <input type="text" value="Blood Chemistry" readonly>
-            </div>
-
-            <div class="info-box" style="background-color: hsla(35, 91%, 56%, 0.1); border-left-color: var(--warning);">
-                <p>⚠️ Please upload the result document with findings before completing this test</p>
-            </div>
-
-            <div class="form-group">
-                <label>Test Results Summary</label>
-                <textarea rows="4" placeholder="Brief summary of test results..." required></textarea>
-            </div>
-
-            <div class="form-group">
-                <label>Upload Result Document (Required) *</label>
-                <input type="file" id="resultDocument" accept=".pdf,.doc,.docx" required>
-                <small style="color: var(--muted-foreground); margin-top: 8px; display: block;">
-                    Accepted formats: PDF, DOC, DOCX
-                </small>
-            </div>
-
-            <div class="form-group">
-                <label>Pathologist/Technician Name</label>
-                <input type="text" value="Dr. Emily Chen" readonly>
-            </div>
-
-            <div class="form-group">
-                <label>Additional Notes</label>
-                <textarea rows="2" placeholder="Any additional remarks..."></textarea>
-            </div>
-
-            <div class="action-buttons" style="margin-top: 20px;">
-                <button class="btn-success" onclick="completeTest()">✅ Complete & Release</button>
-                <button class="btn-secondary" onclick="closeCompleteModal()">Cancel</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Result Entry Modal -->
-    <div class="modal" id="resultModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>🔬 Enter Test Results</h3>
-                <button class="btn-secondary btn-small" onclick="closeResultModal()">✕ Close</button>
-            </div>
-
-            <div class="form-group">
-                <label>Order ID</label>
-                <input type="text" value="LAB-2026-0001" readonly>
+            <div class="info-box">
+                <p>⚠️ Complete all safety checks and preparation steps before imaging</p>
             </div>
 
             <div class="form-row">
@@ -761,94 +738,171 @@
                     <input type="text" value="Juan Dela Cruz" readonly>
                 </div>
                 <div class="form-group">
-                    <label>Test Name</label>
-                    <input type="text" value="Complete Blood Count" readonly>
-                </div>
-            </div>
-
-            <div class="info-box">
-                <p>📝 Enter laboratory values with proper units and reference ranges</p>
-            </div>
-
-            <div class="form-row-3">
-                <div class="form-group">
-                    <label>Parameter</label>
-                    <input type="text" placeholder="e.g., WBC">
-                </div>
-                <div class="form-group">
-                    <label>Result Value</label>
-                    <input type="text" placeholder="e.g., 7.5">
-                </div>
-                <div class="form-group">
-                    <label>Unit</label>
-                    <input type="text" placeholder="e.g., x10^9/L">
+                    <label>Study Type</label>
+                    <input type="text" value="CT Scan - Abdomen with Contrast" readonly>
                 </div>
             </div>
 
             <div class="form-group">
-                <label>Reference Range</label>
-                <input type="text" placeholder="e.g., 4.0 - 11.0">
+                <label>Safety Checklist</label>
+                <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 10px;">
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <input type="checkbox"> Confirmed patient identity
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <input type="checkbox"> Verified no pregnancy (if applicable)
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <input type="checkbox"> Checked for contrast allergies
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <input type="checkbox"> Confirmed fasting requirements met
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <input type="checkbox"> Removed all metal objects
+                    </label>
+                </div>
             </div>
 
             <div class="form-group">
-                <label>Technician Remarks</label>
-                <textarea rows="3" placeholder="Any notes or observations..."></textarea>
+                <label>Preparation Notes</label>
+                <textarea rows="3" placeholder="Any special notes or observations..."></textarea>
+            </div>
+
+            <div class="action-buttons" style="margin-top: 20px;">
+                <button class="btn-success" onclick="startImaging()">✅ Start Imaging</button>
+                <button class="btn-secondary" onclick="closePrepModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Complete Study Modal -->
+    <div class="modal" id="completeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>✅ Complete Radiology Study</h3>
+                <button class="btn-secondary btn-small" onclick="closeCompleteModal()">✕ Close</button>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Order ID</label>
+                    <input type="text" id="completeOrderId" value="RAD-2026-0004" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Patient Name</label>
+                    <input type="text" value="Sarah Johnson" readonly>
+                </div>
             </div>
 
             <div class="form-group">
-                <label>Upload Result Document</label>
+                <label>Study Type</label>
+                <input type="text" value="X-Ray - Left Knee (AP & Lateral)" readonly>
+            </div>
+
+            <div class="info-box" style="background-color: hsla(35, 91%, 56%, 0.1); border-left-color: var(--warning);">
+                <p>⚠️ Please upload the radiologist report with findings before completing this study</p>
+            </div>
+
+            <div class="form-group">
+                <label>Clinical Indication</label>
+                <textarea rows="2" readonly>Knee pain after fall, rule out fracture</textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Radiologist Findings Summary</label>
+                <textarea rows="4" placeholder="Enter brief summary of findings..." required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Upload Radiologist Report (Required) *</label>
+                <input type="file" id="radiologyReport" accept=".pdf,.doc,.docx" required>
+                <small style="color: var(--muted-foreground); margin-top: 8px; display: block;">
+                    Accepted formats: PDF, DOC, DOCX
+                </small>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Radiologist Name</label>
+                    <input type="text" value="Dr. Michael Torres" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Verification Date/Time</label>
+                    <input type="text" id="verificationTime" readonly>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Additional Notes</label>
+                <textarea rows="2" placeholder="Any additional remarks..."></textarea>
+            </div>
+
+            <div class="action-buttons" style="margin-top: 20px;">
+                <button class="btn-success" onclick="completeStudy()">✅ Complete & Release Report</button>
+                <button class="btn-secondary" onclick="closeCompleteModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Report Modal -->
+    <div class="modal" id="reportModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📄 Radiologist Report</h3>
+                <button class="btn-secondary btn-small" onclick="closeReportModal()">✕ Close</button>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Order ID</label>
+                    <input type="text" value="RAD-2026-0001" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Patient Name</label>
+                    <input type="text" value="Maria Santos" readonly>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Study Type</label>
+                <input type="text" value="Chest X-Ray (PA & Lateral)" readonly>
+            </div>
+
+            <div class="form-group">
+                <label>Clinical Indication</label>
+                <textarea rows="2" placeholder="Reason for examination..." readonly>Persistent cough for 2 weeks</textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Findings</label>
+                <textarea rows="5" placeholder="Describe radiological findings..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Impression / Diagnosis</label>
+                <textarea rows="3" placeholder="Radiologist's interpretation and diagnosis..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Recommendations</label>
+                <textarea rows="2" placeholder="Follow-up recommendations..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Upload Report Document</label>
                 <input type="file" accept=".pdf,.doc,.docx">
             </div>
 
             <div class="action-buttons" style="margin-top: 20px;">
-                <button class="btn-success" onclick="saveResults()">💾 Save Results</button>
-                <button class="btn-primary" onclick="submitForVerification()">✅ Submit for Verification</button>
-                <button class="btn-secondary" onclick="closeResultModal()">Cancel</button>
+                <button class="btn-success" onclick="saveReport()">💾 Save Report</button>
+                <button class="btn-primary" onclick="verifyAndRelease()">✅ Verify & Release</button>
+                <button class="btn-secondary" onclick="closeReportModal()">Cancel</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Store test data
-        let tests = {
-            'LAB-2026-0001': { 
-                patient: 'Juan Dela Cruz', 
-                phid: 'PHID-24-001234',
-                test: 'Complete Blood Count (CBC)', 
-                orderedBy: 'Dr. Maria Santos',
-                priority: 'STAT',
-                status: 'Pending',
-                time: '01/31/2026 10:30 AM'
-            },
-            'LAB-2026-0002': { 
-                patient: 'Maria Santos', 
-                phid: 'PHID-24-001235',
-                test: 'Urinalysis', 
-                orderedBy: 'Dr. John Smith',
-                priority: 'Routine',
-                status: 'Validated',
-                time: '01/31/2026 09:15 AM'
-            },
-            'LAB-2026-0003': { 
-                patient: 'Pedro Reyes', 
-                phid: 'PHID-24-001236',
-                test: 'Lipid Profile', 
-                orderedBy: 'Dr. Sarah Lee',
-                priority: 'Routine',
-                status: 'Collected',
-                time: '01/31/2026 08:00 AM'
-            },
-            'LAB-2026-0004': { 
-                patient: 'Ana Garcia', 
-                phid: 'PHID-24-001237',
-                test: 'Blood Chemistry', 
-                orderedBy: 'Dr. Robert Brown',
-                priority: 'Routine',
-                status: 'Results Entered',
-                time: '01/31/2026 07:30 AM'
-            }
-        };
-
         // Navigation
         function showSection(sectionId) {
             document.querySelectorAll('.content-section').forEach(sec => {
@@ -864,12 +918,9 @@
             }
             
             event.target.closest('.nav-item').classList.add('active');
-            
-            // Refresh the tables
-            refreshTables();
         }
 
-
+        // Load current user info
         async function loadCurrentUserInfo() {
             try {
                 const response = await fetch('/api/current-user');
@@ -889,132 +940,56 @@
         });
 
 
-
-        function refreshTables() {
-            // Update pending section
-            updatePendingTable();
-            updateProcessingTable();
-            updateCompletedTable();
-        }
-
-        function updatePendingTable() {
-            const tbody = document.querySelector('#pending tbody');
-            const pendingTests = Object.entries(tests).filter(([id, data]) => data.status === 'Pending');
-            
-            if (pendingTests.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--muted-foreground); padding: 40px;">No pending orders</td></tr>';
-            } else {
-                tbody.innerHTML = pendingTests.map(([id, data]) => `
-                    <tr>
-                        <td><strong>${id}</strong></td>
-                        <td>${data.patient}</td>
-                        <td>${data.test}</td>
-                        <td><span class="status-badge ${data.priority === 'STAT' ? 'badge-stat' : ''}" style="${data.priority === 'Routine' ? 'background-color: #dbeafe; color: #1e40af;' : ''}">${data.priority}</span></td>
-                        <td>${data.time}</td>
-                        <td><button class="btn-primary btn-small" onclick="validateOrder('${id}')">Validate Order</button></td>
-                    </tr>
-                `).join('');
+        // Radiology Actions
+        function markArrived(orderId) {
+            const arrivalTime = new Date().toLocaleTimeString();
+            if (confirm('Mark patient as arrived?')) {
+                alert(`✅ Patient marked as arrived at ${arrivalTime}`);
             }
         }
 
-        function updateProcessingTable() {
-            const tbody = document.querySelector('#processing tbody');
-            const processingTests = Object.entries(tests).filter(([id, data]) => 
-                data.status === 'Processing' || data.status === 'Collected'
-            );
-            
-            if (processingTests.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--muted-foreground); padding: 40px;">No tests currently in process</td></tr>';
-            } else {
-                tbody.innerHTML = processingTests.map(([id, data]) => `
-                    <tr>
-                        <td><strong>${id}</strong></td>
-                        <td>${data.patient}</td>
-                        <td>${data.test}</td>
-                        <td><span class="status-badge badge-processing">${data.status}</span></td>
-                        <td>Lab Tech - John Doe</td>
-                        <td>
-                            <button class="btn-warning btn-small" onclick="startProcessing('${id}')">Enter Results</button>
-                        </td>
-                    </tr>
-                `).join('');
-            }
+        function startPreparation(orderId) {
+            document.getElementById('prepModal').classList.add('active');
         }
 
-        function updateCompletedTable() {
-            const tbody = document.querySelector('#completed tbody');
-            const completedTests = Object.entries(tests).filter(([id, data]) => data.status === 'Completed');
-            
-            if (completedTests.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--muted-foreground); padding: 40px;">No completed tests</td></tr>';
-            } else {
-                tbody.innerHTML = completedTests.map(([id, data]) => `
-                    <tr>
-                        <td><strong>${id}</strong></td>
-                        <td>${data.patient}</td>
-                        <td>${data.test}</td>
-                        <td><span class="status-badge badge-released">Released</span></td>
-                        <td>${data.time}</td>
-                        <td><button class="btn-secondary btn-small" onclick="viewOrder('${id}')">View Report</button></td>
-                    </tr>
-                `).join('');
-            }
+        function closePrepModal() {
+            document.getElementById('prepModal').classList.remove('active');
         }
 
-        // Laboratory Order Actions
-        function validateOrder(orderId) {
-            if (confirm('Validate this laboratory order?')) {
-                tests[orderId].status = 'Validated';
-                alert(`✅ Order ${orderId} validated successfully!`);
-                refreshTables();
+        function startImaging() {
+            if (confirm('All safety checks completed. Start imaging?')) {
+                alert('✅ Imaging started!');
+                closePrepModal();
             }
-        }
-
-        function collectSpecimen(orderId) {
-            if (confirm('Mark specimen as collected?')) {
-                const collectionTime = new Date().toLocaleString();
-                tests[orderId].status = 'Collected';
-                alert(`✅ Specimen collected at ${collectionTime}`);
-                refreshTables();
-                
-                // Auto-switch to processing tab
-                setTimeout(() => {
-                    document.querySelector('.nav-item:nth-child(3)').click();
-                }, 1000);
-            }
-        }
-
-        function startProcessing(orderId) {
-            tests[orderId].status = 'Processing';
-            alert('✅ Test processing started!');
-            document.getElementById('resultModal').classList.add('active');
         }
 
         function viewOrder(orderId) {
-            const data = tests[orderId];
-            alert(`Order Details:\n\nOrder ID: ${orderId}\nPatient: ${data.patient}\nTest: ${data.test}\nOrdered By: ${data.orderedBy}\nStatus: ${data.status}`);
+            alert(`Viewing details for Order RAD-2026-000${orderId}`);
         }
 
-        function saveResults() {
-            alert('✅ Results saved successfully!');
+        function openReportModal() {
+            document.getElementById('reportModal').classList.add('active');
         }
 
-        function submitForVerification() {
-            if (confirm('Submit results for pathologist verification?')) {
-                alert('✅ Results submitted for verification!');
-                closeResultModal();
-                // Update status to ready for completion
-                tests['LAB-2026-0003'].status = 'Results Entered';
-                refreshTables();
+        function closeReportModal() {
+            document.getElementById('reportModal').classList.remove('active');
+        }
+
+        function saveReport() {
+            alert('✅ Report saved as draft!');
+        }
+
+        function verifyAndRelease() {
+            if (confirm('Verify and release this report to the ordering physician?')) {
+                alert('✅ Report verified and released successfully!');
+                closeReportModal();
             }
         }
 
-        function closeResultModal() {
-            document.getElementById('resultModal').classList.remove('active');
-        }
-
         function openCompleteModal(orderId) {
-            document.getElementById('completeOrderId').value = orderId;
+            document.getElementById('completeOrderId').value = `RAD-2026-000${orderId}`;
+            const now = new Date().toLocaleString();
+            document.getElementById('verificationTime').value = now;
             document.getElementById('completeModal').classList.add('active');
         }
 
@@ -1022,27 +997,24 @@
             document.getElementById('completeModal').classList.remove('active');
         }
 
-        function completeTest() {
-            const fileInput = document.getElementById('resultDocument');
+        function completeStudy() {
+            const fileInput = document.getElementById('radiologyReport');
             
             if (!fileInput.files || fileInput.files.length === 0) {
-                alert('⚠️ Please upload the result document before completing the test!');
+                alert('⚠️ Please upload the radiologist report before completing the study!');
                 return;
             }
 
             const fileName = fileInput.files[0].name;
             const orderId = document.getElementById('completeOrderId').value;
 
-            if (confirm(`Complete test ${orderId} and release results?\n\nUploaded document: ${fileName}`)) {
-                tests[orderId].status = 'Completed';
-                alert(`✅ Test completed successfully!\n\nOrder: ${orderId}\nDocument: ${fileName}\nStatus: Released to ordering physician`);
+            if (confirm(`Complete study ${orderId} and release report?\n\nUploaded report: ${fileName}`)) {
+                alert(`✅ Study completed successfully!\n\nOrder: ${orderId}\nReport: ${fileName}\nStatus: Released to ordering physician\nRadiologist: Dr. Michael Torres`);
                 closeCompleteModal();
-                refreshTables();
                 
-                // Auto-switch to completed tab
+                // In a real system, this would update the table
                 setTimeout(() => {
-                    alert('📧 Results have been sent to ' + tests[orderId].orderedBy);
-                    document.querySelector('.nav-item:nth-child(4)').click();
+                    alert('📧 Radiology report has been sent to the ordering physician');
                 }, 500);
             }
         }
@@ -1070,11 +1042,7 @@
         }    
 
 
-        // Initialize tables on load
-        window.addEventListener('DOMContentLoaded', refreshTables);
-
-
-
+        
     </script>
 </body>
 </html>

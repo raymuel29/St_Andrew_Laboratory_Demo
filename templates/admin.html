@@ -549,13 +549,15 @@
                     <div class="flex gap-4 flex-wrap">
                         <input type="text" id="userAccountSearch" placeholder="Search user accounts..." class="flex-1 min-w-64" onkeyup="filterUserAccounts()">
                         <select id="userRoleFilter" onchange="filterUserAccounts()" class="w-48">
-                            <option value="">All Roles</option>
+                            <option value="">All System</option>
+                            <option value="Head of Nurse">Head of Nurse</option>
                             <option value="Front Desk">Front Desk</option>
                             <option value="Business Office">Business Office</option>
                             <option value="Laboratory">Laboratory</option>
                             <option value="Pharmacy">Pharmacy</option>
                             <option value="Doctor">Doctor</option>
                             <option value="Nurse">Nurse</option>
+                            <option value="Radiology">Radiology</option> 
                         </select>
                     </div>
                 </div>
@@ -568,7 +570,7 @@
                                 <th>Username</th>
                                 <th>Full Name</th>
                                 <th>Password</th>
-                                <th>Role</th>
+                                <th>System Access</th>
                                 <th>Created Date</th>
                                 <th>Actions</th>
                             </tr>
@@ -592,16 +594,18 @@
                         <input type="text" id="employeeSearch" placeholder="Search employees..." class="flex-1 min-w-64" onkeyup="filterEmployees()">
                         <select id="departmentFilter" onchange="filterEmployees()" class="w-48">
                             <option value="">All Departments</option>
-                            <option value="nurses">Nurses</option>
-                            <option value="laboratory">Laboratory</option>
-                            <option value="pharmacy">Pharmacy</option>
-                            <option value="business-office">Business Office</option>
-                        </select>
-                        <select id="roleFilter" onchange="filterEmployees()" class="w-48">
-                            <option value="">All Roles</option>
-                            <option value="admin">Admin</option>
-                            <option value="manager">Manager</option>
-                            <option value="staff">Staff</option>
+                            <option value="cardiology">Cardiologists</option>
+                            <option value="gastroenterology">Gastroenterologists</option>
+                            <option value="gynecology">Gynecology</option>
+                            <option value="nephrology">Nephrologists</option>
+                            <option value="nurses">Nurse</option>
+                            <option value="orthopedic">Orthopedic</option>
+                            <option value="opthalmology">Ophthalmologists</option>
+                            <option value="obstetric">Obstetric</option>
+                            <option value="pediatric">Pediatrics</option>
+                            <option value="psychiatrist">Psychiatrists</option>
+                            <option value="psychology">Psychologists</option>
+                            <option value="pulmonology">Pulmonologists</option>
                         </select>
                     </div>
                 </div>
@@ -610,86 +614,18 @@
                     <table class="table" id="employeesTable">
                         <thead>
                             <tr>
-                                <th>ID</th>
                                 <th>Name</th>
+                                <th>Gender</th>
                                 <th>Email</th>
+                                <th>Contact Number</th>
+                                <th>Address</th>
                                 <th>Department</th>
-                                <th>Role</th>
                                 <th>Status</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="employeesTableBody">
-                            <tr>
-                                <td>#EMP001</td>
-                                <td>Sarah Johnson</td>
-                                <td>sarah.j@hospital.com</td>
-                                <td>Nurses</td>
-                                <td><span class="badge badge-info">Manager</span></td>
-                                <td><span class="badge badge-success">Active</span></td>
-                                <td>
-                                    <div class="flex gap-2">
-                                        <button class="btn-secondary text-sm" onclick="editEmployee(1)">Edit</button>
-                                        <button class="btn-danger text-sm" onclick="deleteEmployee(1)">Delete</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>#EMP002</td>
-                                <td>Michael Chen</td>
-                                <td>m.chen@hospital.com</td>
-                                <td>Laboratory</td>
-                                <td><span class="badge badge-info">Staff</span></td>
-                                <td><span class="badge badge-success">Active</span></td>
-                                <td>
-                                    <div class="flex gap-2">
-                                        <button class="btn-secondary text-sm" onclick="editEmployee(2)">Edit</button>
-                                        <button class="btn-danger text-sm" onclick="deleteEmployee(2)">Delete</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>#EMP003</td>
-                                <td>Emily Rodriguez</td>
-                                <td>e.rodriguez@hospital.com</td>
-                                <td>Pharmacy</td>
-                                <td><span class="badge badge-warning">Manager</span></td>
-                                <td><span class="badge badge-success">Active</span></td>
-                                <td>
-                                    <div class="flex gap-2">
-                                        <button class="btn-secondary text-sm" onclick="editEmployee(3)">Edit</button>
-                                        <button class="btn-danger text-sm" onclick="deleteEmployee(3)">Delete</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>#EMP004</td>
-                                <td>David Kim</td>
-                                <td>d.kim@hospital.com</td>
-                                <td>Business Office</td>
-                                <td><span class="badge badge-info">Staff</span></td>
-                                <td><span class="badge badge-success">Active</span></td>
-                                <td>
-                                    <div class="flex gap-2">
-                                        <button class="btn-secondary text-sm" onclick="editEmployee(4)">Edit</button>
-                                        <button class="btn-danger text-sm" onclick="deleteEmployee(4)">Delete</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>#EMP005</td>
-                                <td>Jennifer Adams</td>
-                                <td>j.adams@hospital.com</td>
-                                <td>Nurses</td>
-                                <td><span class="badge badge-info">Staff</span></td>
-                                <td><span class="badge badge-warning">Inactive</span></td>
-                                <td>
-                                    <div class="flex gap-2">
-                                        <button class="btn-secondary text-sm" onclick="editEmployee(5)">Edit</button>
-                                        <button class="btn-danger text-sm" onclick="deleteEmployee(5)">Delete</button>
-                                    </div>
-                                </td>
-                            </tr>
+                            <!-- Data loaded via JavaScript -->
                         </tbody>
                     </table>
                 </div>
@@ -1071,35 +1007,105 @@
                     <input type="text" id="empName" required placeholder="Enter full name">
                 </div>
                 <div>
+                    <label class="block mb-2">Gender</label>
+                    <select id="empGender" required>
+                        <option value="">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
+                <div>
                     <label class="block mb-2">Email</label>
                     <input type="email" id="empEmail" required placeholder="employee@hospital.com">
+                </div>
+                <div>
+                    <label class="block mb-2">Contact Number</label>
+                    <input type="tel" id="empContactNumber" placeholder="Enter contact number">
+                </div>
+                <div>
+                    <label class="block mb-2">Address</label>
+                    <textarea id="empAddress" rows="3" placeholder="Enter address"></textarea>
                 </div>
                 <div>
                     <label class="block mb-2">Department</label>
                     <select id="empDepartment" required>
                         <option value="">Select Department</option>
-                        <option value="nurses">Nurses</option>
-                        <option value="laboratory">Laboratory</option>
-                        <option value="pharmacy">Pharmacy</option>
-                        <option value="business-office">Business Office</option>
+                        <option value="Cardiologists">Cardiologists</option>
+                        <option value="Gastroenterologists">Gastroenterologists</option>
+                        <option value="Gynecology">Gynecology</option>
+                        <option value="Nephrologists">Nephrologists</option>
+                        <option value="Nurse">Nurse</option>
+                        <option value="Orthopedic">Orthopedic</option>
+                        <option value="Ophthalmologists">Ophthalmologists</option>
+                        <option value="Obstetric">Obstetric</option>
+                        <option value="Pediatrics">Pediatrics</option>
+                        <option value="Psychiatrists">Psychiatrists</option>
+                        <option value="Psychologists">Psychologists</option>
+                        <option value="Pulmonologists">Pulmonologists</option>
                     </select>
-                </div>
-                <div>
-                    <label class="block mb-2">Role</label>
-                    <select id="empRole" required>
-                        <option value="">Select Role</option>
-                        <option value="admin">Admin</option>
-                        <option value="manager">Manager</option>
-                        <option value="staff">Staff</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block mb-2">Password</label>
-                    <input type="password" id="empPassword" required placeholder="Enter password">
                 </div>
                 <div class="flex gap-3 mt-6">
                     <button type="submit" class="btn-primary flex-1">Add Employee</button>
                     <button type="button" class="btn-secondary flex-1" onclick="closeModal('addEmployeeModal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Employee Modal -->
+    <div id="editEmployeeModal" class="modal">
+        <div class="modal-content p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-semibold">Edit Employee</h3>
+                <button onclick="closeModal('editEmployeeModal')" class="text-2xl">&times;</button>
+            </div>
+            <form onsubmit="updateEmployee(event)" class="space-y-4">
+                <input type="hidden" id="editEmpId">
+                <div>
+                    <label class="block mb-2">Full Name</label>
+                    <input type="text" id="editEmpName" required placeholder="Enter full name">
+                </div>
+                <div>
+                    <label class="block mb-2">Gender</label>
+                    <select id="editEmpGender" required>
+                        <option value="">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block mb-2">Email</label>
+                    <input type="email" id="editEmpEmail" required placeholder="employee@hospital.com">
+                </div>
+                <div>
+                    <label class="block mb-2">Contact Number</label>
+                    <input type="tel" id="editEmpContactNumber" placeholder="Enter contact number">
+                </div>
+                <div>
+                    <label class="block mb-2">Address</label>
+                    <textarea id="editEmpAddress" rows="3" placeholder="Enter address"></textarea>
+                </div>
+                <div>
+                    <label class="block mb-2">Department</label>
+                    <select id="editEmpDepartment" required>
+                        <option value="">Select Department</option>
+                        <option value="Cardiologists">Cardiologists</option>
+                        <option value="Gastroenterologists">Gastroenterologists</option>
+                        <option value="Gynecology">Gynecology</option>
+                        <option value="Nephrologists">Nephrologists</option>
+                        <option value="Nurse">Nurse</option>
+                        <option value="Orthopedic">Orthopedic</option>
+                        <option value="Ophthalmologists">Ophthalmologists</option>
+                        <option value="Obstetric">Obstetric</option>
+                        <option value="Pediatrics">Pediatrics</option>
+                        <option value="Psychiatrists">Psychiatrists</option>
+                        <option value="Psychologists">Psychologists</option>
+                        <option value="Pulmonologists">Pulmonologists</option>
+                    </select>
+                </div>
+                <div class="flex gap-3 mt-6">
+                    <button type="submit" class="btn-primary flex-1">Update Employee</button>
+                    <button type="button" class="btn-secondary flex-1" onclick="closeModal('editEmployeeModal')">Cancel</button>
                 </div>
             </form>
         </div>
@@ -1324,12 +1330,14 @@
                     <label class="block mb-2">Role</label>
                     <select id="newUserRole" required>
                         <option value="">Select Role</option>
+                        <option value="Head of Nurse">Head of Nurse</option>
                         <option value="Front Desk">Front Desk</option>
                         <option value="Business Office">Business Office</option>
                         <option value="Laboratory">Laboratory</option>
                         <option value="Pharmacy">Pharmacy</option>
                         <option value="Doctor">Doctor</option>
                         <option value="Nurse">Nurse</option>
+                        <option value="Radiology">Radiology</option>
                     </select>
                 </div>
                 <div class="p-4 rounded-lg" style="background-color: hsl(var(--secondary)); border: 1px solid hsl(var(--border));">
@@ -1366,12 +1374,14 @@
                     <label class="block mb-2">Role</label>
                     <select id="editUserRole" required>
                         <option value="">Select Role</option>
+                        <option value="Head of Nurse">Head of Nurse</option>
                         <option value="Front Desk">Front Desk</option>
                         <option value="Business Office">Business Office</option>
                         <option value="Laboratory">Laboratory</option>
                         <option value="Pharmacy">Pharmacy</option>
                         <option value="Doctor">Doctor</option>
                         <option value="Nurse">Nurse</option>
+                        <option value="Radiology">Radiology</option> 
                     </select>
                 </div>
                 <div class="flex gap-3 mt-6">
@@ -1451,7 +1461,9 @@
                 loadAdminAccounts();
             } else if (sectionId === 'user-accounts') {
                 loadUserAccounts();
-            } else if (sectionId === 'audit-logs') {
+            } else if (sectionId === 'employees') {
+                loadEmployees();
+            }else if (sectionId === 'audit-logs') {
                 loadAuditLogs();
             }
         }
@@ -1971,23 +1983,215 @@
         }
 
         /* EMPLOYEE & PATIENT PLACEHOLDERS */
-        function addEmployee(event) {
+        async function loadEmployees() {
+            try {
+                const response = await fetch('/api/employee/list');
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    renderEmployeesTable(data.data);
+                }
+            } catch (err) {
+                console.error('Error loading employees:', err);
+                showAlert('error', 'Error', 'Failed to load employees');
+            }
+        }
+
+        function renderEmployeesTable(employees) {
+            const tbody = document.getElementById('employeesTableBody');
+            if (!tbody) return;
+
+            tbody.innerHTML = '';
+
+            if (employees.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" style="text-align:center; padding:24px; color: hsl(var(--muted-foreground));">
+                            No employees found.
+                        </td>
+                    </tr>`;
+                return;
+            }
+
+            employees.forEach(emp => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${emp.name}</td>
+                    <td>${emp.gender || '—'}</td>
+                    <td>${emp.email}</td>
+                    <td>${emp.contact_number || '—'}</td>
+                    <td>${emp.address || '—'}</td>
+                    <td>${emp.department}</td>
+                    <td><span class="badge badge-success">${emp.status}</span></td>
+                    <td>
+                        <div class="flex gap-2">
+                            <button class="btn-secondary text-sm" onclick="editEmployee(${emp.id})">Edit</button>
+                            <button class="btn-danger text-sm" onclick="deleteEmployee(${emp.id})">Delete</button>
+                        </div>
+                    </td>`;
+                tbody.appendChild(row);
+            });
+        }
+
+        async function addEmployee(event) {
             event.preventDefault();
-            showAlert('info', 'Coming Soon', 'Employee management will be implemented');
-            closeModal('addEmployeeModal');
+
+            const name          = document.getElementById('empName').value.trim();
+            const gender        = document.getElementById('empGender').value;
+            const email         = document.getElementById('empEmail').value.trim();
+            const contactNumber = document.getElementById('empContactNumber').value.trim();
+            const address       = document.getElementById('empAddress').value.trim();
+            const department    = document.getElementById('empDepartment').value;
+
+            if (!name || !gender || !email || !department) {
+                showAlert('error', 'Error', 'Please fill in all required fields');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/employee/create', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        name, 
+                        gender, 
+                        email, 
+                        contact_number: contactNumber,
+                        address: address,
+                        department 
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    showAlert('success', 'Success', data.message);
+                    closeModal('addEmployeeModal');
+                    loadEmployees();
+                } else {
+                    showAlert('error', 'Error', data.message);
+                }
+            } catch (err) {
+                console.error('Error adding employee:', err);
+                showAlert('error', 'Error', 'Failed to add employee');
+            }
         }
 
-        function editEmployee(id) {
-            showAlert('info', 'Coming Soon', 'Employee editing will be implemented');
+        async function editEmployee(id) {
+            try {
+                const response = await fetch('/api/employee/list');
+                const data = await response.json();
+
+                const emp = data.data.find(e => e.id === id);
+                if (!emp) {
+                    showAlert('error', 'Error', 'Employee not found');
+                    return;
+                }
+
+                document.getElementById('editEmpId').value            = emp.id;
+                document.getElementById('editEmpName').value          = emp.name;
+                document.getElementById('editEmpGender').value        = emp.gender || '';
+                document.getElementById('editEmpEmail').value         = emp.email;
+                document.getElementById('editEmpContactNumber').value = emp.contact_number || '';
+                document.getElementById('editEmpAddress').value       = emp.address || '';
+                document.getElementById('editEmpDepartment').value    = emp.department;
+
+                openModal('editEmployeeModal');
+            } catch (err) {
+                console.error('Error fetching employee:', err);
+                showAlert('error', 'Error', 'Failed to load employee data');
+            }
         }
 
-        function deleteEmployee(id) {
-            showAlert('info', 'Coming Soon', 'Employee deletion will be implemented');
+        async function updateEmployee(event) {
+            event.preventDefault();
+
+            const id            = document.getElementById('editEmpId').value;
+            const name          = document.getElementById('editEmpName').value.trim();
+            const gender        = document.getElementById('editEmpGender').value;
+            const email         = document.getElementById('editEmpEmail').value.trim();
+            const contactNumber = document.getElementById('editEmpContactNumber').value.trim();
+            const address       = document.getElementById('editEmpAddress').value.trim();
+            const department    = document.getElementById('editEmpDepartment').value;
+
+            if (!name || !gender || !email || !department) {
+                showAlert('error', 'Error', 'Please fill in all required fields');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/employee/update/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        name, 
+                        gender, 
+                        email, 
+                        contact_number: contactNumber,
+                        address: address,
+                        department 
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    showAlert('success', 'Success', data.message);
+                    closeModal('editEmployeeModal');
+                    loadEmployees();
+                } else {
+                    showAlert('error', 'Error', data.message);
+                }
+            } catch (err) {
+                console.error('Error updating employee:', err);
+                showAlert('error', 'Error', 'Failed to update employee');
+            }
+        }
+        
+        async function deleteEmployee(id) {
+            if (!confirm('Are you sure you want to delete this employee?')) return;
+
+            try {
+                const response = await fetch(`/api/employee/delete/${id}`, {
+                    method: 'DELETE'
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    showAlert('success', 'Success', data.message);
+                    loadEmployees();
+                } else {
+                    showAlert('error', 'Error', data.message);
+                }
+            } catch (err) {
+                console.error('Error deleting employee:', err);
+                showAlert('error', 'Error', 'Failed to delete employee');
+            }
         }
 
-        function filterEmployees() {
-            // Placeholder
+       
+        async function filterEmployees() {
+            const search     = document.getElementById('employeeSearch').value.trim();
+            const department = document.getElementById('departmentFilter').value;
+
+            try {
+                let url = '/api/employee/list?';
+                if (search)     url += `search=${encodeURIComponent(search)}&`;
+                if (department) url += `department=${encodeURIComponent(department)}&`;
+
+                const response = await fetch(url);
+                const data     = await response.json();
+
+                if (data.status === 'success') {
+                    renderEmployeesTable(data.data);
+                }
+            } catch (err) {
+                console.error('Error filtering employees:', err);
+            }
         }
+
+
 
         function addPatient(event) {
             event.preventDefault();

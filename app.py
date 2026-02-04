@@ -131,9 +131,11 @@ def user_dashboard():
     role_templates = {
         'Business Office': 'business-office.html',
         'Laboratory': 'laboratory.html',
+        'Radiology': 'radiology.html', 
         'Front Desk': 'front-desk.html',
         'Doctor': 'doctor.html',
         'Pharmacy': 'pharmacy.html',
+        'Head of Nurse': 'admin-nurse.html',
         'Nurse': 'nurse.html',
         'Head of Hospital': 'user-head.html'
     }

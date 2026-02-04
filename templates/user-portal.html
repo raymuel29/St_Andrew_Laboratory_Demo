@@ -1308,23 +1308,23 @@
             <!-- Header -->
             <div class="header">
                 <div class="header-left">
-                    <h1>Welcome Back, John!</h1>
+                    <h1 id="headerGreeting">Welcome Back, John!</h1>
                     <p>Tuesday, November 25, 2025</p>
                 </div>
                 <div class="user-profile">
                     <div class="user-info" style="text-align: right;">
-                        <h3>John Doe</h3>
-                        <p>Patient ID: #STH2024-001</p>
+                        <h3 id="headerUserName">John Doe</h3>
                     </div>
-                    <div class="user-avatar" onclick="toggleProfileDropdown()">JD</div>
+                    <div class="user-avatar" onclick="toggleProfileDropdown()">
+                        <span id="avatarInitials">JD</span>
+                    </div>
                 </div>
             </div>
 
             <!-- Profile Dropdown -->
             <div class="profile-dropdown" id="profileDropdown">
                 <div class="dropdown-header">
-                    <h4>John Doe</h4>
-                    <p>Patient ID: #STH2024-001</p>
+                    <h4 id="dropdownUserName">John Doe</h4>
                 </div>
                 <div class="dropdown-menu">
                     <div class="dropdown-item" onclick="viewProfile(); closeDropdown();">
@@ -1441,13 +1441,17 @@
                             <button class="btn-view-all" onclick="enableEditProfile()">✏️ Edit Profile</button>
                         </div>
 
+                        <div id="profileIncompleteWarning" style="display:none; background: #fff3cd; border: 1px solid #ffc107; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                            <p style="margin: 0; color: #856404;">
+                                ⚠️ <strong>Important:</strong> Please complete your patient information to book appointments.
+                            </p>
+                        </div>
+
                         <!-- Profile Header -->
                         <div class="profile-header-card">
-                            <div class="profile-avatar-large">JD</div>
+                            <div class="profile-avatar-large" id="profileAvatarLarge">JD</div>
                             <div class="profile-main-info">
-                                <h2>John Doe</h2>
-                                <p>Patient ID: #STH2024-001</p>
-                                <p>Member since: January 15, 2024</p>
+                                <h2 id="profileFullName">John Doe</h2>
                             </div>
                         </div>
 
@@ -1458,11 +1462,15 @@
                                 <div class="form-grid">
                                     <div class="form-group">
                                         <label>First Name *</label>
-                                        <input type="text" id="firstName" value="John" disabled>
+                                        <input type="text" id="firstName" value="" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Middle Name</label>  
+                                        <input type="text" id="middleName" value="" readonly>
                                     </div>
                                     <div class="form-group">
                                         <label>Last Name *</label>
-                                        <input type="text" id="lastName" value="Doe" disabled>
+                                        <input type="text" id="lastName" value="" readonly>
                                     </div>
                                     <div class="form-group">
                                         <label>Date of Birth *</label>
@@ -1823,9 +1831,6 @@
                                     <label>Service Type *</label>
                                     <select id="serviceType" required onchange="updateDoctorList()">
                                         <option value="">Select Service</option>
-                                        <option value="checkup">General Check-up</option>
-                                        <option value="consultation">Specialist Consultation</option>
-                                        <option value="counselling">Counselling</option>
                                         <option value="room">Room Booking for Patient</option>
                                     </select>
                                 </div>
@@ -1834,90 +1839,15 @@
                                     <label>Department *</label>
                                     <select id="department" required>
                                         <option value="">Select Department</option>
-                                        <option value="pediatric">Pediatrics</option>
-                                        <option value="cardiologist">Cardiologist</option>
-                                        <option value="pulmonologist">Pulmonologist</option>
-                                        <option value="gastroenterologist">Gastroenterologist</option>
-                                        <option value="nephrologist">Nephrologist</option>
-                                        <option value="orthopedic">Orthopedic</option>
-                                        <option value="urologist">Urologist</option>
-                                        <option value="ophthalmologist">Ophthalmologist</option>
-                                        <option value="obstetric">Obstetric and Gynecology</option>
-                                        <option value="psychiatrist">Psychiatrist</option>
-                                        <option value="psychologist">Psychologist</option>
+                                        <!-- Departments will be loaded dynamically from Employee DB -->
                                     </select>
                                 </div>
 
                                 <div class="form-group">
                                     <label>Doctor *</label>
                                     <select id="doctor" required>
-                                        <option value="">Choose a doctor</option>
-                                        
-                                        <optgroup label="Pediatrics">
-                                            <option value="Dra. Karen Icel B. Parcon" data-dept="pediatric">Dra. Karen Icel B. Parcon</option>
-                                            <option value="Dr. Jose Martinez" data-dept="pediatric">Dr. Jose Martinez - Pediatrician</option>
-                                            <option value="Dra. Maria Santos" data-dept="pediatric">Dra. Maria Santos - Pediatric Specialist</option>
-                                        </optgroup>
-                                        
-                                        <optgroup label="Cardiologist">
-                                            <option value="Dr. Roberto Cruz" data-dept="cardiologist">Dr. Roberto Cruz - Cardiologist</option>
-                                            <option value="Dra. Ana Reyes" data-dept="cardiologist">Dra. Ana Reyes - Cardiac Specialist</option>
-                                            <option value="Dr. Miguel Torres" data-dept="cardiologist">Dr. Miguel Torres - Interventional Cardiologist</option>
-                                        </optgroup>
-                                        
-                                        <optgroup label="Pulmonologist">
-                                            <option value="Dr. Juan Dela Cruz" data-dept="pulmonologist">Dr. Juan Dela Cruz - Pulmonologist</option>
-                                            <option value="Dra. Teresa Garcia" data-dept="pulmonologist">Dra. Teresa Garcia - Respiratory Specialist</option>
-                                            <option value="Dr. Rafael Santos" data-dept="pulmonologist">Dr. Rafael Santos - Pulmonary Medicine</option>
-                                        </optgroup>
-                                        
-                                        <optgroup label="Gastroenterologist">
-                                            <option value="Dr. Carlos Rivera" data-dept="gastroenterologist">Dr. Carlos Rivera - Gastroenterologist</option>
-                                            <option value="Dra. Linda Ramos" data-dept="gastroenterologist">Dra. Linda Ramos - GI Specialist</option>
-                                            <option value="Dr. Antonio Lopez" data-dept="gastroenterologist">Dr. Antonio Lopez - Digestive Health Expert</option>
-                                        </optgroup>
-                                        
-                                        <optgroup label="Nephrologist">
-                                            <option value="Dr. Fernando Santos" data-dept="nephrologist">Dr. Fernando Santos - Nephrologist</option>
-                                            <option value="Dra. Patricia Cruz" data-dept="nephrologist">Dra. Patricia Cruz - Kidney Specialist</option>
-                                            <option value="Dr. Ricardo Mendoza" data-dept="nephrologist">Dr. Ricardo Mendoza - Renal Medicine</option>
-                                        </optgroup>
-                                        
-                                        <optgroup label="Orthopedic">
-                                            <option value="Dr. Manuel Garcia" data-dept="orthopedic">Dr. Manuel Garcia - Orthopedic Surgeon</option>
-                                            <option value="Dra. Sofia Martinez" data-dept="orthopedic">Dra. Sofia Martinez - Sports Medicine</option>
-                                            <option value="Dr. Eduardo Reyes" data-dept="orthopedic">Dr. Eduardo Reyes - Joint & Spine Specialist</option>
-                                        </optgroup>
-                                        
-                                        <optgroup label="Urologist">
-                                            <option value="Dr. Michael Conrad S. Mendoza" data-dept="urologist">Dr. Michael Conrad S. Mendoza</option>
-                                            <option value="Dra. Angela Torres" data-dept="urologist">Dra. Angela Torres - Urologist</option>
-                                            <option value="Dr. Benjamin Cruz" data-dept="urologist">Dr. Benjamin Cruz - Urological Surgeon</option>
-                                        </optgroup>
-                                        
-                                        <optgroup label="Ophthalmologist">
-                                            <option value="Dr. Pedro Santos" data-dept="ophthalmologist">Dr. Pedro Santos - Ophthalmologist</option>
-                                            <option value="Dra. Rosa Garcia" data-dept="ophthalmologist">Dra. Rosa Garcia - Eye Surgeon</option>
-                                            <option value="Dr. Luis Ramos" data-dept="ophthalmologist">Dr. Luis Ramos - Vision Specialist</option>
-                                        </optgroup>
-                                        
-                                        <optgroup label="Obstetric and Gynecology">
-                                            <option value="Dra. Katrina Rose S. Balasbas" data-dept="obstetric">Dra. Katrina Rose S. Balasbas</option>
-                                            <option value="Dra. Isabel Reyes" data-dept="obstetric">Dra. Isabel Reyes - OB-GYN</option>
-                                            <option value="Dra. Carmen Santos" data-dept="obstetric">Dra. Carmen Santos - Maternal Health Specialist</option>
-                                        </optgroup>
-                                        
-                                        <optgroup label="Psychiatrist">
-                                            <option value="Dr. Mark Anthony S. Mendoza" data-dept="psychiatrist">Dr. Mark Anthony S. Mendoza</option>
-                                            <option value="Dra. Elena Cruz" data-dept="psychiatrist">Dra. Elena Cruz - Psychiatrist</option>
-                                            <option value="Dr. Gabriel Torres" data-dept="psychiatrist">Dr. Gabriel Torres - Mental Health Specialist</option>
-                                        </optgroup>
-                                        
-                                        <optgroup label="Psychologist">
-                                            <option value="Dra. Anna Reyes" data-dept="psychologist">Dra. Anna Reyes - Clinical Psychologist</option>
-                                            <option value="Dr. David Garcia" data-dept="psychologist">Dr. David Garcia - Counseling Psychologist</option>
-                                            <option value="Dra. Maria Lopez" data-dept="psychologist">Dra. Maria Lopez - Child Psychologist</option>
-                                        </optgroup>
+                                        <option value="">Choose a department first</option>
+                                        <!-- Doctors will be loaded based on selected department -->
                                     </select>
                                 </div>
 
@@ -1945,10 +1875,7 @@
                                     <label>Room Type *</label>
                                     <select id="roomType">
                                         <option value="">Select Room Type</option>
-                                        <option value="private">Private Room - ₱5,000/day</option>
-                                        <option value="semi-private">Semi-Private Room - ₱3,000/day</option>
-                                        <option value="ward">Ward - ₱1,500/day</option>
-                                        <option value="icu">ICU - ₱10,000/day</option>
+                                        <!-- Room options injected here from DB when Room Booking is selected -->
                                     </select>
                                 </div>
 
@@ -2533,6 +2460,7 @@
     <script>
 
         let currentMessage = null;
+        let currentUserProfile = null;
 
         document.addEventListener('DOMContentLoaded', function() {
             // Load appointments when page loads
@@ -2543,6 +2471,9 @@
             
             // Load inbox
             loadInbox();
+
+            // Load user profile
+            loadUserProfile();  // <-- ADD THIS LINE
             
             // Set minimum date for appointment booking (today)
             const appointmentDateInput = document.getElementById('appointmentDate');
@@ -2584,7 +2515,178 @@
             }
         }
 
-        // PROFILE DROPDOWN FUNCTIONS
+
+        
+        async function loadUserProfile() {
+            try {
+                const response = await fetch('/api/website-user/profile');
+                const data = await response.json();
+                
+                if (response.ok && data.status === 'success') {
+                    currentUserProfile = data.data;
+                    updateProfileDisplay(currentUserProfile);
+                    
+                    // Also load patient information
+                    await loadPatientInfo();
+                } else {
+                    console.error('Failed to load profile:', data.message);
+                    if (response.status === 401) {
+                        window.location.href = '/website';
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+            }
+        }
+
+        async function loadPatientInfo() {
+            try {
+                const response = await fetch('/api/patient/info');
+                const data = await response.json();
+                
+                const warningDiv = document.getElementById('profileIncompleteWarning');
+                
+                if (response.ok && data.exists) {
+                    const patient = data.data;
+                    
+                    // Hide warning if patient info exists
+                    if (warningDiv) warningDiv.style.display = 'none';
+                    
+                    // Fill in patient fields
+                    document.getElementById('birthdate').value = patient.birthdate || '';
+                    document.getElementById('gender').value = patient.gender || 'male';
+                    document.getElementById('bloodType').value = patient.blood_type || 'O+';
+                    document.getElementById('civilStatus').value = patient.civil_status || 'single';
+                    document.getElementById('email').value = patient.email || '';
+                    document.getElementById('phone').value = patient.phone || '';
+                    document.getElementById('address').value = patient.address || '';
+                    document.getElementById('emergencyName').value = patient.emergency_name || '';
+                    document.getElementById('emergencyRelation').value = patient.emergency_relation || '';
+                    document.getElementById('emergencyPhone').value = patient.emergency_phone || '';
+                    document.getElementById('emergencyEmail').value = patient.emergency_email || '';
+                    document.getElementById('allergies').value = patient.allergies || '';
+                    document.getElementById('conditions').value = patient.conditions || '';
+                    document.getElementById('medications').value = patient.medications || '';
+                    document.getElementById('insuranceProvider').value = patient.insurance_provider || '';
+                    document.getElementById('policyNumber').value = patient.policy_number || '';
+                } else {
+                    // Show warning if patient info doesn't exist
+                    if (warningDiv) warningDiv.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error loading patient info:', error);
+            }
+        }
+
+        async function saveProfile() {
+            const patientData = {
+                firstName: document.getElementById('firstName').value,
+                middleName: document.getElementById('middleName').value,
+                lastName: document.getElementById('lastName').value,
+                birthdate: document.getElementById('birthdate').value,
+                gender: document.getElementById('gender').value,
+                bloodType: document.getElementById('bloodType').value,
+                civilStatus: document.getElementById('civilStatus').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                address: document.getElementById('address').value,
+                emergencyName: document.getElementById('emergencyName').value,
+                emergencyRelation: document.getElementById('emergencyRelation').value,
+                emergencyPhone: document.getElementById('emergencyPhone').value,
+                emergencyEmail: document.getElementById('emergencyEmail').value,
+                allergies: document.getElementById('allergies').value,
+                conditions: document.getElementById('conditions').value,
+                medications: document.getElementById('medications').value,
+                insuranceProvider: document.getElementById('insuranceProvider').value,
+                policyNumber: document.getElementById('policyNumber').value
+            };
+            
+            // Validate required fields
+            if (!patientData.firstName || !patientData.lastName || !patientData.birthdate || 
+                !patientData.gender || !patientData.phone || !patientData.address) {
+                alert('Please fill in all required fields (marked with *)');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/patient/save', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(patientData)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    alert('Profile updated successfully!');
+                    cancelEditProfile();
+                    loadUserProfile(); // Reload to show updated data
+                } else {
+                    alert(data.message || 'Failed to update profile');
+                }
+            } catch (error) {
+                console.error('Save profile error:', error);
+                alert('An error occurred while saving profile');
+            }
+        }
+
+
+        
+        function updateProfileDisplay(profile) {
+            // Update header
+            const firstName = profile.first_name || 'User';
+            document.getElementById('headerGreeting').textContent = `Welcome Back, ${firstName}!`;
+            document.getElementById('headerUserName').textContent = profile.full_name;
+            
+            // Update dropdown
+            const dropdownName = document.getElementById('dropdownUserName');
+            if (dropdownName) {
+                dropdownName.textContent = profile.full_name;
+            }
+            
+            // Update avatar initials (first letter of first and last name)
+            const initials = getInitials(profile.first_name, profile.last_name);
+            document.getElementById('avatarInitials').textContent = initials;
+            
+            const profileAvatarLarge = document.getElementById('profileAvatarLarge');
+            if (profileAvatarLarge) {
+                profileAvatarLarge.textContent = initials;
+            }
+            
+            // Update profile page header
+            const profileFullName = document.getElementById('profileFullName');
+            if (profileFullName) {
+                profileFullName.textContent = profile.full_name;
+            }
+            
+            // Update form fields
+            document.getElementById('firstName').value = profile.first_name || '';
+            document.getElementById('middleName').value = profile.middle_name || '';
+            document.getElementById('lastName').value = profile.last_name || '';
+        }
+
+
+        function getInitials(firstName, lastName) {
+            const first = (firstName || '').trim().charAt(0).toUpperCase();
+            const last = (lastName || '').trim().charAt(0).toUpperCase();
+            return first + last || 'U';
+        }
+
+
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            try {
+                const date = new Date(dateString);
+                const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                return date.toLocaleDateString('en-US', options);
+            } catch (e) {
+                return 'N/A';
+            }
+        }
+
+
         function toggleProfileDropdown() {
             const dropdown = document.getElementById('profileDropdown');
             dropdown.classList.toggle('show');
@@ -2646,8 +2748,238 @@
 
         
         // APPOINTMENT BOOKING FUNCTIONS
-        function showBookingModal() {
+        async function loadProfessionalFees() {
+            try {
+                const res = await fetch('/api/services/professional-fees');
+                const json = await res.json();
+                if (res.ok && json.data) {
+                    const serviceType = document.getElementById('serviceType');
+                    // Remove existing Professional Fee options (keep placeholder + Room Booking)
+                    // Room Booking is always the LAST option
+                    const roomOption = serviceType.querySelector('option[value="room"]');
+                    // Clear all except placeholder and room
+                    while (serviceType.options.length > 1) {
+                        // if it's the room option, skip
+                        if (serviceType.options[1].value === 'room') break;
+                        serviceType.remove(1);
+                    }
+                    // Insert Professional Fee options BEFORE the Room Booking option
+                    json.data.forEach(fee => {
+                        const opt = document.createElement('option');
+                        opt.value = fee.service_name;
+                        opt.textContent = fee.service_name + ' - ₱' + fee.price.toLocaleString('en-PH', {minimumFractionDigits: 2});
+                        serviceType.insertBefore(opt, roomOption);
+                    });
+                }
+            } catch (e) {
+                console.error('Failed to load professional fees:', e);
+            }
+        }
+
+        async function loadDepartments() {
+            try {
+                const response = await fetch('/api/employees/departments');
+                const data = await response.json();
+                
+                if (response.ok && data.data) {
+                    const departmentSelect = document.getElementById('department');
+                    
+                    // Clear existing options except placeholder
+                    while (departmentSelect.options.length > 1) {
+                        departmentSelect.remove(1);
+                    }
+                    
+                    // Add departments from database
+                    data.data.forEach(dept => {
+                        const option = document.createElement('option');
+                        option.value = dept;
+                        option.textContent = dept;
+                        departmentSelect.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading departments:', error);
+            }
+        }
+
+        async function loadDoctorsByDepartment(department) {
+            try {
+                const response = await fetch(`/api/employees/by-department/${encodeURIComponent(department)}`);
+                const data = await response.json();
+                
+                const doctorSelect = document.getElementById('doctor');
+                
+                // Clear existing options except placeholder
+                while (doctorSelect.options.length > 1) {
+                    doctorSelect.remove(1);
+                }
+                
+                if (response.ok && data.data && data.data.length > 0) {
+                    // Update placeholder
+                    doctorSelect.options[0].textContent = 'Choose a doctor';
+                    
+                    // Add doctors from database
+                    data.data.forEach(emp => {
+                        const option = document.createElement('option');
+                        option.value = emp.name;
+                        option.textContent = emp.name;
+                        doctorSelect.appendChild(option);
+                    });
+                } else {
+                    // No doctors found in this department
+                    doctorSelect.options[0].textContent = 'No doctors available in this department';
+                }
+            } catch (error) {
+                console.error('Error loading doctors:', error);
+                const doctorSelect = document.getElementById('doctor');
+                doctorSelect.options[0].textContent = 'Error loading doctors';
+            }
+        }
+
+        // Update the department change handler
+        const departmentSelect = document.getElementById("department");
+        if (departmentSelect) {
+            departmentSelect.addEventListener("change", function () {
+                const dept = this.value;
+                const doctorSelect = document.getElementById("doctor");
+
+                // Reset doctor selection
+                doctorSelect.value = "";
+
+                if (dept) {
+                    // Load doctors for selected department
+                    loadDoctorsByDepartment(dept);
+                } else {
+                    // Clear doctor dropdown if no department selected
+                    while (doctorSelect.options.length > 1) {
+                        doctorSelect.remove(1);
+                    }
+                    doctorSelect.options[0].textContent = 'Choose a department first';
+                }
+            });
+        }
+
+        function updateDoctorList() {
+            const serviceType = document.getElementById("serviceType").value;
+            const departmentGroup = document.getElementById("departmentGroup");
+            const department = document.getElementById("department");
+            const doctorSelect = document.getElementById("doctor");
+            const roomTypeGroup = document.getElementById("roomTypeGroup");
+            const durationGroup = document.getElementById("durationGroup");
+
+            // Reset selections
+            department.value = "";
+            doctorSelect.value = "";
+
+            // Show/hide room booking fields
+            if (serviceType === "room") {
+                departmentGroup.style.display = "none";
+                department.required = false;
+                roomTypeGroup.style.display = "block";
+                durationGroup.style.display = "block";
+                document.getElementById("roomType").required = true;
+                document.getElementById("duration").required = true;
+                loadRooms();
+                
+                // Load ALL doctors for room booking (no department filter)
+                loadAllDoctors();
+            } else {
+                departmentGroup.style.display = "block";
+                department.required = true;
+                roomTypeGroup.style.display = "none";
+                durationGroup.style.display = "none";
+                document.getElementById("roomType").required = false;
+                document.getElementById("duration").required = false;
+                
+                // Clear doctor dropdown
+                while (doctorSelect.options.length > 1) {
+                    doctorSelect.remove(1);
+                }
+                doctorSelect.options[0].textContent = 'Choose a department first';
+            }
+        }
+                
+
+        // Load all doctors from all departments (for Room Booking)
+        async function loadAllDoctors() {
+            try {
+                const response = await fetch('/api/employees/all-doctors');
+                const data = await response.json();
+                
+                const doctorSelect = document.getElementById('doctor');
+                
+                // Clear existing options except placeholder
+                while (doctorSelect.options.length > 1) {
+                    doctorSelect.remove(1);
+                }
+                
+                if (response.ok && data.data && data.data.length > 0) {
+                    // Update placeholder
+                    doctorSelect.options[0].textContent = 'Choose a doctor';
+                    
+                    // Add all doctors grouped by department
+                    const groupedDoctors = {};
+                    
+                    data.data.forEach(emp => {
+                        if (!groupedDoctors[emp.department]) {
+                            groupedDoctors[emp.department] = [];
+                        }
+                        groupedDoctors[emp.department].push(emp);
+                    });
+                    
+                    // Create optgroups for each department
+                    Object.keys(groupedDoctors).sort().forEach(dept => {
+                        const optgroup = document.createElement('optgroup');
+                        optgroup.label = dept;
+                        
+                        groupedDoctors[dept].forEach(emp => {
+                            const option = document.createElement('option');
+                            option.value = emp.name;
+                            option.textContent = emp.name;
+                            optgroup.appendChild(option);
+                        });
+                        
+                        doctorSelect.appendChild(optgroup);
+                    });
+                } else {
+                    doctorSelect.options[0].textContent = 'No doctors available';
+                }
+            } catch (error) {
+                console.error('Error loading all doctors:', error);
+                const doctorSelect = document.getElementById('doctor');
+                doctorSelect.options[0].textContent = 'Error loading doctors';
+            }
+        }
+
+        async function loadRooms() {
+            try {
+                const res = await fetch('/api/services/rooms');
+                const json = await res.json();
+                if (res.ok && json.data) {
+                    const roomType = document.getElementById('roomType');
+                    // Clear existing options except placeholder
+                    while (roomType.options.length > 1) roomType.remove(1);
+                    // Add room options from DB
+                    json.data.forEach(room => {
+                        const opt = document.createElement('option');
+                        opt.value = room.service_name;
+                        opt.textContent = room.service_name + ' - ₱' + room.price.toLocaleString('en-PH', {minimumFractionDigits: 2}) + '/day';
+                        roomType.appendChild(opt);
+                    });
+                }
+            } catch (e) {
+                console.error('Failed to load rooms:', e);
+            }
+        }
+
+        async function showBookingModal() {
             document.getElementById("bookingModal").style.display = "block";
+            // Load Service Type options from DB every time modal opens (fresh prices)
+            await loadProfessionalFees();
+
+            await loadDepartments();
+            // Pre-load rooms in background so ready when user picks Room Booking
+            loadRooms();
         }
 
         function closeBookingModal() {
@@ -2660,113 +2992,25 @@
             document.getElementById('departmentGroup').style.display = 'block';
         }
 
-        function updateDoctorList() {
-            const serviceType = document.getElementById("serviceType").value;
-            const departmentGroup = document.getElementById("departmentGroup");
-            const department = document.getElementById("department");
-            const doctorSelect = document.getElementById("doctor");
-            const roomTypeGroup = document.getElementById("roomTypeGroup");
-            const durationGroup = document.getElementById("durationGroup");
-
-            const allDoctors = doctorSelect.querySelectorAll("option[data-dept]");
-            const allOptGroups = doctorSelect.querySelectorAll("optgroup");
-
-            // Reset department
-            department.value = "";
-            Array.from(department.options).forEach(opt => {
-                if (!opt.value) return;
-                opt.style.display = "none";
-            });
-
-            let allowedDepts = [];
-
-            if (serviceType === "checkup") {
-                allowedDepts = ["pediatric"];
-            } else if (serviceType === "consultation") {
-                allowedDepts = ["cardiologist","pulmonologist","gastroenterologist","nephrologist","orthopedic","urologist","ophthalmologist","obstetric"];
-            } else if (serviceType === "counselling") {
-                allowedDepts = ["psychiatrist","psychologist"];
-            }
-            
-            // Show/hide departments
-            allowedDepts.forEach(d => {
-                const opt = department.querySelector(`option[value="${d}"]`);
-                if (opt) opt.style.display = "block";
-            });
-
-            // Show/hide room booking fields
-            if (serviceType === "room") {
-                departmentGroup.style.display = "none";
-                department.required = false;
-                roomTypeGroup.style.display = "block";
-                durationGroup.style.display = "block";
-                document.getElementById("roomType").required = true;
-                document.getElementById("duration").required = true;
-            } else {
-                departmentGroup.style.display = "block";
-                department.required = true;
-                roomTypeGroup.style.display = "none";
-                durationGroup.style.display = "none";
-                document.getElementById("roomType").required = false;
-                document.getElementById("duration").required = false;
-            }
-
-            if (serviceType === "room") {
-                // Show all doctors for room service
-                allDoctors.forEach(opt => opt.style.display = "block");
-                allOptGroups.forEach(g => g.style.display = "block");
-                doctorSelect.value = "";
-            } else {
-                // Reset doctor select
-                doctorSelect.value = "";
-                allDoctors.forEach(opt => opt.style.display = "none");
-                allOptGroups.forEach(g => g.style.display = "none");
-
-                // For counselling: show doctors immediately
-                if (serviceType === "counselling") {
-                    showDoctorsByDept(allowedDepts);
-                }
-            }
-        }
-
-        function showDoctorsByDept(depts) {
-            const doctorSelect = document.getElementById("doctor");
-            const options = doctorSelect.querySelectorAll("option[data-dept]");
-            const groups = doctorSelect.querySelectorAll("optgroup");
-
-            options.forEach(opt => {
-                opt.style.display = depts.includes(opt.dataset.dept) ? "block" : "none";
-            });
-
-            groups.forEach(group => {
-                const hasVisible = Array.from(group.children)
-                    .some(opt => opt.style.display === "block");
-                group.style.display = hasVisible ? "block" : "none";
-            });
-        }
-
-        // Department change handler
-        const departmentSelect = document.getElementById("department");
-        if (departmentSelect) {
-            departmentSelect.addEventListener("change", function () {
-                const dept = this.value;
-                const doctorSelect = document.getElementById("doctor");
-
-                // Reset doctor selection
-                doctorSelect.value = "";
-
-                if (dept) {
-                    showDoctorsByDept([dept]);
-                } else {
-                    // Show all doctors if no department selected
-                    doctorSelect.querySelectorAll("option[data-dept]").forEach(opt => opt.style.display = "block");
-                    doctorSelect.querySelectorAll("optgroup").forEach(g => g.style.display = "block");
-                }
-            });
-        }
-
         async function submitBooking(event) {
             event.preventDefault();
+            
+            // Check if patient information is complete first
+            try {
+                const checkResponse = await fetch('/api/patient/check-info');
+                const checkData = await checkResponse.json();
+                
+                if (!checkData.exists) {
+                    alert('Please complete your patient information first. Go to My Profile to add your details.');
+                    closeBookingModal();
+                    showSection('profile');
+                    return;
+                }
+            } catch (error) {
+                console.error('Error checking patient info:', error);
+                alert('Unable to verify patient information');
+                return;
+            }
             
             const formData = {
                 serviceType: document.getElementById('serviceType').value,
@@ -3202,11 +3446,6 @@
             formFields.forEach(field => field.disabled = true);
             document.getElementById('profileActions').style.display = 'none';
             document.getElementById('profileForm').reset();
-        }
-
-        function saveProfile() {
-            alert('Profile update feature - Coming soon');
-            cancelEditProfile();
         }
 
         function callSupport() {

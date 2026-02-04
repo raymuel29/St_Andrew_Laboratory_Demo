@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nurse Admin - St. Andrew Hospital</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0e17;
+            --bg-secondary: #151b2b;
+            --bg-tertiary: #1e2638;
+            --accent-orange: #ff6b35;
+            --accent-blue: #00d4ff;
+            --accent-purple: #a855f7;
+            --accent-green: #10b981;
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --border-color: #2d3748;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--accent-orange);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, var(--accent-orange), #ff8c42);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+        }
+
+        .hospital-name h2 {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .hospital-name p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-family: 'Space Mono', monospace;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .header-user {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .logout-btn {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            padding: 10px 24px;
+            border-radius: 8px;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: var(--accent-orange);
+            border-color: var(--accent-orange);
+            transform: translateY(-2px);
+        }
+
+        .container {
+            display: flex;
+            height: calc(100vh - 95px);
+        }
+
+        .sidebar {
+            width: 280px;
+            background: var(--bg-secondary);
+            padding: 30px 0;
+            border-right: 1px solid var(--border-color);
+        }
+
+        .menu-item {
+            padding: 16px 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            margin: 4px 0;
+        }
+
+        .menu-item:hover {
+            background: var(--bg-tertiary);
+            transform: translateX(5px);
+        }
+
+        .menu-item.active {
+            background: linear-gradient(90deg, transparent, var(--bg-tertiary));
+            border-left: 4px solid var(--accent-orange);
+            color: var(--accent-orange);
+        }
+
+        .menu-icon {
+            font-size: 22px;
+            width: 30px;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            background: var(--bg-primary);
+        }
+
+        .page-title {
+            font-size: 32px;
+            margin-bottom: 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-orange), #ff8c42);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.5);
+        }
+
+        .nurse-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 25px;
+            margin-top: 25px;
+        }
+
+        .nurse-card {
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nurse-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-orange), var(--accent-blue));
+        }
+
+        .nurse-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+            border-color: var(--accent-blue);
+        }
+
+        .nurse-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .nurse-name {
+            font-weight: 700;
+            color: var(--accent-orange);
+            margin-bottom: 8px;
+            font-size: 20px;
+        }
+
+        .nurse-badge {
+            background: var(--accent-green);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .nurse-details {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .detail-row {
+            display: flex;
+            align-items: center;
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-family: 'Space Mono', monospace;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: var(--text-primary);
+            min-width: 90px;
+        }
+
+        .nurse-stats {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            flex: 1;
+            background: var(--bg-primary);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+
+        .nurse-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-edit {
+            background: var(--accent-blue);
+            color: var(--bg-primary);
+        }
+
+        .btn-edit:hover {
+            background: #00b8e6;
+            transform: translateY(-2px);
+        }
+
+        .btn-delete {
+            background: transparent;
+            border: 1px solid #ef4444;
+            color: #ef4444;
+        }
+
+        .btn-delete:hover {
+            background: #ef4444;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .table-container {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            margin-top: 25px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: var(--bg-tertiary);
+        }
+
+        th {
+            padding: 18px 20px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--accent-orange);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        td {
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+        }
+
+        tr:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .status-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+            text-transform: uppercase;
+        }
+
+        .status-assigned {
+            background: var(--accent-green);
+            color: white;
+        }
+
+        .status-unassigned {
+            background: #ef4444;
+            color: white;
+        }
+
+        .shift-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .shift-morning {
+            background: #fbbf24;
+            color: var(--bg-primary);
+        }
+
+        .shift-afternoon {
+            background: var(--accent-orange);
+            color: white;
+        }
+
+        .shift-night {
+            background: var(--accent-purple);
+            color: white;
+        }
+
+        .btn-table {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-right: 6px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .btn-assign {
+            background: var(--accent-green);
+            color: white;
+        }
+
+        .btn-assign:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+
+        .btn-table-edit {
+            background: var(--accent-blue);
+            color: var(--bg-primary);
+        }
+
+        .btn-table-edit:hover {
+            background: #00b8e6;
+            transform: translateY(-2px);
+        }
+
+        .btn-remove {
+            background: transparent;
+            border: 1px solid #ef4444;
+            color: #ef4444;
+        }
+
+        .btn-remove:hover {
+            background: #ef4444;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.show {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+            padding: 35px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 85vh;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .modal-header h2 {
+            color: var(--accent-orange);
+            font-size: 26px;
+            font-weight: 700;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 28px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+        }
+
+        .close-btn:hover {
+            background: var(--bg-primary);
+            color: var(--accent-orange);
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+            transition: all 0.3s ease;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .form-group select:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent-orange);
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 30px;
+        }
+
+        .btn-cancel {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 12px 28px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-cancel:hover {
+            background: var(--bg-primary);
+            border-color: var(--text-secondary);
+        }
+
+        .notification {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, var(--accent-orange), #ff8c42);
+            color: white;
+            padding: 16px 28px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+            display: none;
+            animation: slideInRight 0.3s ease;
+            z-index: 2000;
+            font-weight: 600;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .notification.show {
+            display: block;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 35px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+            padding: 28px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-orange), var(--accent-blue));
+        }
+
+        .stat-card h3 {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-card .stat-value {
+            font-size: 42px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-orange), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 72px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .shift-section {
+            margin-bottom: 35px;
+        }
+
+        .shift-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .shift-icon {
+            font-size: 32px;
+        }
+
+        .shift-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-orange);
+        }
+
+        .shift-time {
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-family: 'Space Mono', monospace;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-orange);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ff8c42;
+        }
+    </style>
+</head>
+<body>
+    <div class="notification" id="notification"></div>
+
+    <div class="header">
+        <div class="logo-section">
+            <div class="logo">👨‍⚕️</div>
+            <div class="hospital-name">
+                <h2>Nurse Admin Panel</h2>
+                <p>St. Andrew Hospital</p>
+            </div>
+        </div>
+        <div class="user-info">
+            <span class="header-user">Head Nurse: <strong id="currentUserName">Admin</strong></span>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="sidebar">
+            <div class="menu-item active" onclick="showSection('nurses')">
+                <span class="menu-icon">👥</span>
+                <span>Nurse List</span>
+            </div>
+            <div class="menu-item" onclick="showSection('assignments')">
+                <span class="menu-icon">📋</span>
+                <span>Patient Assignments</span>
+            </div>
+            <div class="menu-item" onclick="showSection('shifts')">
+                <span class="menu-icon">🕐</span>
+                <span>Shift Schedule</span>
+            </div>
+            <div class="menu-item" onclick="showSection('dashboard')">
+                <span class="menu-icon">📊</span>
+                <span>Dashboard</span>
+            </div>
+        </div>
+
+        <div class="main-content" id="main-content">
+            <!-- Content will be loaded here -->
+        </div>
+    </div>
+
+    <!-- Assignment Modal -->
+    <div class="modal" id="assignModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Assign Nurse to Patient</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <form id="assignForm">
+                <input type="hidden" id="patientId">
+                <div class="form-group">
+                    <label>Patient Name</label>
+                    <input type="text" id="patientName" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Select Nurse</label>
+                    <select id="nurseSelect" required>
+                        <option value="">-- Select Nurse --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Shift</label>
+                    <select id="shiftSelect" required>
+                        <option value="">-- Select Shift --</option>
+                        <option value="morning">Morning (7AM - 3PM)</option>
+                        <option value="afternoon">Afternoon (3PM - 11PM)</option>
+                        <option value="night">Night (11PM - 7AM)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Start Date</label>
+                    <input type="date" id="startDate" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn-primary" id="assignNurseBtn">Assign Nurse</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Sample data
+        let nurses = [
+            {
+                id: 'nurse_001',
+                name: 'Sarah Johnson',
+                employeeId: 'EMP001',
+                licenseNumber: 'RN-12345',
+                contact: '0917-123-4567',
+                email: 'sarah.johnson@hospital.com',
+                status: 'active'
+            },
+            {
+                id: 'nurse_002',
+                name: 'Maria Santos',
+                employeeId: 'EMP002',
+                licenseNumber: 'RN-12346',
+                contact: '0917-234-5678',
+                email: 'maria.santos@hospital.com',
+                status: 'active'
+            },
+            {
+                id: 'nurse_003',
+                name: 'Anna Reyes',
+                employeeId: 'EMP003',
+                licenseNumber: 'RN-12347',
+                contact: '0917-345-6789',
+                email: 'anna.reyes@hospital.com',
+                status: 'active'
+            }
+        ];
+
+        let patients = [
+            {
+                id: 1,
+                name: "Raymuel Propeta Villamor",
+                admissionDate: "02/02/2026",
+                roomType: "Semi-Private Room",
+                assignedNurse: null,
+                shift: null,
+                startDate: null
+            },
+            {
+                id: 2,
+                name: "Maria Santos Cruz",
+                admissionDate: "02/01/2026",
+                roomType: "Private Room",
+                assignedNurse: null,
+                shift: null,
+                startDate: null
+            },
+            {
+                id: 3,
+                name: "Juan Dela Cruz",
+                admissionDate: "01/31/2026",
+                roomType: "Semi-Private Room",
+                assignedNurse: null,
+                shift: null,
+                startDate: null
+            },
+            {
+                id: 4,
+                name: "Ana Reyes Martinez",
+                admissionDate: "01/30/2026",
+                roomType: "Ward",
+                assignedNurse: null,
+                shift: null,
+                startDate: null
+            }
+        ];
+
+        // Load data from localStorage
+        function loadData() {
+            const savedNurses = localStorage.getItem('hospitalNurses');
+            const savedPatients = localStorage.getItem('hospitalPatients');
+            
+            if (savedNurses) nurses = JSON.parse(savedNurses);
+            if (savedPatients) patients = JSON.parse(savedPatients);
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('hospitalNurses', JSON.stringify(nurses));
+            localStorage.setItem('hospitalPatients', JSON.stringify(patients));
+        }
+
+        // Show section
+        function showSection(section) {
+            document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+
+            if (section === 'nurses') {
+                showNurses();
+            } else if (section === 'assignments') {
+                showAssignments();
+            } else if (section === 'shifts') {
+                showShifts();
+            } else if (section === 'dashboard') {
+                showDashboard();
+            }
+        }
+
+        // Show nurses list
+        function showNurses() {
+            const mainContent = document.getElementById('main-content');
+            mainContent.innerHTML = `
+                <div class="page-title">
+                    <span>Nurse List</span>
+                </div>
+                <div id="nursesList" class="nurse-grid"></div>
+            `;
+            renderNursesList();
+        }
+
+        function renderNursesList() {
+            const nursesList = document.getElementById('nursesList');
+            if (nurses.length === 0) {
+                nursesList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">👥</div>
+                        <h3>No nurses registered</h3>
+                        <p>No nurses available in the system</p>
+                    </div>
+                `;
+                return;
+            }
+
+            nursesList.innerHTML = nurses.map(nurse => {
+                const assignedPatients = patients.filter(p => p.assignedNurse === nurse.id);
+                const patientCount = assignedPatients.length;
+                
+                return `
+                    <div class="nurse-card">
+                        <div class="nurse-header">
+                            <div>
+                                <div class="nurse-name">${nurse.name}</div>
+                            </div>
+                            <span class="nurse-badge">Active</span>
+                        </div>
+                        
+                        <div class="nurse-details">
+                            <div class="detail-row">
+                                <span class="detail-label">Employee ID:</span>
+                                <span>${nurse.employeeId}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">License:</span>
+                                <span>${nurse.licenseNumber}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Contact:</span>
+                                <span>${nurse.contact}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Email:</span>
+                                <span>${nurse.email}</span>
+                            </div>
+                        </div>
+
+                        <div class="nurse-stats">
+                            <div class="stat-box">
+                                <div class="stat-number">${patientCount}</div>
+                                <div class="stat-label">Patients</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Show assignments
+        function showAssignments() {
+            const mainContent = document.getElementById('main-content');
+            mainContent.innerHTML = `
+                <div class="page-title">
+                    <span>Patient Assignments</span>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Patient Name</th>
+                                <th>Admission Date</th>
+                                <th>Room Type</th>
+                                <th>Assigned Nurse</th>
+                                <th>Shift</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="assignmentsTable">
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            renderAssignmentsTable();
+            console.log('Assignments table rendered');
+        }
+
+        function renderAssignmentsTable() {
+            const tbody = document.getElementById('assignmentsTable');
+            if (!tbody) {
+                console.error('Assignment table body not found!');
+                return;
+            }
+            
+            console.log('Rendering assignments for', patients.length, 'patients');
+            
+            tbody.innerHTML = patients.map(patient => {
+                const nurse = patient.assignedNurse ? nurses.find(n => n.id === patient.assignedNurse) : null;
+                return `
+                    <tr>
+                        <td><strong>${patient.name}</strong></td>
+                        <td>${patient.admissionDate}</td>
+                        <td>${patient.roomType}</td>
+                        <td>${nurse ? nurse.name : '<span style="color: #94a3b8;">Not assigned</span>'}</td>
+                        <td>${patient.shift ? `<span class="shift-badge shift-${patient.shift}">${patient.shift.charAt(0).toUpperCase() + patient.shift.slice(1)}</span>` : '-'}</td>
+                        <td>
+                            <span class="status-badge ${patient.assignedNurse ? 'status-assigned' : 'status-unassigned'}">
+                                ${patient.assignedNurse ? 'Assigned' : 'Unassigned'}
+                            </span>
+                        </td>
+                        <td>
+                            ${!patient.assignedNurse ? `
+                                <button class="btn-table btn-assign" onclick="openAssignModal(${patient.id})">
+                                    Assign
+                                </button>
+                            ` : `
+                                <button class="btn-table btn-table-edit" onclick="openAssignModal(${patient.id})">
+                                    Edit
+                                </button>
+                                <button class="btn-table btn-remove" onclick="removeAssignment(${patient.id})">
+                                    Remove
+                                </button>
+                            `}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+            
+            console.log('Assignment table rendered successfully');
+        }
+
+        // Show shifts
+        function showShifts() {
+            const mainContent = document.getElementById('main-content');
+            mainContent.innerHTML = `
+                <div class="page-title">
+                    <span>Shift Schedule</span>
+                </div>
+                <div id="shiftsContent"></div>
+            `;
+            renderShiftSchedule();
+        }
+
+        function renderShiftSchedule() {
+            const shiftsContent = document.getElementById('shiftsContent');
+            const shifts = [
+                { name: 'morning', icon: '🌅', label: 'Morning Shift', time: '7AM - 3PM' },
+                { name: 'afternoon', icon: '☀️', label: 'Afternoon Shift', time: '3PM - 11PM' },
+                { name: 'night', icon: '🌙', label: 'Night Shift', time: '11PM - 7AM' }
+            ];
+            
+            shiftsContent.innerHTML = shifts.map(shift => {
+                const shiftPatients = patients.filter(p => p.shift === shift.name);
+                return `
+                    <div class="shift-section">
+                        <div class="shift-header">
+                            <span class="shift-icon">${shift.icon}</span>
+                            <div>
+                                <div class="shift-title">${shift.label}</div>
+                                <div class="shift-time">${shift.time}</div>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Patient</th>
+                                        <th>Room</th>
+                                        <th>Nurse</th>
+                                        <th>Start Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${shiftPatients.length > 0 ? shiftPatients.map(p => {
+                                        const nurse = nurses.find(n => n.id === p.assignedNurse);
+                                        return `
+                                            <tr>
+                                                <td><strong>${p.name}</strong></td>
+                                                <td>${p.roomType}</td>
+                                                <td>${nurse ? nurse.name : 'N/A'}</td>
+                                                <td>${p.startDate || 'N/A'}</td>
+                                            </tr>
+                                        `;
+                                    }).join('') : `
+                                        <tr>
+                                            <td colspan="4" style="text-align: center; color: #94a3b8; padding: 40px;">No assignments for this shift</td>
+                                        </tr>
+                                    `}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Show dashboard
+        function showDashboard() {
+            const mainContent = document.getElementById('main-content');
+            const assignedCount = patients.filter(p => p.assignedNurse).length;
+            const unassignedCount = patients.filter(p => !p.assignedNurse).length;
+            
+            mainContent.innerHTML = `
+                <div class="page-title">
+                    <span>Dashboard Overview</span>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Total Nurses</h3>
+                        <div class="stat-value">${nurses.length}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Patients</h3>
+                        <div class="stat-value">${patients.length}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Assigned Patients</h3>
+                        <div class="stat-value">${assignedCount}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Unassigned Patients</h3>
+                        <div class="stat-value">${unassignedCount}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Open assign modal
+        function openAssignModal(patientId) {
+            console.log('Opening modal for patient:', patientId);
+            const patient = patients.find(p => p.id === patientId);
+            
+            if (!patient) {
+                console.error('Patient not found!');
+                return;
+            }
+            
+            console.log('Patient found:', patient);
+            
+            document.getElementById('patientId').value = patientId;
+            document.getElementById('patientName').value = patient.name;
+            
+            const nurseSelect = document.getElementById('nurseSelect');
+            nurseSelect.innerHTML = '<option value="">-- Select Nurse --</option>' + 
+                nurses.map(nurse => `<option value="${nurse.id}" ${patient.assignedNurse === nurse.id ? 'selected' : ''}>${nurse.name}</option>`).join('');
+            
+            if (patient.assignedNurse) {
+                document.getElementById('shiftSelect').value = patient.shift || '';
+                document.getElementById('startDate').value = patient.startDate || '';
+            } else {
+                document.getElementById('shiftSelect').value = '';
+                document.getElementById('startDate').value = '';
+            }
+            
+            const modal = document.getElementById('assignModal');
+            console.log('Modal element:', modal);
+            modal.classList.add('show');
+            console.log('Modal should be visible now');
+        }
+
+        function closeModal() {
+            document.getElementById('assignModal').classList.remove('show');
+            document.getElementById('assignForm').reset();
+        }
+
+        function removeAssignment(patientId) {
+            if (confirm('Are you sure you want to remove this nurse assignment?')) {
+                const patient = patients.find(p => p.id === patientId);
+                patient.assignedNurse = null;
+                patient.shift = null;
+                patient.startDate = null;
+                
+                saveData();
+                showNotification('✓ Assignment removed successfully');
+                showAssignments();
+            }
+        }
+
+        // Add nurse modal functions removed - no longer needed
+        
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.classList.add('show');
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        function logout() {
+            if (!confirm('Are you sure you want to logout?')) {
+                return;
+            }
+            
+            try {
+                fetch('/api/logout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        window.location.href = data.redirect;
+                    } else {
+                        window.location.href = '/IMS';
+                    }
+                })
+                .catch(err => {
+                    console.error('Logout error:', err);
+                    window.location.href = '/IMS';
+                });
+            } catch (err) {
+                console.error('Logout error:', err);
+                window.location.href = '/IMS';
+            }
+        }
+        
+        // Load current user info
+        async function loadCurrentUserInfo() {
+            try {
+                const response = await fetch('/api/current-user');
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    document.getElementById('currentUserName').textContent = data.full_name;
+                }
+            } catch (err) {
+                console.error('Error loading current user info:', err);
+                // Keep default text if API fails
+            }
+        }
+
+        // Setup assign form handler
+        function setupAssignForm() {
+            const form = document.getElementById('assignForm');
+            console.log('Setting up assign form:', form);
+            
+            if (form) {
+                // Method 1: Form submit event
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    console.log('Form submitted via submit event!');
+                    handleAssignment();
+                });
+                
+                // Method 2: Direct button click (backup)
+                const submitBtn = document.getElementById('assignNurseBtn');
+                if (submitBtn) {
+                    submitBtn.addEventListener('click', function(e) {
+                        console.log('Button clicked directly!');
+                        // Check if form is valid
+                        if (form.checkValidity()) {
+                            e.preventDefault();
+                            handleAssignment();
+                        }
+                    });
+                }
+                
+                console.log('Form event listeners attached successfully');
+            } else {
+                console.error('Assign form not found!');
+            }
+        }
+        
+        // Separate function to handle the assignment
+        function handleAssignment() {
+            const patientId = parseInt(document.getElementById('patientId').value);
+            const nurseId = document.getElementById('nurseSelect').value;
+            const shift = document.getElementById('shiftSelect').value;
+            const startDate = document.getElementById('startDate').value;
+            
+            console.log('Assignment data:', { patientId, nurseId, shift, startDate });
+            
+            // Validation
+            if (!nurseId) {
+                alert('Please select a nurse!');
+                return;
+            }
+            
+            if (!shift) {
+                alert('Please select a shift!');
+                return;
+            }
+            
+            if (!startDate) {
+                alert('Please select a start date!');
+                return;
+            }
+            
+            const patient = patients.find(p => p.id === patientId);
+            const nurse = nurses.find(n => n.id === nurseId);
+            
+            if (!patient) {
+                console.error('Patient not found!');
+                alert('Error: Patient not found!');
+                return;
+            }
+            
+            if (!nurse) {
+                console.error('Nurse not found!');
+                alert('Error: Nurse not found!');
+                return;
+            }
+            
+            console.log('Assigning', nurse.name, 'to', patient.name);
+            
+            patient.assignedNurse = nurseId;
+            patient.shift = shift;
+            patient.startDate = startDate;
+            
+            console.log('Updated patient:', patient);
+            
+            saveData();
+            closeModal();
+            showNotification(`✓ Successfully assigned ${nurse.name} to ${patient.name}`);
+            showAssignments();
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            loadCurrentUserInfo();
+            setupAssignForm();
+            showNurses();
+        });
+    </script>
+</body>
+</html>

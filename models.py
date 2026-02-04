@@ -135,11 +135,12 @@ class Employee(db.Model):
     __tablename__ = 'employees'
     
     id = db.Column(db.Integer, primary_key=True)
-    emp_id = db.Column(db.String(20), unique=True, nullable=False)
     name = db.Column(db.String(100), nullable=False)
+    gender = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
-    department = db.Column(db.String(50), nullable=False, index=True)  # nurses, laboratory, pharmacy, business-office
-    role = db.Column(db.String(50), nullable=False)  # admin, manager, staff
+    contact_number = db.Column(db.String(20), nullable=True)
+    address = db.Column(db.Text, nullable=True)
+    department = db.Column(db.String(50), nullable=False, index=True)
     status = db.Column(db.String(20), default='Active')
     created_date = db.Column(db.DateTime, default=datetime.utcnow)
     created_by = db.Column(db.Integer, db.ForeignKey('admin_accounts.id'))
@@ -148,19 +149,21 @@ class Employee(db.Model):
         """Convert to dictionary"""
         return {
             'id': self.id,
-            'emp_id': self.emp_id,
             'name': self.name,
+            'gender': self.gender,
             'email': self.email,
+            'contact_number': self.contact_number,
+            'address': self.address,
             'department': self.department,
-            'role': self.role,
             'status': self.status,
-            'created_date': self.created_date.strftime('%Y-%m-%d')
+            'created_date': self.created_date.strftime('%Y-%m-%d') if self.created_date else None
         }
     
     def __repr__(self):
         return f'<Employee {self.name} - {self.department}>'
 
 
+# BUSINESS OFFICE BACKEND.HTML
 # PATIENTS
 class Patient(db.Model):
     """Patients table for Front Desk patient registration"""
@@ -434,29 +437,234 @@ class PharmacySaleItem(db.Model):
         }
 
 
-# WEBSITE ACCOUNT - Modified to use username instead of email
+# SERVICE INVENTORY
+class HospitalService(db.Model):
+    """Hospital Services Model - Rooms, Diagnostics, Procedures, etc."""
+    __tablename__ = 'hospital_services'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    service_name = db.Column(db.String(200), nullable=False)
+    category = db.Column(db.String(100), nullable=False, index=True)  # Room, Diagnostic, Procedure, Professional Fee, Medication, Other
+    price = db.Column(db.Numeric(10, 2), nullable=False)
+    description = db.Column(db.Text, nullable=True)
+    
+    # Availability tracking (for rooms and equipment)
+    is_available = db.Column(db.Boolean, default=True)
+    quantity_available = db.Column(db.Integer, nullable=True)  # For services with limited availability
+    
+    # Status tracking
+    status = db.Column(db.String(20), default='Active')  # Active, Inactive
+    
+    # Pricing history
+    previous_price = db.Column(db.Numeric(10, 2), nullable=True)
+    price_last_updated = db.Column(db.DateTime, nullable=True)
+    
+    # Timestamps
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # User tracking
+    created_by = db.Column(db.Integer, nullable=True)
+    updated_by = db.Column(db.Integer, nullable=True)
+    
+    # Relationships
+    usage_records = db.relationship('ServiceUsageRecord', backref='service', lazy=True)
+    
+    def to_dict(self):
+        """Convert to dictionary"""
+        return {
+            'id': self.id,
+            'service_name': self.service_name,
+            'category': self.category,
+            'price': float(self.price),
+            'description': self.description,
+            'is_available': self.is_available,
+            'quantity_available': self.quantity_available,
+            'status': self.status,
+            'previous_price': float(self.previous_price) if self.previous_price else None,
+            'price_last_updated': self.price_last_updated.isoformat() if self.price_last_updated else None,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None
+        }
+    
+    def __repr__(self):
+        return f'<HospitalService {self.service_name} - ₱{self.price}>'
+
+
+class ServiceUsageRecord(db.Model):
+    """Service Usage Records - Track when services are used"""
+    __tablename__ = 'service_usage_records'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    service_id = db.Column(db.Integer, db.ForeignKey('hospital_services.id'), nullable=False)
+    
+    # Patient Information (if applicable)
+    patient_id = db.Column(db.Integer, db.ForeignKey('patients.id'), nullable=True)
+    patient_name = db.Column(db.String(100), nullable=True)
+    
+    # Usage Details
+    usage_date = db.Column(db.DateTime, default=datetime.utcnow, nullable=False, index=True)
+    quantity = db.Column(db.Integer, default=1, nullable=False)
+    
+    # Pricing at time of usage
+    unit_price = db.Column(db.Numeric(10, 2), nullable=False)
+    total_price = db.Column(db.Numeric(10, 2), nullable=False)
+    
+    # Billing status
+    billing_status = db.Column(db.String(20), default='Pending')  # Pending, Billed, Paid
+    billed_date = db.Column(db.DateTime, nullable=True)
+    payment_date = db.Column(db.DateTime, nullable=True)
+    
+    # Additional details
+    notes = db.Column(db.Text, nullable=True)
+    
+    # User tracking
+    recorded_by = db.Column(db.Integer, nullable=True)
+    
+    # Relationship
+    patient = db.relationship('Patient', backref='service_usage')
+    
+    def to_dict(self):
+        """Convert to dictionary"""
+        return {
+            'id': self.id,
+            'service_id': self.service_id,
+            'service_name': self.service.service_name if self.service else None,
+            'service_category': self.service.category if self.service else None,
+            'patient_id': self.patient_id,
+            'patient_name': self.patient_name,
+            'usage_date': self.usage_date.isoformat() if self.usage_date else None,
+            'quantity': self.quantity,
+            'unit_price': float(self.unit_price),
+            'total_price': float(self.total_price),
+            'billing_status': self.billing_status,
+            'billed_date': self.billed_date.isoformat() if self.billed_date else None,
+            'payment_date': self.payment_date.isoformat() if self.payment_date else None,
+            'notes': self.notes,
+            'recorded_by': self.recorded_by
+        }
+    
+    def __repr__(self):
+        return f'<ServiceUsageRecord {self.id} - {self.service.service_name if self.service else "N/A"}>'
+
+
+class ServicePriceHistory(db.Model):
+    """Track price changes for services"""
+    __tablename__ = 'service_price_history'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    service_id = db.Column(db.Integer, db.ForeignKey('hospital_services.id'), nullable=False)
+    
+    # Price change details
+    old_price = db.Column(db.Numeric(10, 2), nullable=False)
+    new_price = db.Column(db.Numeric(10, 2), nullable=False)
+    change_percentage = db.Column(db.Numeric(5, 2), nullable=False)
+    
+    # Change tracking
+    change_date = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    reason = db.Column(db.Text, nullable=True)
+    
+    # User tracking
+    changed_by = db.Column(db.Integer, nullable=True)
+    
+    # Relationship
+    service = db.relationship('HospitalService', backref='price_history')
+    
+    def to_dict(self):
+        """Convert to dictionary"""
+        return {
+            'id': self.id,
+            'service_id': self.service_id,
+            'service_name': self.service.service_name if self.service else None,
+            'old_price': float(self.old_price),
+            'new_price': float(self.new_price),
+            'change_percentage': float(self.change_percentage),
+            'change_date': self.change_date.isoformat() if self.change_date else None,
+            'reason': self.reason,
+            'changed_by': self.changed_by
+        }
+    
+    def __repr__(self):
+        return f'<ServicePriceHistory {self.service.service_name if self.service else "N/A"} - ₱{self.old_price} → ₱{self.new_price}>'
+
+
+class PatientAdmission(db.Model):
+    __tablename__ = 'patient_admissions'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    
+    # Patient Info (from form)
+    patient_name = db.Column(db.String(200), nullable=False)
+    gender = db.Column(db.String(20), nullable=False)
+    
+    # Doctor Info (from form)
+    doctor_name = db.Column(db.String(200), nullable=False)
+    
+    # Room Info (from form)
+    room_type = db.Column(db.String(100), nullable=False)
+    
+    # Financial Info (from form)
+    deposit_amount = db.Column(db.Numeric(10, 2), default=0)
+    
+    # Auto-generated fields
+    admission_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    status = db.Column(db.String(50), default='Admitted')  # Changed from 'Active' to 'Admitted'
+    
+    # Tracking
+    admitted_by = db.Column(db.Integer, db.ForeignKey('user_accounts.id'))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'patient_name': self.patient_name,
+            'gender': self.gender,
+            'doctor_name': self.doctor_name,
+            'room_type': self.room_type,
+            'deposit_amount': float(self.deposit_amount) if self.deposit_amount else 0,
+            'admission_date': self.admission_date.strftime('%Y-%m-%d %H:%M:%S') if self.admission_date else None,
+            'status': self.status,
+            'days_admitted': (datetime.utcnow() - self.admission_date).days if self.admission_date else 0
+        }
+
+
 class WebsiteUser(db.Model, UserMixin):
     """Website user accounts table"""
     __tablename__ = 'website_users'
     
     id = db.Column(db.Integer, primary_key=True)
-    full_name = db.Column(db.String(100), nullable=False)
-    username = db.Column(db.String(50), unique=True, nullable=False, index=True)  # Changed from email
-    phone = db.Column(db.String(20), nullable=False)
+
+    # Name (stored as one field, parsed when needed)
+    full_name = db.Column(db.String(150), nullable=False)
+
+    # Login credentials
+    username = db.Column(db.String(50), unique=True, nullable=False, index=True)
     password_hash = db.Column(db.String(255), nullable=False)
+
+    # Contact
+    phone = db.Column(db.String(20), unique=True, nullable=False, index=True)
+
+    # Status & audit
     is_active = db.Column(db.Boolean, default=True)
     created_date = db.Column(db.DateTime, default=datetime.utcnow)
     last_login = db.Column(db.DateTime, nullable=True)
-    
+
+    # -------------------------
+    # PASSWORD METHODS
+    # -------------------------
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
-    
+
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
-    
+
+    # -------------------------
+    # FLASK-LOGIN COMPAT
+    # -------------------------
     def get_id(self):
+        # Keep this if you mix user types elsewhere
         return f'website_{self.id}'
-    
+
     def __repr__(self):
         return f'<WebsiteUser {self.username}>'
 

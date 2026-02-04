@@ -475,6 +475,370 @@
             margin-top: 4px;
         }
 
+        /* Page Section Styles */
+        .page-section {
+            width: 100%;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .page-header h1 {
+            font-size: 24px;
+            color: var(--foreground);
+            font-weight: 600;
+        }
+
+
+        /* Tabs System - WRAPPED VERSION */
+        .tabs {
+            display: flex;
+            flex-wrap: wrap; /* This makes tabs wrap to next line */
+            gap: 0;
+            border-bottom: 2px solid var(--border);
+            margin-bottom: 0;
+            background-color: var(--card);
+        }
+
+        .tab {
+            padding: 12px 18px; /* Slightly reduced padding */
+            background: none;
+            border: none;
+            color: var(--muted-foreground);
+            cursor: pointer;
+            font-size: 13px; /* Slightly smaller font */
+            font-weight: 500;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .tab:hover {
+            color: var(--foreground);
+            background-color: hsla(168, 85%, 60%, 0.05);
+        }
+
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+            background-color: hsla(168, 85%, 60%, 0.1);
+        }
+
+        /* Tab content stays the same */
+        .tab-content {
+            display: none;
+            padding: 24px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+
+        /* Info Box */
+        .info-box {
+            background-color: hsla(168, 85%, 60%, 0.1);
+            border-left: 4px solid var(--primary);
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+
+        .info-box p {
+            margin: 0;
+            color: var(--foreground);
+            font-size: 14px;
+        }
+
+        /* Order Type Buttons */
+        .order-type-btns {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        /* Form Groups */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        /* Treatment Section */
+        .treatment-section {
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .treatment-section h3 {
+            font-size: 18px;
+            margin-bottom: 16px;
+            color: var(--foreground);
+            font-weight: 600;
+        }
+
+        .treatment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .treatment-title {
+            font-size: 18px;
+            color: var(--foreground);
+            margin: 0;
+            font-weight: 600;
+        }
+
+        /* Detail Rows */
+        .detail-row {
+            display: flex;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: var(--muted-foreground);
+            width: 200px;
+            min-width: 200px;
+        }
+
+        .detail-value {
+            color: var(--foreground);
+            flex: 1;
+        }
+
+        /* Vital Signs Grid */
+        .vital-signs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .vital-item {
+            background-color: var(--secondary);
+            padding: 16px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+
+        .vital-item label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: var(--muted-foreground);
+            font-weight: 500;
+        }
+
+        .vital-item input {
+            width: 100%;
+            background-color: var(--card);
+        }
+
+        /* Checkbox Group */
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: auto;
+            cursor: pointer;
+        }
+
+        .checkbox-item label {
+            margin: 0;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        /* Required Field Indicator */
+        .required::after {
+            content: " *";
+            color: hsl(0, 72%, 65%);
+        }
+
+        /* Bill Items List */
+        #billItemsList,
+        #treatmentBillItemsList {
+            background-color: var(--background);
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 200px;
+        }
+
+        /* Bill Section Headers */
+        .bill-section-header {
+            background-color: var(--secondary);
+            padding: 12px 16px;
+            margin: 24px 0 16px 0;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 15px;
+            color: var(--foreground);
+        }
+
+        .bill-section-header:first-child {
+            margin-top: 0;
+        }
+
+        /* Bill Item */
+        .bill-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 16px;
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            margin-bottom: 12px;
+            transition: background-color 0.2s;
+        }
+
+        .bill-item:hover {
+            background-color: hsl(240, 4%, 12%);
+        }
+
+        .bill-item-info {
+            flex: 1;
+        }
+
+        .bill-item-name {
+            font-weight: 600;
+            color: var(--foreground);
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+
+        .bill-item-date {
+            font-size: 12px;
+            color: var(--muted-foreground);
+        }
+
+        .bill-item-amount {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            white-space: nowrap;
+            margin-left: 16px;
+        }
+
+        /* Bill Total */
+        .bill-total {
+            background: linear-gradient(135deg, var(--card) 0%, hsl(240, 4%, 13%) 100%);
+            border: 2px solid var(--primary);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .bill-total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+        }
+
+        .bill-total-label {
+            font-size: 16px;
+            color: var(--muted-foreground);
+        }
+
+        .bill-total-amount {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Button Variants */
+        .btn {
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .btn-warning {
+            background-color: hsl(35, 91%, 56%);
+            color: hsl(0, 0%, 100%);
+        }
+
+        .btn-warning:hover {
+            background-color: hsl(35, 91%, 48%);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .form-row,
+            .form-row-3 {
+                grid-template-columns: 1fr;
+            }
+            
+            .vital-signs-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs {
+                gap: 0;
+            }
+
+            .tab {
+                padding: 12px 16px;
+                font-size: 13px;
+            }
+
+            .treatment-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+        }
+
+
         /* Utilities */
         .w-5 { width: 20px; }
         .h-5 { height: 20px; }
@@ -584,7 +948,7 @@
                 </div>
             </div>
             <div class="header-right">
-                <span class="header-user">Staff: <span id="currentUserName">Dr. Maria Santos</span></span>
+                <span class="header-user">Staff: <span id="currentUserName">Loading...</span></span>
                 <button class="btn-secondary" onclick="logout()">Logout</button>
             </div>
         </div>
@@ -606,6 +970,12 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                     </svg>
                     <span>Appointments</span>
+                </div>
+                <div class="nav-item" onclick="showSection('outpatients')">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                    <span>Out Patient</span>
                 </div>
                 <div class="nav-item" onclick="showSection('patients', event)">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -718,7 +1088,39 @@
                     </div>
                 </div>
             </section>
-                
+            
+
+            <!-- Out Patient Page -->
+            <section id="outpatients" class="content-section hidden">
+                <div class="dashboard-filters">
+                    <h2>Out Patient List</h2>
+                </div>                    
+                <div class="dashboard-table-container">
+                    <h3 style="margin-bottom: 20px;">Out Patients - Today's Visits</h3>
+                    <div class="table-container">
+                        <table id="outpatientsTable">
+                            <thead>
+                                <tr>
+                                    <th>Patient Name</th>
+                                    <th>Visit Date</th>
+                                    <th>Visit Type</th>
+                                    <th>Reason</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="outpatientsTableBody">
+                                <tr>
+                                    <td colspan="6" style="text-align: center; color: #888; padding: 40px;">
+                                        Loading out patients...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
                 
             <!-- In Patient Page -->
             <section id="patients" class="content-section hidden">
@@ -732,81 +1134,17 @@
                             <thead>
                                 <tr>
                                     <th>Patient Name</th>
+                                    <th>Admission Date</th>
                                     <th>Room</th>
-                                    <th>Doctor</th>
-                                    <th>Days</th>
-                                    <th>Visit Status</th>
+                                    <th>Days Admitted</th>
+                                    <th>Status</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="patientsTableBody">
                                 <tr>
-                                    <td>
-                                        <div style="display: flex; flex-direction: column;">
-                                            <strong>Raymuel Propeta Villamor</strong>
-                                            <span style="color: #888; font-size: 12px;">PHID-24-001234</span>
-                                        </div>
-                                    </td>
-                                    <td>General Ward</td>
-                                    <td>Dr. Maria Santos</td>
-                                    <td>1</td>
-                                    <td><span class="status-badge" style="background-color: #d1fae5; color: #065f46;">Admitted</span></td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="btn-success btn-small" onclick="showSection('medicalRecordsPage')">
-                                                Medical Records
-                                            </button>
-                                            
-                                            <button class="btn-primary btn-small" onclick="showSection('patientOrdersPage')">
-                                                Orders
-                                            </button>   
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div style="display: flex; flex-direction: column;">
-                                            <strong>John Michael Cruz</strong>
-                                            <span style="color: #888; font-size: 12px;">PHID-24-001235</span>
-                                        </div>
-                                    </td>
-                                    <td>Private Room 205</td>
-                                    <td>Dr. Sarah Johnson</td>
-                                    <td>3</td>
-                                    <td><span class="status-badge" style="background-color: #d1fae5; color: #065f46;">Admitted</span></td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="btn-success btn-small" onclick="showSection('medicalRecordsPage')">
-                                                Medical Records
-                                            </button>
-                                            
-                                            <button class="btn-primary btn-small" onclick="showSection('patientOrdersPage')">
-                                                Orders
-                                            </button>   
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div style="display: flex; flex-direction: column;">
-                                            <strong>Maria Elena Reyes</strong>
-                                            <span style="color: #888; font-size: 12px;">PHID-24-001236</span>
-                                        </div>
-                                    </td>
-                                    <td>Semi-Private 310</td>
-                                    <td>Dr. Michael Chen</td>
-                                    <td>5</td>
-                                    <td><span class="status-badge" style="background-color: #d1fae5; color: #065f46;">Admitted</span></td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="btn-success btn-small" onclick="showSection('medicalRecordsPage')">
-                                                Medical Records
-                                            </button>
-                                            
-                                            <button class="btn-primary btn-small" onclick="showSection('patientOrdersPage')">
-                                                Orders
-                                            </button>                                            
-                                        </div>
+                                    <td colspan="6" style="text-align: center; color: #888; padding: 40px;">
+                                        Loading admitted patients...
                                     </td>
                                 </tr>
                             </tbody>
@@ -1769,10 +2107,50 @@
 
         // DOCTOR APPOINTMENTS MANAGEMENT
         let allDoctorAppointments = [];
+        let allOutPatients = [];
+        let allAdmittedPatients = [];
+        let currentPatientData = null;
 
-        document.addEventListener('DOMContentLoaded', () => {
+
+
+        // Load current user information on page load
+        async function loadCurrentUser() {
+            try {
+                const response = await fetch('/api/current-user');
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    document.getElementById('currentUserName').textContent = data.full_name;
+                } else {
+                    document.getElementById('currentUserName').textContent = 'Unknown User';
+                }
+            } catch (error) {
+                console.error('Error loading current user:', error);
+                document.getElementById('currentUserName').textContent = 'Error';
+            }
+        }
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load current user first
+            loadCurrentUser();
+            
+            // Load appointments
             loadDoctorAppointments();
+
+            // Add to DOMContentLoaded
+            loadOutPatients();
+
+            loadAdmittedPatients();
+            
+            // Initialize BOTH billing containers with complete billing data including totals
+            const billItemsHTML = `
+                // ... rest of your existing initialization code ...
+            `;
+            
+            // ... rest of your code ...
         });
+                
 
         async function loadDoctorAppointments() {
             console.log('[DEBUG] Loading doctor appointments...');
@@ -1869,7 +2247,6 @@
                     <td>
                         <div style="display: flex; flex-direction: column;">
                             <strong>${escapeHtml(apt.patient_name)}</strong>
-                            <span style="color: #888; font-size: 12px;">PHID-24-${String(apt.patient_id).padStart(6, '0')}</span>
                         </div>
                     </td>
                     <td>${formatDate(apt.appointment_date)} ${apt.appointment_time}</td>
@@ -1907,7 +2284,6 @@
                         <td>
                             <div style="display: flex; flex-direction: column;">
                                 <strong>${escapeHtml(apt.patient_name)}</strong>
-                                <span style="color: #888; font-size: 12px;">PHID-24-${String(apt.patient_id).padStart(6, '0')}</span>
                             </div>
                         </td>
                         <td>${formatDate(apt.appointment_date)} ${apt.appointment_time}</td>
@@ -1953,7 +2329,6 @@
                         <td>
                             <div style="display: flex; flex-direction: column;">
                                 <strong>${escapeHtml(apt.patient_name)}</strong>
-                                <span style="color: #888; font-size: 12px;">PHID-24-${String(apt.patient_id).padStart(6, '0')}</span>
                             </div>
                         </td>
                         <td>${formatDate(apt.appointment_date)} ${apt.appointment_time}</td>
@@ -2048,7 +2423,6 @@
         Appointment Details:
 
         Patient Name: ${apt.patient_name}
-        Username: ${apt.patient_username}
         Service Type: ${apt.service_type}
         Department: ${apt.department || 'N/A'}
         Doctor: ${apt.doctor}
@@ -2086,14 +2460,343 @@
         }
 
 
-
-        // shortcuts
-        function openPatientOrders() {
-            showMainSection('patientOrdersPage');
+        // OUT PATIENT MANAGEMENT - PULLS FROM APPOINTMENTS TABLE
+        async function loadOutPatients() {
+            console.log('[DEBUG] Loading out patients from appointments...');
+            try {
+                const response = await fetch('/api/doctor/outpatient-appointments');
+                console.log('[DEBUG] Response status:', response.status);
+                
+                const data = await response.json();
+                console.log('[DEBUG] Response data:', data);
+                
+                if (data.status === 'success') {
+                    allOutPatients = data.data || [];
+                    console.log('[DEBUG] Loaded out patient appointments:', allOutPatients.length);
+                    renderOutPatients();
+                } else {
+                    console.error('[DEBUG] Failed to load out patients:', data.message);
+                    showPatientError('outpatientsTableBody', data.message);
+                }
+            } catch (error) {
+                console.error('[DEBUG] Error loading out patients:', error);
+                showPatientError('outpatientsTableBody', 'Failed to load out patients. Please refresh the page.');
+            }
         }
 
-        function openMedicalRecords() {
-            showMainSection('medicalRecordsPage');
+
+
+        function renderOutPatients() {
+            const tbody = document.getElementById('outpatientsTableBody');
+            if (!tbody) {
+                console.error('[DEBUG] outpatientsTableBody not found!');
+                return;
+            }
+            
+            if (allOutPatients.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #888; padding: 40px;">No approved appointments for today</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = allOutPatients.map((apt) => {
+                return `
+                    <tr>
+                        <td><strong>${escapeHtml(apt.patient_name)}</strong></td>
+                        <td>${formatDateTime(apt.appointment_date, apt.appointment_time)}</td>
+                        <td>${escapeHtml(apt.service_type)}</td>
+                        <td>${escapeHtml(apt.reason || '-')}</td>
+                        <td><span class="status-badge" style="background-color: #d1fae5; color: #065f46;">Approved</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-success btn-small" onclick="openOutPatientMedicalRecords(${apt.id})">
+                                    Medical Records
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+
+
+        async function openOutPatientMedicalRecords(appointmentId) {
+            console.log('[DEBUG] Opening out patient medical records for appointment ID:', appointmentId);
+            
+            // Store selected appointment ID
+            sessionStorage.setItem('selectedAppointmentId', appointmentId);
+            sessionStorage.setItem('patientType', 'outpatient');
+            
+            // Show the medical records page
+            showSection('outPatientRecordsPage');
+            
+            // Load out patient data from appointment
+            await loadOutPatientDataFromAppointment(appointmentId);
+        }
+
+
+
+        async function loadOutPatientDataFromAppointment(appointmentId) {
+            try {
+                console.log('[DEBUG] Loading out patient data for appointment ID:', appointmentId);
+                
+                // Show loading state
+                document.getElementById('op-name').textContent = 'Loading...';
+                document.getElementById('op-visit-date').textContent = 'Loading...';
+                document.getElementById('op-service-type').textContent = 'Loading...';
+                document.getElementById('op-doctor').textContent = 'Loading...';
+                document.getElementById('op-specialty').textContent = 'Loading...';
+                
+                // Fetch appointment data with patient info
+                const response = await fetch(`/api/doctor/outpatient-appointment/${appointmentId}`);
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    currentOutPatientData = data.data;
+                    console.log('[DEBUG] Out patient data loaded:', currentOutPatientData);
+                    
+                    // Populate Patient Information section
+                    document.getElementById('op-name').textContent = currentOutPatientData.patient_name || '-';
+                    document.getElementById('op-visit-date').textContent = formatDateTime(currentOutPatientData.appointment_date, currentOutPatientData.appointment_time) || '-';
+                    document.getElementById('op-service-type').textContent = currentOutPatientData.service_type || '-';
+                    document.getElementById('op-reason').textContent = currentOutPatientData.reason || '-';
+                    
+                    // Populate Doctor section
+                    document.getElementById('op-doctor').textContent = currentOutPatientData.doctor || '-';
+                    document.getElementById('op-specialty').textContent = currentOutPatientData.doctor_specialty || '';
+                    
+                    // Update page title
+                    document.getElementById('outPatientRecordsTitle').textContent = `Out Patient Records - ${currentOutPatientData.patient_name}`;
+                    
+                    // Update billing date
+                    const billDate = document.getElementById('op-bill-date');
+                    if (billDate) {
+                        billDate.textContent = formatDate(currentOutPatientData.appointment_date);
+                    }
+                    
+                } else {
+                    console.error('[DEBUG] Failed to load out patient data:', data.message);
+                    alert('Failed to load out patient data: ' + data.message);
+                    showSection('outpatients');
+                }
+                
+            } catch (error) {
+                console.error('[DEBUG] Error loading out patient data:', error);
+                alert('Failed to load out patient data. Please try again.');
+                showSection('outpatients');
+            }
+        }
+
+
+
+
+        function formatDateTime(dateString, timeString) {
+            const formattedDate = formatDate(dateString);
+            return `${formattedDate} ${timeString || ''}`;
+        }
+
+        function showPatientError(tableBodyId, message) {
+            const tbody = document.getElementById(tableBodyId);
+            if (tbody) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #ef4444; padding: 40px;">${message}</td></tr>`;
+            }
+        }
+
+
+
+        function switchOutPatientTab(tabName) {
+            // Remove active class from all tabs
+            document.querySelectorAll('#outPatientRecordsPage .tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('#outPatientRecordsPage .tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Add active class to selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        async function filterOutPatientsByDate(date) {
+            try {
+                const response = await fetch(`/api/doctor/outpatient-appointments/filter?date=${date}`);
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    allOutPatients = data.data || [];
+                    renderOutPatients();
+                } else {
+                    showPatientError('outpatientsTableBody', data.message);
+                }
+            } catch (error) {
+                console.error('Error filtering out patients:', error);
+                showPatientError('outpatientsTableBody', 'Failed to filter out patients');
+            }
+        }
+
+
+        async function loadAdmittedPatients() {
+            console.log('[DEBUG] Loading admitted patients...');
+            try {
+                const response = await fetch('/api/doctor/admitted-patients');
+                console.log('[DEBUG] Response status:', response.status);
+                
+                const data = await response.json();
+                console.log('[DEBUG] Response data:', data);
+                
+                if (data.status === 'success') {
+                    allAdmittedPatients = data.data || [];
+                    console.log('[DEBUG] Loaded patients:', allAdmittedPatients.length);
+                    renderAdmittedPatients();
+                } else {
+                    console.error('[DEBUG] Failed to load patients:', data.message);
+                    showPatientError('patientsTableBody', data.message);
+                }
+            } catch (error) {
+                console.error('[DEBUG] Error loading patients:', error);
+                showPatientError('patientsTableBody', 'Failed to load patients. Please refresh the page.');
+            }
+        }
+
+        function showPatientError(tableBodyId, message) {
+            const tbody = document.getElementById(tableBodyId);
+            if (tbody) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #ef4444; padding: 40px;">${message}</td></tr>`;
+            }
+        }
+
+        
+        
+
+        // Updated function to open Medical Records with patient data loading
+        async function openMedicalRecords(patientId) {
+            console.log('[DEBUG] Opening medical records for patient ID:', patientId);
+            
+            // Store selected patient ID
+            sessionStorage.setItem('selectedPatientId', patientId);
+            
+            // Show the medical records page
+            showSection('medicalRecordsPage');
+            
+            // Load patient data
+            await loadPatientData(patientId);
+        }
+
+        async function loadPatientData(patientId) {
+            try {
+                console.log('[DEBUG] Loading patient data for ID:', patientId);
+                
+                // Show loading state
+                document.getElementById('mr-name').textContent = 'Loading...';
+                document.getElementById('mr-admission').textContent = 'Loading...';
+                document.getElementById('mr-days').textContent = 'Loading...';
+                document.getElementById('mr-room').textContent = 'Loading...';
+                document.getElementById('mr-doctor').textContent = 'Loading...';
+                document.getElementById('mr-specialty').textContent = 'Loading...';
+                
+                // Fetch patient admission data
+                const response = await fetch(`/api/doctor/patient-admission/${patientId}`);
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    currentPatientData = data.data;
+                    console.log('[DEBUG] Patient data loaded:', currentPatientData);
+                    
+                    // Populate Patient Information section
+                    document.getElementById('mr-name').textContent = currentPatientData.patient_name || '-';
+                    document.getElementById('mr-admission').textContent = formatDate(currentPatientData.admission_date) || '-';
+                    document.getElementById('mr-days').textContent = currentPatientData.days_admitted || '0';
+                    document.getElementById('mr-room').textContent = currentPatientData.room_type || '-';
+                    
+                    // Populate Attending Physician section
+                    document.getElementById('mr-doctor').textContent = currentPatientData.doctor_name || '-';
+                    // Use doctor_specialty from backend (fetched from Employee.department)
+                    document.getElementById('mr-specialty').textContent = currentPatientData.doctor_specialty || '';
+                    
+                    // Update page title
+                    document.getElementById('medicalRecordsTitle').textContent = `Medical Records - ${currentPatientData.patient_name}`;
+                    
+                } else {
+                    console.error('[DEBUG] Failed to load patient data:', data.message);
+                    alert('Failed to load patient data: ' + data.message);
+                    showSection('patients'); // Go back to patient list
+                }
+                
+            } catch (error) {
+                console.error('[DEBUG] Error loading patient data:', error);
+                alert('Failed to load patient data. Please try again.');
+                showSection('patients'); // Go back to patient list
+            }
+        }
+
+        function getDoctorSpecialty(doctorName) {
+            // You can enhance this later to fetch from Employee table
+            // For now, we'll extract from doctor name if it has specialty in parentheses
+            // Or return a default specialty
+            
+            // Example: "Dr. Maria Santos (Internal Medicine)" -> "Internal Medicine"
+            const match = doctorName.match(/\((.*?)\)/);
+            if (match) {
+                return match[1];
+            }
+            
+            // Default specialty based on doctor name (you can customize this)
+            return 'General Practice';
+        }
+
+        // Also update openPatientOrders to load patient data
+        async function openPatientOrders(patientId) {
+            console.log('[DEBUG] Opening patient orders for patient ID:', patientId);
+            
+            // Store selected patient ID
+            sessionStorage.setItem('selectedPatientId', patientId);
+            
+            // Show the patient orders page
+            showSection('patientOrdersPage');
+            
+            // Load patient data
+            await loadPatientData(patientId);
+            
+            // Update page title
+            if (currentPatientData) {
+                document.getElementById('ordersPageTitle').textContent = `Patient Orders - ${currentPatientData.patient_name}`;
+            }
+        }
+
+        function renderAdmittedPatients() {
+            const tbody = document.getElementById('patientsTableBody');
+            if (!tbody) {
+                console.error('[DEBUG] patientsTableBody not found!');
+                return;
+            }
+            
+            if (allAdmittedPatients.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #888; padding: 40px;">No admitted patients found</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = allAdmittedPatients.map((patient) => `
+                <tr>
+                    <td>
+                        <strong>${escapeHtml(patient.patient_name)}</strong>
+                    </td>
+                    <td>${formatDate(patient.admission_date)}</td>
+                    <td>${escapeHtml(patient.room_type)}</td>
+                    <td>${patient.days_admitted || 0}</td>
+                    <td><span class="status-badge" style="background-color: #d1fae5; color: #065f46;">Admitted</span></td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-success btn-small" onclick="openMedicalRecords(${patient.id})">
+                                Medical Records
+                            </button>
+                            <button class="btn-primary btn-small" onclick="openPatientOrders(${patient.id})">
+                                Orders
+                            </button>   
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
         }
 
         function backToPatients() {
@@ -2151,8 +2854,256 @@
             }
         }
 
+        function switchOrdersTab(tabName) {
+            document.querySelectorAll('#patientOrdersPage .tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('#patientOrdersPage .tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
 
+        // Tab switching for Medical Records page
+        function switchMainTab(tabName) {
+            document.querySelectorAll('#medicalRecordsPage .tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('#medicalRecordsPage .tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+        // Load appointments
+        loadDoctorAppointments();
         
+        // Initialize BOTH billing containers with complete billing data including totals
+        const billItemsHTML = `
+            <div class="bill-section-header">Admissions</div>
+            <div class="bill-item">
+                <div class="bill-item-info">
+                    <div class="bill-item-name">Admission Fee</div>
+                    <div class="bill-item-date">1/30/2026</div>
+                </div>
+                <div class="bill-item-amount">₱1,000</div>
+            </div>
+
+            <div class="bill-section-header">Doctors</div>
+            <div class="bill-item">
+                <div class="bill-item-info">
+                    <div class="bill-item-name">Professional Fee - Dr. Maria Santos (Internal Medicine)</div>
+                    <div class="bill-item-date">1/30/2026</div>
+                </div>
+                <div class="bill-item-amount">₱1,500</div>
+            </div>
+
+            <div class="bill-total">
+                <div class="bill-total-row">
+                    <div class="bill-total-label">Subtotal:</div>
+                    <div style="font-size: 18px; font-weight: 600; color: var(--foreground);">₱2,500</div>
+                </div>
+                <div class="bill-total-row">
+                    <div class="bill-total-label">Payments Made:</div>
+                    <div style="font-size: 18px; font-weight: 600; color: #22c55e;">-₱0</div>
+                </div>
+                <div class="bill-total-row" style="padding-top: 12px; border-top: 1px solid var(--border); margin-top: 8px;">
+                    <div class="bill-total-label" style="font-size: 18px;">Balance Due:</div>
+                    <div class="bill-total-amount">₱2,500</div>
+                </div>
+            </div>
+        `;
+        
+        // Set for Medical Records > Billing tab
+        const treatmentBillContainer = document.getElementById('treatmentBillItemsList');
+        if (treatmentBillContainer) {
+            treatmentBillContainer.innerHTML = billItemsHTML;
+        }
+        
+        // Set for Patient Orders > Running Bill tab
+        const billContainer = document.getElementById('billItemsList');
+        if (billContainer) {
+            billContainer.innerHTML = billItemsHTML;
+        }
+    });
+
+        function updateBillingTotals() {
+            // This function can be called whenever a new item is added to the bill
+            // For now, it just updates both billing displays with fresh data
+            
+            const billItemsHTML = `
+                <div class="bill-section-header">Admissions</div>
+                <div class="bill-item">
+                    <div class="bill-item-info">
+                        <div class="bill-item-name">Admission Fee</div>
+                        <div class="bill-item-date">1/30/2026</div>
+                    </div>
+                    <div class="bill-item-amount">₱1,000</div>
+                </div>
+
+                <div class="bill-section-header">Doctors</div>
+                <div class="bill-item">
+                    <div class="bill-item-info">
+                        <div class="bill-item-name">Professional Fee - Dr. Maria Santos (Internal Medicine)</div>
+                        <div class="bill-item-date">1/30/2026</div>
+                    </div>
+                    <div class="bill-item-amount">₱1,500</div>
+                </div>
+
+                <div class="bill-total">
+                    <div class="bill-total-row">
+                        <div class="bill-total-label">Subtotal:</div>
+                        <div style="font-size: 18px; font-weight: 600; color: var(--foreground);">₱2,500</div>
+                    </div>
+                    <div class="bill-total-row">
+                        <div class="bill-total-label">Payments Made:</div>
+                        <div style="font-size: 18px; font-weight: 600; color: #22c55e;">-₱0</div>
+                    </div>
+                    <div class="bill-total-row" style="padding-top: 12px; border-top: 1px solid var(--border); margin-top: 8px;">
+                        <div class="bill-total-label" style="font-size: 18px;">Balance Due:</div>
+                        <div class="bill-total-amount">₱2,500</div>
+                    </div>
+                </div>
+            `;
+            
+            const treatmentBillContainer = document.getElementById('treatmentBillItemsList');
+            if (treatmentBillContainer) {
+                treatmentBillContainer.innerHTML = billItemsHTML;
+            }
+            
+            const billContainer = document.getElementById('billItemsList');
+            if (billContainer) {
+                billContainer.innerHTML = billItemsHTML;
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // Order type selection
+        function selectOrderType(type) {
+            const serviceSelect = document.getElementById('serviceSelect');
+            serviceSelect.innerHTML = '<option value="">-- Select Service --</option>';
+            
+            if (type === 'laboratory') {
+                serviceSelect.innerHTML += `
+                    <option value="cbc">Complete Blood Count - ₱500</option>
+                    <option value="urinalysis">Urinalysis - ₱300</option>
+                    <option value="xray">Chest X-Ray - ₱800</option>
+                    <option value="ecg">ECG - ₱600</option>
+                `;
+            } else if (type === 'pharmacy') {
+                serviceSelect.innerHTML += `
+                    <option value="paracetamol">Paracetamol 500mg - ₱50</option>
+                    <option value="amoxicillin">Amoxicillin 500mg - ₱150</option>
+                    <option value="ibuprofen">Ibuprofen 400mg - ₱75</option>
+                `;
+            } else if (type === 'procedures') {
+                serviceSelect.innerHTML += `
+                    <option value="wound-dressing">Wound Dressing - ₱500</option>
+                    <option value="iv-insertion">IV Insertion - ₱300</option>
+                `;
+            }
+        }
+
+        // Add order to bill
+        function addOrderToBill() {
+            const serviceSelect = document.getElementById('serviceSelect');
+            if (!serviceSelect.value) {
+                alert('Please select a service first');
+                return;
+            }
+            alert('✅ Order added to bill successfully!');
+        }
+
+        // Add hospital day
+        function addHospitalDay() {
+            if (confirm('Add hospital day charge to the bill?')) {
+                alert('✅ Hospital day added successfully!');
+            }
+        }
+
+        // Add hospital day from treatment page
+        function addHospitalDayFromTreatment() {
+            addHospitalDay();
+        }
+
+        // Medical Records Functions
+        function saveVitalSigns() {
+            alert('✅ Vital signs saved successfully!');
+        }
+
+        function addAllergy() {
+            alert('✅ Allergy added successfully!');
+        }
+
+        function addCurrentMedication() {
+            alert('✅ Medication added successfully!');
+        }
+
+        function saveComplaint() {
+            alert('✅ Presenting complaint saved successfully!');
+        }
+
+        function saveHistory() {
+            alert('✅ History and examination saved successfully!');
+        }
+
+        function addDiagnosis() {
+            alert('✅ Diagnosis added successfully!');
+        }
+
+        function addInvestigation() {
+            alert('✅ Investigation ordered successfully!');
+        }
+
+        function addPrescription() {
+            alert('✅ Prescription added successfully!');
+        }
+
+        function saveAdvice() {
+            alert('✅ Advice saved successfully!');
+        }
+
+        function generateCertificate() {
+            alert('✅ Medical certificate generated successfully!');
+        }
+
+        function saveReferral() {
+            alert('✅ Referral saved successfully!');
+        }
+
+        function updateFinalBalance() {
+            console.log('Updating final balance...');
+        }
+
+        function processDischarge() {
+            if (confirm('Process patient discharge? This action cannot be undone.')) {
+                alert('✅ Patient discharged successfully!');
+                showSection('patients');
+            }
+        }
+
+        function showPage(pageName) {
+            showSection(pageName);
+        }
+                
 
         async function logout() {
             if (!confirm('Are you sure you want to logout?')) {

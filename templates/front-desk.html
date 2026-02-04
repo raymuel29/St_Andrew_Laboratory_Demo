@@ -758,7 +758,7 @@
                 </div>
             </div>
             <div class="header-right">
-                <span class="header-user">Staff: <span id="currentUserName">Maria Santos</span></span>
+                <span class="header-user">Staff: <span id="currentUserName">Loading...</span></span>
                 <button class="btn-secondary" onclick="logout()">Logout</button>
             </div>
         </div>
@@ -793,12 +793,7 @@
                     Messages
                     <span class="badge badge-danger ml-auto" id="unreadCount">3</span>
                 </div>
-                <div class="nav-item" onclick="showSection('checkin')">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                    Check-in/Check-out
-                </div>
+               
                 
                 <!-- In-Patient Management Section -->
                 <div>
@@ -1335,38 +1330,6 @@
                 </div>
             </section>
 
-            <!-- Check-in/Check-out Section -->
-            <section id="checkin" class="content-section hidden">
-                <h2 class="text-2xl font-semibold mb-6">Patient Check-in/Check-out</h2>
-
-                <div class="grid grid-cols-1 lg-grid-cols-2 gap-6 mb-6">
-                    <div class="card p-6">
-                        <h3 class="text-lg font-semibold mb-4">Quick Check-in</h3>
-                        <div class="space-y-4">
-                            <div class="search-box">
-                                <svg class="search-icon w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                                </svg>
-                                <input type="text" id="checkinSearch" placeholder="Search by name, ID, or appointment #">
-                            </div>
-                            <button class="btn-primary w-full" onclick="performCheckin()">Check-in Patient</button>
-                        </div>
-                    </div>
-
-                    <div class="card p-6">
-                        <h3 class="text-lg font-semibold mb-4">Quick Check-out</h3>
-                        <div class="space-y-4">
-                            <div class="search-box">
-                                <svg class="search-icon w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                                </svg>
-                                <input type="text" id="checkoutSearch" placeholder="Search by name or patient ID">
-                            </div>
-                            <button class="btn-success w-full" onclick="performCheckout()">Check-out Patient</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
 
 
             <!-- Admission Request Section -->
@@ -1447,21 +1410,18 @@
 
                 <div class="card p-6">
                     <h3 style="margin-bottom: 20px;">New Patient Admission Form</h3>
-                    <form id="admissionForm">
+                    <form id="admissionForm" onsubmit="admitPatient(event)">
                         <div class="form-group">
                             <label>Patient Name *</label>
-                            <input type="text" id="patientName" required>
+                            <input type="text" id="patientName" placeholder="Enter patient name " required>
                         </div>
                         
                         <div class="form-row">
                             <div class="form-group">
                                 <label>Attending Physician *</label>
-                                <select id="patientDoctor">
-                                    <option value="1">Dr. Maria Santos - Internal Medicine (PF: ₱1,500)</option>
-                                    <option value="2">Dr. Juan dela Cruz - Surgery (PF: ₱3,000)</option>
-                                    <option value="3">Dr. Ana Reyes - Pediatrics (PF: ₱1,200)</option>
-                                    <option value="4">Dr. Roberto Garcia - Cardiology (PF: ₱2,500)</option>
-                                    <option value="5">Dr. Elena Mendoza - Orthopedics (PF: ₱2,000)</option>
+                                <select id="patientDoctor" required>
+                                    <option value="">Select person...</option>
+                                    <!-- Doctors will be loaded from Employee database -->
                                 </select>
                             </div>
                             <div class="form-group">
@@ -1476,16 +1436,14 @@
                         <div class="form-group">
                             <label>Room Type</label>
                             <select id="roomType">
-                                <option value="General Ward">General Ward - ₱2,000/day</option>
-                                <option value="Semi-Private">Semi-Private - ₱4,000/day</option>
-                                <option value="Private Room">Private Room - ₱8,000/day</option>
-                                <option value="ICU">ICU - ₱15,000/day</option>
+                                <option value="">Loading rooms...</option>
+                                <!-- Rooms will be loaded from Service Inventory -->
                             </select>
                         </div>
 
                         <div class="form-group">
                             <label>Deposit Amount</label>
-                            <input type="number" id="depositAmount" value="5000">
+                            <input type="number" id="depositAmount" placeholder="0.00" value="">
                         </div>
 
                         <button type="submit" class="btn btn-primary">Admit Patient</button>
@@ -1503,7 +1461,7 @@
                 <!-- Search Bar -->
                 <div class="form-group" style="margin-bottom: 20px;">
                     <input type="text" id="patientSearchInput" placeholder="🔍 Search patient by name..." 
-                           style="max-width: 500px; font-size: 15px;" oninput="filterPatientsByName()">
+                           style="max-width: 500px; font-size: 15px;" onkeyup="filterPatientsByName()">
                 </div>
 
                 <div class="table-container">
@@ -1910,7 +1868,7 @@
                 </div>
             </section>
 
-            <!-- Patient Discharge Section -->
+            <!-- Patient Discharge List Section -->
             <section id="patient-discharge" class="content-section hidden">
                 <h2 class="text-2xl font-semibold mb-6">Patient Discharge</h2>
 
@@ -2318,21 +2276,155 @@
 
         
         
+        async function loadCurrentUser() {
+            try {
+                const response = await fetch('/api/current-user');
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    document.getElementById('currentUserName').textContent = data.full_name;
+                } else {
+                    document.getElementById('currentUserName').textContent = 'Unknown User';
+                }
+            } catch (error) {
+                console.error('Error loading current user:', error);
+                document.getElementById('currentUserName').textContent = 'Error';
+            }
+        }
+
+
+        // Add this to your DOMContentLoaded section
         document.addEventListener('DOMContentLoaded', () => {
+            loadCurrentUser();
             initializeBedStatus();
             setupEventListeners();
             renderConversationList();
             updateUnreadCount();
             loadAppointments();
             
+            // Load doctors and rooms for admission form
+            loadAllDoctorsForAdmission();
+            loadRoomTypesForAdmission();
+            loadProfessionalFeesForAdmission();
+            
+            // Initialize patient name autocomplete
+            initializePatientAutocomplete();
+            
             // Load patient records if on that section
             if (!document.getElementById('patients').classList.contains('hidden')) {
                 loadPatientRecords();
-                
+            }
+            
+            // Load admission list if on that section
+            if (!document.getElementById('admission-list').classList.contains('hidden')) {
+                loadAdmissionList();
             }
         });
 
-        
+        // Patient name autocomplete functionality
+        function initializePatientAutocomplete() {
+            const patientNameInput = document.getElementById('patientName');
+            if (!patientNameInput) return;
+            
+            let debounceTimer;
+            const autocompleteResults = document.createElement('div');
+            autocompleteResults.className = 'autocomplete-results';
+            autocompleteResults.style.cssText = `
+                position: absolute;
+                background: var(--card);
+                border: 1px solid var(--border);
+                border-radius: 6px;
+                margin-top: 4px;
+                max-height: 200px;
+                overflow-y: auto;
+                z-index: 1000;
+                display: none;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            `;
+            
+            // Insert after the input
+            patientNameInput.parentNode.style.position = 'relative';
+            patientNameInput.parentNode.appendChild(autocompleteResults);
+            
+            patientNameInput.addEventListener('input', function() {
+                clearTimeout(debounceTimer);
+                const searchTerm = this.value.trim();
+                
+                if (searchTerm.length < 2) {
+                    autocompleteResults.style.display = 'none';
+                    return;
+                }
+                
+                debounceTimer = setTimeout(async () => {
+                    try {
+                        const response = await fetch(`/api/patient/search?q=${encodeURIComponent(searchTerm)}`);
+                        const data = await response.json();
+                        
+                        if (data.status === 'success' && data.data.length > 0) {
+                            displayAutocompleteResults(data.data);
+                        } else {
+                            autocompleteResults.style.display = 'none';
+                        }
+                    } catch (error) {
+                        console.error('Error searching patients:', error);
+                    }
+                }, 300);
+            });
+            
+            function displayAutocompleteResults(patients) {
+                autocompleteResults.innerHTML = '';
+                
+                patients.forEach(patient => {
+                    const item = document.createElement('div');
+                    item.style.cssText = `
+                        padding: 12px;
+                        cursor: pointer;
+                        border-bottom: 1px solid var(--border);
+                        transition: background-color 0.2s;
+                    `;
+                    
+                    item.innerHTML = `
+                        <div style="font-weight: 600;">${patient.full_name}</div>
+                        <div style="font-size: 12px; color: var(--muted-foreground); margin-top: 4px;">
+                            ID: ${patient.patient_id} | ${patient.gender} | ${patient.blood_type || 'N/A'} | ${patient.mobile}
+                        </div>
+                    `;
+                    
+                    item.addEventListener('mouseenter', function() {
+                        this.style.backgroundColor = 'var(--secondary)';
+                    });
+                    
+                    item.addEventListener('mouseleave', function() {
+                        this.style.backgroundColor = 'transparent';
+                    });
+                    
+                    item.addEventListener('click', function() {
+                        // Fill in the form with selected patient
+                        patientNameInput.value = patient.full_name;
+                        document.getElementById('patientGender').value = patient.gender;
+                        autocompleteResults.style.display = 'none';
+                        
+                        // Show patient info
+                        showAlert('info', 'Patient Selected', 
+                            `${patient.full_name} (${patient.patient_id}) - ${patient.gender}`);
+                    });
+                    
+                    autocompleteResults.appendChild(item);
+                });
+                
+                autocompleteResults.style.display = 'block';
+                autocompleteResults.style.width = patientNameInput.offsetWidth + 'px';
+            }
+            
+            // Close autocomplete when clicking outside
+            document.addEventListener('click', function(e) {
+                if (e.target !== patientNameInput && !autocompleteResults.contains(e.target)) {
+                    autocompleteResults.style.display = 'none';
+                }
+            });
+        }
+                    
+
         function setupEventListeners() {
             window.onclick = function(event) {
                 if (event.target.classList.contains('modal')) {
@@ -2362,8 +2454,13 @@
             if (sectionId === 'patients') {
                 loadPatientRecords();
             }
+            
+            // Load data when switching to admission list
+            if (sectionId === 'admission-list') {
+                loadAdmissionList();
+            }
         }
-
+                
         function toggleSubmenu(submenuId) {
             const submenu = document.getElementById(submenuId + '-submenu');
             const arrow = document.getElementById(submenuId + '-arrow');
@@ -2876,33 +2973,358 @@
 
         
         // ADMISSION & TRANSFER FUNCTIONS
-        function approveAdmission(uhid) {
-            if (confirm(`Approve admission request for patient ${uhid}?`)) {
-                showAlert('success', 'Approved', 'Admission request approved. Proceed to patient admission.');
+        async function loadAllDoctorsForAdmission() {
+            try {
+                const response = await fetch('/api/frontdesk/employees/all-doctors');
+                const data = await response.json();
+                
+                const doctorSelect = document.getElementById('patientDoctor');
+                
+                // Clear existing options
+                while (doctorSelect.options.length > 1) {
+                    doctorSelect.remove(1);
+                }
+                
+                if (response.ok && data.data && data.data.length > 0) {
+                    // Update placeholder
+                    doctorSelect.options[0].textContent = 'Choose a doctor';
+                    
+                    // Group doctors by department
+                    const groupedDoctors = {};
+                    
+                    data.data.forEach(emp => {
+                        if (!groupedDoctors[emp.department]) {
+                            groupedDoctors[emp.department] = [];
+                        }
+                        groupedDoctors[emp.department].push(emp);
+                    });
+                    
+                    // Create optgroups for each department
+                    Object.keys(groupedDoctors).sort().forEach(dept => {
+                        const optgroup = document.createElement('optgroup');
+                        optgroup.label = dept;
+                        
+                        groupedDoctors[dept].forEach(emp => {
+                            const option = document.createElement('option');
+                            option.value = emp.name;
+                            option.textContent = emp.name;
+                            optgroup.appendChild(option);
+                        });
+                        
+                        doctorSelect.appendChild(optgroup);
+                    });
+                } else {
+                    doctorSelect.options[0].textContent = 'No doctors available';
+                }
+            } catch (error) {
+                console.error('Error loading doctors:', error);
+                const doctorSelect = document.getElementById('patientDoctor');
+                doctorSelect.options[0].textContent = 'Error loading doctors';
             }
         }
 
-        function viewAdmissionDetails(uhid) {
-            showAlert('info', 'View Details', `Viewing details for patient ${uhid}`);
+        async function loadRoomTypesForAdmission() {
+            try {
+                const response = await fetch('/api/frontdesk/services/rooms');
+                const data = await response.json();
+                
+                if (response.ok && data.data) {
+                    const roomType = document.getElementById('roomType');
+                    
+                    // Clear existing options except placeholder
+                    while (roomType.options.length > 1) {
+                        roomType.remove(1);
+                    }
+                    
+                    // Update placeholder
+                    roomType.options[0].textContent = 'Select room type';
+                    
+                    // Add room options from database
+                    data.data.forEach(room => {
+                        const option = document.createElement('option');
+                        option.value = room.service_name;
+                        option.textContent = `${room.service_name} - ₱${room.price.toLocaleString('en-PH', {minimumFractionDigits: 2})}/day`;
+                        option.setAttribute('data-price', room.price);
+                        roomType.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading rooms:', error);
+            }
         }
 
-        function admitPatient(event) {
+        async function loadProfessionalFeesForAdmission() {
+            try {
+                const response = await fetch('/api/frontdesk/services/professional-fees');
+                const data = await response.json();
+                
+                if (response.ok && data.data) {
+                    // This is for future use if you want to add professional fee selection
+                    console.log('Professional fees loaded:', data.data);
+                }
+            } catch (error) {
+                console.error('Error loading professional fees:', error);
+            }
+        }
+                
+        async function admitPatient(event) {
             event.preventDefault();
-            showAlert('success', 'Success', 'Patient admitted successfully!');
-            event.target.reset();
+            
+            try {
+                // Get form data
+                const patientName = document.getElementById('patientName').value.trim();
+                const gender = document.getElementById('patientGender').value;
+                const doctorName = document.getElementById('patientDoctor').value;
+                const roomType = document.getElementById('roomType').value;
+                const depositAmount = document.getElementById('depositAmount').value;
+                
+                // Validate
+                if (!patientName || !gender || !doctorName || !roomType) {
+                    showAlert('error', 'Error', 'Please fill in all required fields');
+                    return;
+                }
+                
+                // First, check if patient exists in the database
+                const checkResponse = await fetch(`/api/patient/check-exists?name=${encodeURIComponent(patientName)}`);
+                const checkData = await checkResponse.json();
+                
+                if (!checkResponse.ok || checkData.status !== 'success' || !checkData.exists) {
+                    showAlert('error', 'Patient Not Found', 
+                        'This patient is not registered in the system. Please register the patient first before admission.');
+                    
+                    // Optionally, ask if user wants to register the patient
+                    if (confirm('Would you like to register this patient now?')) {
+                        showSection('registration');
+                        // Pre-fill the name in registration form
+                        const nameParts = patientName.split(' ');
+                        if (nameParts.length >= 2) {
+                            document.getElementById('firstName').value = nameParts[0];
+                            document.getElementById('lastName').value = nameParts[nameParts.length - 1];
+                            if (nameParts.length > 2) {
+                                document.getElementById('middleName').value = nameParts.slice(1, -1).join(' ');
+                            }
+                        }
+                        // Pre-fill gender if available
+                        if (gender) {
+                            document.getElementById('gender').value = gender;
+                        }
+                    }
+                    return;
+                }
+                
+                // Patient exists - show confirmation with patient details
+                const patientData = checkData.data;
+                const confirmMessage = `Admit patient: ${patientData.full_name}\n` +
+                                    `Patient ID: ${patientData.patient_id}\n` +
+                                    `Gender: ${patientData.gender}\n` +
+                                    `Blood Type: ${patientData.blood_type || 'N/A'}\n\n` +
+                                    `Doctor: ${doctorName}\n` +
+                                    `Room: ${roomType}\n` +
+                                    `Deposit: ₱${parseFloat(depositAmount || 0).toLocaleString('en-PH', {minimumFractionDigits: 2})}\n\n` +
+                                    `Proceed with admission?`;
+                
+                if (!confirm(confirmMessage)) {
+                    return;
+                }
+                
+                // Prepare data for admission (use verified gender from database)
+                const formData = {
+                    patient_name: patientData.full_name, // Use exact name from database
+                    gender: patientData.gender, // Use verified gender from database
+                    doctor_name: doctorName,
+                    room_type: roomType,
+                    deposit_amount: parseFloat(depositAmount) || 0
+                };
+                
+                // Send to API
+                const response = await fetch('/api/frontdesk/admission/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showAlert('success', 'Success', 
+                        `Patient ${patientData.full_name} (${patientData.patient_id}) admitted successfully!`);
+                    
+                    // Reset form
+                    event.target.reset();
+                    
+                    // Reload admission list if on that page
+                    if (!document.getElementById('admission-list').classList.contains('hidden')) {
+                        loadAdmissionList();
+                    }
+                } else {
+                    showAlert('error', 'Error', data.message || 'Failed to admit patient');
+                }
+                
+            } catch (error) {
+                console.error('Error admitting patient:', error);
+                showAlert('error', 'Error', 'An error occurred. Please try again.');
+            }
         }
 
-        function resetAdmissionForm() {
-            document.querySelector('#patient-admission form').reset();
+        async function loadAdmissionList() {
+            try {
+                const searchInput = document.getElementById('patientSearchInput');
+                const searchTerm = searchInput ? searchInput.value.trim() : '';
+                
+                const response = await fetch(`/api/frontdesk/admission/list?status=Admitted&search=${encodeURIComponent(searchTerm)}`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    displayAdmissionList(data.data);
+                } else {
+                    console.error('Failed to load admissions');
+                    // Show empty state
+                    const tbody = document.getElementById('patientsTableBody');
+                    if (tbody) {
+                        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #7f8c8d;">Error loading patients</td></tr>';
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading admissions:', error);
+                const tbody = document.getElementById('patientsTableBody');
+                if (tbody) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #7f8c8d;">Error loading patients</td></tr>';
+                }
+            }
         }
 
-        function searchAdmission() {
-            document.getElementById('patientInfoSection').style.display = 'block';
-            document.getElementById('transferPatientName').textContent = 'John Smith';
-            document.getElementById('transferCurrentDoctor').textContent = 'Dr. Sarah Johnson';
-            document.getElementById('transferWardRoom').textContent = 'Ward 4 - Room 201';
-            showAlert('success', 'Found', 'Patient information loaded');
+        function displayAdmissionList(admissions) {
+            const tbody = document.getElementById('patientsTableBody');
+            
+            if (!tbody) return;
+            
+            if (admissions.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #7f8c8d;">No admitted patients</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = admissions.map(admission => `
+                <tr>
+                    <td>${admission.patient_name}</td>
+                    <td>${admission.room_type}</td>
+                    <td>${admission.doctor_name}</td>
+                    <td>${admission.days_admitted} days</td>
+                    <td><span class="badge badge-primary">${admission.status}</span></td>
+                    <td>
+                        <div class="flex gap-2">
+                            <button class="btn-secondary text-sm" onclick="viewAdmissionDetails(${admission.id})">View</button>
+                            <button class="btn-danger text-sm" onclick="dischargePatientFromList(${admission.id})">Discharge</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
         }
+        
+        async function filterPatientsByName() {
+            const searchInput = document.getElementById('patientSearchInput');
+            const searchTerm = searchInput ? searchInput.value.trim() : '';
+            
+            try {
+                const response = await fetch(`/api/frontdesk/admission/list?status=Admitted&search=${encodeURIComponent(searchTerm)}`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    displayAdmissionList(data.data);
+                } else {
+                    console.error('Failed to load admissions');
+                    showAlert('error', 'Error', 'Failed to search patients');
+                }
+            } catch (error) {
+                console.error('Error searching patients:', error);
+                showAlert('error', 'Error', 'Failed to search patients');
+            }
+        }
+
+        async function viewAdmissionDetails(admissionId) {
+            try {
+                const response = await fetch(`/api/frontdesk/admission/${admissionId}`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    const admission = data.data;
+                    
+                    const modalContent = `
+                        <div style="max-height: 70vh; overflow-y: auto;">
+                            <h3 class="text-xl font-semibold mb-4">Admission Details</h3>
+                            
+                            <div class="form-section">
+                                <h4 class="form-section-title">Patient Information</h4>
+                                <div class="grid grid-cols-2 gap-4 p-4 rounded-lg" style="background-color: var(--secondary);">
+                                    <div><span style="color: var(--muted-foreground);">Patient Name:</span> <strong>${admission.patient_name}</strong></div>
+                                    <div><span style="color: var(--muted-foreground);">Gender:</span> <strong>${admission.gender}</strong></div>
+                                    <div><span style="color: var(--muted-foreground);">Doctor:</span> <strong>${admission.doctor_name}</strong></div>
+                                    <div><span style="color: var(--muted-foreground);">Room Type:</span> <strong>${admission.room_type}</strong></div>
+                                    <div><span style="color: var(--muted-foreground);">Admission Date:</span> <strong>${admission.admission_date}</strong></div>
+                                    <div><span style="color: var(--muted-foreground);">Days Admitted:</span> <strong>${admission.days_admitted} days</strong></div>
+                                    <div><span style="color: var(--muted-foreground);">Deposit Amount:</span> <strong>₱${admission.deposit_amount.toLocaleString('en-PH', {minimumFractionDigits: 2})}</strong></div>
+                                    <div><span style="color: var(--muted-foreground);">Status:</span> <strong>${admission.status}</strong></div>
+                                </div>
+                            </div>
+                            
+                            <button class="btn-primary w-full mt-4" onclick="closeAdmissionDetailsModal()">Close</button>
+                        </div>
+                    `;
+                    
+                    const modal = document.createElement('div');
+                    modal.id = 'admissionDetailsModal';
+                    modal.className = 'modal active';
+                    modal.innerHTML = `<div class="modal-content p-6" style="max-width: 800px;">${modalContent}</div>`;
+                    document.body.appendChild(modal);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('error', 'Error', 'Failed to load admission details');
+            }
+        }
+
+        function closeAdmissionDetailsModal() {
+            const modal = document.getElementById('admissionDetailsModal');
+            if (modal) modal.remove();
+        }
+
+        async function dischargePatientFromList(admissionId) {
+            if (!confirm('Are you sure you want to discharge this patient?')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/frontdesk/admission/discharge/${admissionId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showAlert('success', 'Success', 'Patient discharged successfully');
+                    loadAdmissionList(); // Reload the list
+                } else {
+                    showAlert('error', 'Error', data.message || 'Failed to discharge patient');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('error', 'Error', 'Failed to discharge patient');
+            }
+        }
+
+        function dischargePatient(event) {
+            event.preventDefault();
+            if (confirm('Are you sure you want to discharge this patient?')) {
+                showAlert('success', 'Success', 'Patient discharged successfully!');
+                event.target.reset();
+                document.getElementById('dischargePatientInfo').style.display = 'none';
+            }
+        }
+
 
         function transferDoctor(event) {
             event.preventDefault();
