@@ -137,6 +137,7 @@ def user_dashboard():
         'Pharmacy': 'pharmacy.html',
         'Head of Nurse': 'admin-nurse.html',
         'Nurse': 'nurse.html',
+        'Accounting': 'accounting.html',
         'Head of Hospital': 'user-head.html'
     }
     

@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Business Office - St. Andrew Hospital</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='pharmacy.css') }}">
     <style>
         * {
             margin: 0;
@@ -12,34 +11,40 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --primary: hsl(168, 85%, 60%);
+            --primary-foreground: hsl(0, 0%, 100%);
+            --secondary: hsl(240, 4%, 16%);
+            --secondary-foreground: hsl(0, 0%, 100%);
+            --accent: hsl(142, 71%, 45%);
+            --accent-foreground: hsl(0, 0%, 100%);
+            --background: hsl(0, 0%, 7%);
+            --foreground: hsl(0, 0%, 98%);
+            --card: hsl(240, 4%, 10%);
+            --card-foreground: hsl(0, 0%, 98%);
+            --border: hsl(240, 4%, 16%);
+            --muted: hsl(240, 4%, 16%);
+            --muted-foreground: hsl(240, 5%, 65%);
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background-color: #0a0a0a;
-            color: #e5e5e5;
+            background-color: var(--background);
+            color: var(--foreground);
             line-height: 1.6;
         }
 
-        /* Layout structure with header at top, sidebar left, main content right */
-        .app-container {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
+        /* Header styles */
+        header {
+            border-bottom: 1px solid var(--border);
+            background-color: var(--card);
         }
 
-        /* Header at the top */
-        .top-header {
-            background-color: #1a1a1a;
-            border-bottom: 1px solid #2a2a2a;
-            padding: 20px 32px;
+        .header-container {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-            height: 70px;
+            justify-content: space-between;
+            padding: 16px 24px;
         }
 
         .header-left {
@@ -48,28 +53,25 @@
             gap: 12px;
         }
 
-        .header-logo-icon {
+        .header-icon {
             width: 40px;
             height: 40px;
-            background-color: #14b8a6;
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
+            background-color: var(--primary);
             font-size: 20px;
         }
 
-        .header-logo-text h1 {
-            font-size: 18px;
+        .header-title h1 {
+            font-size: 20px;
             font-weight: 600;
-            color: #fff;
-            line-height: 1.2;
         }
 
-        .header-logo-text p {
-            font-size: 12px;
-            color: #888;
-            line-height: 1.2;
+        .header-title p {
+            font-size: 14px;
+            color: var(--muted-foreground);
         }
 
         .header-right {
@@ -78,79 +80,54 @@
             gap: 16px;
         }
 
-        .user-info {
-            color: #888;
-            font-size: 14px;
+        .header-user {
+            color: var(--muted-foreground);
         }
 
-        .user-info strong {
-            color: #e5e5e5;
-        }
-
-        .logout-btn {
-            background-color: #dc2626;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            transition: background-color 0.2s;
-        }
-
-        .logout-btn:hover {
-            background-color: #b91c1c;
-        }
-
-        /* Main container below header */
-        .main-container {
+        /* Layout */
+        .main-layout {
             display: flex;
-            margin-top: 70px;
-            min-height: calc(100vh - 70px);
         }
 
-        /* Sidebar on the left */
-        .sidebar {
-            width: 240px;
-            background-color: #0a0a0a;
-            border-right: 1px solid #2a2a2a;
+        aside {
+            width: 256px;
+            min-height: calc(100vh - 70px);
+            border-right: 1px solid var(--border);
+            padding: 16px;
+            background-color: var(--card);
+        }
+
+        main {
+            flex: 1;
+            padding: 24px;
+        }
+
+        /* Navigation */
+        nav {
             display: flex;
             flex-direction: column;
-            position: fixed;
-            height: calc(100vh - 70px);
-            overflow-y: auto;
-            top: 70px;
-            left: 0;
-        }
-
-        .nav-menu {
-            padding: 20px 0;
-            flex: 1;
+            gap: 8px;
         }
 
         .nav-item {
-            padding: 12px 20px;
-            margin: 4px 12px;
-            border-radius: 8px;
+            padding: 12px 16px;
+            border-radius: 6px;
             cursor: pointer;
+            transition: background-color 0.2s;
             display: flex;
             align-items: center;
             gap: 12px;
-            color: #a0a0a0;
-            transition: all 0.2s;
-            text-decoration: none;
-            font-size: 14px;
+            color: var(--muted-foreground);
         }
 
         .nav-item:hover {
-            background-color: #1a1a1a;
-            color: #14b8a6;
+            background-color: var(--secondary);
+            color: var(--foreground);
         }
 
         .nav-item.active {
-            background-color: #1a1a1a;
-            color: #14b8a6;
+            background-color: var(--secondary);
+            color: var(--primary);
         }
 
         .nav-item svg {
@@ -159,28 +136,69 @@
             flex-shrink: 0;
         }
 
-        /* Main content area on the right */
-        .main-content {
-            margin-left: 240px;
-            flex: 1;
-            padding: 32px;
-            background-color: #0a0a0a;
-        }
-
-        .page-title {
-            font-size: 28px;
-            font-weight: 600;
-            margin-bottom: 32px;
-            color: #fff;
-        }
-
-        /* Page sections */
-        .page-section {
+        /* Content sections */
+        .content-section {
             display: none;
         }
 
-        .page-section.active {
+        .content-section.active {
             display: block;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Cards */
+        .card {
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--primary-foreground);
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: var(--secondary-foreground);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background-color: hsl(240, 4%, 20%);
+        }
+
+        .btn-success {
+            background-color: var(--accent);
+            color: var(--accent-foreground);
+        }
+
+        .btn-danger {
+            background-color: hsl(0, 72%, 51%);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
         }
 
         /* Stats Grid */
@@ -192,15 +210,15 @@
         }
 
         .stat-card {
-            background-color: #1a1a1a;
-            border: 1px solid #2a2a2a;
-            border-radius: 12px;
-            padding: 24px;
+            background: linear-gradient(135deg, var(--card) 0%, hsl(240, 4%, 13%) 100%);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
             transition: all 0.2s;
         }
 
         .stat-card:hover {
-            border-color: #14b8a6;
+            border-color: var(--primary);
             transform: translateY(-2px);
         }
 
@@ -212,7 +230,7 @@
         }
 
         .stat-label {
-            color: #888;
+            color: var(--muted-foreground);
             font-size: 14px;
         }
 
@@ -238,137 +256,90 @@
             color: #10b981;
         }
 
-        .stat-change.negative {
-            color: #ef4444;
-        }
-
-        /* Content Cards */
-        .content-card {
-            background-color: #1a1a1a;
-            border: 1px solid #2a2a2a;
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 24px;
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .card-title {
-            font-size: 20px;
-            font-weight: 600;
-            color: #fff;
-        }
-
-        /* Buttons */
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.2s;
-        }
-
-        .btn-primary {
-            background-color: #14b8a6;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: #0d9488;
-        }
-
-        .btn-secondary {
-            background-color: #2a2a2a;
-            color: #e5e5e5;
-        }
-
-        .btn-secondary:hover {
-            background-color: #3a3a3a;
-        }
-
-        .btn-danger {
-            background-color: #dc2626;
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background-color: #b91c1c;
-        }
-
-        .btn-sm {
-            padding: 6px 12px;
-            font-size: 12px;
-        }
-
         /* Tables */
-        .table-container {
-            overflow-x: auto;
-        }
-
-        table {
+        .table {
             width: 100%;
             border-collapse: collapse;
         }
 
-        th, td {
-            padding: 12px;
+        .table th {
             text-align: left;
-            border-bottom: 1px solid #2a2a2a;
-        }
-
-        th {
-            color: #888;
-            font-weight: 500;
-            font-size: 13px;
-            text-transform: uppercase;
-        }
-
-        td {
-            color: #e5e5e5;
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            color: var(--muted-foreground);
             font-size: 14px;
+            font-weight: 500;
         }
 
-        tr:hover {
-            background-color: rgba(20, 184, 166, 0.05);
+        .table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
         }
 
-        /* Status badges */
+        .table tr:hover {
+            background-color: hsl(240, 4%, 12%);
+        }
+
+        /* Badges */
         .badge {
+            display: inline-block;
             padding: 4px 12px;
             border-radius: 12px;
             font-size: 12px;
             font-weight: 500;
-            display: inline-block;
         }
 
         .badge-success {
-            background-color: rgba(16, 185, 129, 0.2);
-            color: #10b981;
+            background-color: hsl(142, 71%, 45%, 0.2);
+            color: hsl(142, 71%, 60%);
         }
 
         .badge-warning {
-            background-color: rgba(245, 158, 11, 0.2);
-            color: #f59e0b;
-        }
-
-        .badge-danger {
-            background-color: rgba(239, 68, 68, 0.2);
-            color: #ef4444;
+            background-color: hsl(45, 93%, 47%, 0.2);
+            color: hsl(45, 93%, 60%);
         }
 
         .badge-info {
-            background-color: rgba(59, 130, 246, 0.2);
-            color: #3b82f6;
+            background-color: hsl(200, 90%, 50%, 0.2);
+            color: hsl(200, 90%, 60%);
+        }
+
+        .badge-danger {
+            background-color: hsl(0, 72%, 51%, 0.2);
+            color: hsl(0, 72%, 65%);
+        }
+
+        .badge-primary {
+            background-color: hsla(168, 85%, 60%, 0.2);
+            color: var(--primary);
         }
 
         /* Forms */
+        input, select, textarea {
+            background-color: var(--secondary);
+            border: 1px solid var(--border);
+            color: var(--foreground);
+            padding: 10px 14px;
+            border-radius: 6px;
+            width: 100%;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px hsla(168, 85%, 60%, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+            color: var(--foreground);
+        }
+
         .form-group {
             margin-bottom: 20px;
         }
@@ -376,23 +347,23 @@
         .form-label {
             display: block;
             margin-bottom: 8px;
-            color: #888;
+            color: var(--muted-foreground);
             font-size: 14px;
         }
 
         .form-input, .form-select, .form-textarea {
             width: 100%;
             padding: 10px 12px;
-            background-color: #0a0a0a;
-            border: 1px solid #2a2a2a;
+            background-color: var(--secondary);
+            border: 1px solid var(--border);
             border-radius: 6px;
-            color: #e5e5e5;
+            color: var(--foreground);
             font-size: 14px;
         }
 
         .form-input:focus, .form-select:focus, .form-textarea:focus {
             outline: none;
-            border-color: #14b8a6;
+            border-color: var(--primary);
         }
 
         .form-textarea {
@@ -414,13 +385,13 @@
             justify-content: center;
         }
 
-        .modal.show {
+        .modal.active {
             display: flex;
         }
 
         .modal-content {
-            background-color: #1a1a1a;
-            border: 1px solid #2a2a2a;
+            background-color: var(--card);
+            border: 1px solid var(--border);
             border-radius: 12px;
             padding: 32px;
             max-width: 600px;
@@ -445,7 +416,7 @@
         .close-btn {
             background: none;
             border: none;
-            color: #888;
+            color: var(--muted-foreground);
             font-size: 24px;
             cursor: pointer;
             padding: 0;
@@ -454,16 +425,27 @@
         }
 
         .close-btn:hover {
-            color: #e5e5e5;
+            color: var(--foreground);
         }
 
-        /* Action buttons in tables */
-        .action-btns {
-            display: flex;
-            gap: 8px;
+        /* Search */
+        .search-box {
+            position: relative;
         }
 
-        /* Search and filter bar */
+        .search-box input {
+            padding-left: 40px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted-foreground);
+        }
+
+        /* Filter bar */
         .filter-bar {
             display: flex;
             gap: 12px;
@@ -474,685 +456,557 @@
         .search-input {
             flex: 1;
             min-width: 200px;
-            padding: 10px 12px;
-            background-color: #0a0a0a;
-            border: 1px solid #2a2a2a;
-            border-radius: 6px;
-            color: #e5e5e5;
-            font-size: 14px;
         }
 
-        .search-input:focus {
-            outline: none;
-            border-color: #14b8a6;
-        }
-
-        /* Inventory table styles */
-        .inventory-status {
+        /* Action buttons */
+        .action-btns {
             display: flex;
-            align-items: center;
             gap: 8px;
         }
 
-        .stock-indicator {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
+        /* Utility classes */
+        .text-sm { font-size: 14px; }
+        .text-lg { font-size: 18px; }
+        .text-xl { font-size: 20px; }
+        .text-2xl { font-size: 24px; }
+        .text-3xl { font-size: 30px; }
+
+        .font-semibold { font-weight: 600; }
+        .font-bold { font-weight: 700; }
+
+        .mb-2 { margin-bottom: 8px; }
+        .mb-4 { margin-bottom: 16px; }
+        .mb-6 { margin-bottom: 24px; }
+
+        .mt-4 { margin-top: 16px; }
+        .mt-6 { margin-top: 24px; }
+
+        .p-4 { padding: 16px; }
+        .p-6 { padding: 24px; }
+
+        .flex { display: flex; }
+        .flex-1 { flex: 1; }
+        .items-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .gap-2 { gap: 8px; }
+        .gap-3 { gap: 12px; }
+        .gap-4 { gap: 16px; }
+        .gap-6 { gap: 24px; }
+
+        .grid { display: grid; }
+        .grid-cols-1 { grid-template-columns: repeat(1, 1fr); }
+        .grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+        .grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+
+        .space-y-3 > * + * { margin-top: 12px; }
+        .space-y-4 > * + * { margin-top: 16px; }
+
+        .w-2 { width: 8px; }
+        .h-2 { height: 8px; }
+        .w-4 { width: 16px; }
+        .h-4 { height: 16px; }
+        .w-5 { width: 20px; }
+        .h-5 { height: 20px; }
+        .w-10 { width: 40px; }
+        .h-10 { height: 40px; }
+
+        .rounded { border-radius: 4px; }
+        .rounded-lg { border-radius: 8px; }
+        .rounded-full { border-radius: 9999px; }
+
+        /* Announcements */
+        .announcement-card {
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            transition: all 0.2s;
         }
 
-        .stock-indicator.high {
-            background-color: #10b981;
+        .announcement-card:hover {
+            border-color: var(--primary);
         }
 
-        .stock-indicator.medium {
-            background-color: #f59e0b;
+        .announcement-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
         }
 
-        .stock-indicator.low {
-            background-color: #ef4444;
+        .announcement-title {
+            font-size: 16px;
+            font-weight: 600;
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 80px;
-            }
+        .announcement-date {
+            font-size: 12px;
+            color: var(--muted-foreground);
+        }
 
-            .main-content {
-                margin-left: 80px;
-            }
+        .announcement-content {
+            color: var(--muted-foreground);
+            font-size: 14px;
+            line-height: 1.6;
+        }
 
-            .header-logo-text,
-            .nav-item span {
-                display: none;
-            }
+        /* Messages styling */
+        .conversation-item {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
 
-            .stats-grid {
-                grid-template-columns: 1fr;
+        .conversation-item:hover {
+            background-color: var(--secondary);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
             }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        .ml-auto {
+            margin-left: auto;
         }
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Header at Top -->
-        <header class="top-header">
+    <!-- Header -->
+    <header>
+        <div class="header-container">
             <div class="header-left">
-                <div class="header-logo-icon">💼</div>
-                <div class="header-logo-text">
-                    <h1>St. Andrew Hospital</h1>
-                    <p>Business Office System</p>
+                <div class="header-icon">💼</div>
+                <div class="header-title">
+                    <h1>Business Office</h1>
+                    <p>St. Andrew Hospital</p>
                 </div>
             </div>
             <div class="header-right">
-                <div class="user-info">
-                    Business Manager: <strong id="userName"><span id="currentUserName">{{ user_info.full_name }}</span></strong>
-                </div>
-                <button class="logout-btn" onclick="logout()">Logout</button>
+                <span class="header-user">Business Manager: <strong id="currentUserName">{{ user_info.full_name }}</strong></span>
+                <button class="btn-secondary" onclick="logout()">Logout</button>
             </div>
-        </header>
-
-        <!-- Main Container with Sidebar and Content -->
-        <div class="main-container">
-            <!-- Sidebar -->
-            <aside class="sidebar">
-                <nav class="nav-menu">
-                    <div class="nav-item active" onclick="showPage('dashboard')">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-                        </svg>
-                        <span>Dashboard</span>
-                    </div>
-                    <div class="nav-item" onclick="showPage('billing')">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                        </svg>
-                        <span>Billing & Invoicing</span>
-                    </div>
-                    <div class="nav-item" onclick="showPage('reports')">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                        </svg>
-                        <span>Financial Reports</span>
-                    </div>
-                    <div class="nav-item" onclick="showPage('revenue')">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                        <span>Revenue Management</span>
-                    </div>
-                    <div class="nav-item" onclick="showPage('service')">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
-                        </svg>
-                        <span>Service Inventory System</span>
-                    </div>
-                    <div class="nav-item" onclick="showPage('inventory')">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                        </svg>
-                        <span>POS Inventory Management System</span>
-                    </div>
-                    <div class="nav-item" onclick="showPage('pharmacy-sales')">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-                        </svg>
-                        <span>Pharmacy Sales Report</span>
-                    </div>
-                </nav>
-            </aside>
-
-            <!-- Main Content Area -->
-            <main class="main-content">
-                <!-- Dashboard Page -->
-                <div id="dashboard" class="page-section active">
-                    <h2 class="page-title">Business Office Dashboard</h2>
-                    
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-header">
-                                <span class="stat-label">Total Revenue (Month)</span>
-                                <div class="stat-icon" style="background-color: rgba(16, 185, 129, 0.2); color: #10b981;">$</div>
-                            </div>
-                            <div class="stat-value">$247,850</div>
-                            <div class="stat-change">+12.5% from last month</div>
-                        </div>
-
-                        <div class="stat-card">
-                            <div class="stat-header">
-                                <span class="stat-label">Pending Invoices</span>
-                                <div class="stat-icon" style="background-color: rgba(245, 158, 11, 0.2); color: #f59e0b;">📄</div>
-                            </div>
-                            <div class="stat-value">43</div>
-                            <div class="stat-change">-5 from yesterday</div>
-                        </div>
-
-                        <div class="stat-card">
-                            <div class="stat-header">
-                                <span class="stat-label">Outstanding Payments</span>
-                                <div class="stat-icon" style="background-color: rgba(239, 68, 68, 0.2); color: #ef4444;">💳</div>
-                            </div>
-                            <div class="stat-value">$32,420</div>
-                            <div class="stat-change">18 accounts</div>
-                        </div>
-
-                        <div class="stat-card">
-                            <div class="stat-header">
-                                <span class="stat-label">Insurance Claims (Pending)</span>
-                                <div class="stat-icon" style="background-color: rgba(59, 130, 246, 0.2); color: #3b82f6;">🛡️</div>
-                            </div>
-                            <div class="stat-value">27</div>
-                            <div class="stat-change">Processing</div>
-                        </div>
-                    </div>
-
-                    <div class="content-card">
-                        <div class="card-header">
-                            <h3 class="card-title">Recent Transactions</h3>
-                        </div>
-                        <div class="table-container">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Patient</th>
-                                        <th>Description</th>
-                                        <th>Amount</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>2024-01-04</td>
-                                        <td>Michael Chen</td>
-                                        <td>Surgery - Appendectomy</td>
-                                        <td>$8,500.00</td>
-                                        <td><span class="badge badge-success">Paid</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>2024-01-04</td>
-                                        <td>Sarah Johnson</td>
-                                        <td>Laboratory Tests</td>
-                                        <td>$350.00</td>
-                                        <td><span class="badge badge-success">Paid</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>2024-01-03</td>
-                                        <td>Robert Williams</td>
-                                        <td>Emergency Room Visit</td>
-                                        <td>$1,200.00</td>
-                                        <td><span class="badge badge-warning">Pending</span></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Billing Page -->
-                <div id="billing" class="page-section">
-                    <div class="page-header">
-                        <h1>Billing & Discharge</h1>
-                    </div>
-                    
-                    <div class="card">
-                        <h3 style="margin-bottom: 20px;">Admitted Patients</h3>
-                        <div class="table-container">
-                            <table id="billingTable">
-                                <thead>
-                                    <tr>
-                                        <th>Patient Name</th>
-                                        <th>Doctor</th>
-                                        <th>Days Admitted</th>
-                                        <th>Total Bill</th>
-                                        <th>Status</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="billingTableBody">
-                                    <tr>
-                                        <td colspan="6" style="text-align: center; color: #7f8c8d;">No admitted patients</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Financial Reports Page -->
-                <div id="reports" class="page-section">
-                    <h2 class="page-title">Financial Reports</h2>
-                    
-                    <div class="content-card">
-                        <div class="card-header">
-                            <h3 class="card-title">Generate Reports</h3>
-                            <button class="btn btn-primary" onclick="generateReport()">Export Report</button>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Report Type</label>
-                            <select class="form-select" id="reportType">
-                                <option>Revenue Summary</option>
-                                <option>Payment Collection</option>
-                                <option>Outstanding Balances</option>
-                                <option>Insurance Claims Analysis</option>
-                                <option>Department Revenue</option>
-                            </select>
-                        </div>
-
-                        <div style="display: flex; gap: 16px; margin-bottom: 24px;">
-                            <div class="form-group" style="flex: 1;">
-                                <label class="form-label">Start Date</label>
-                                <input type="date" class="form-input" id="reportStartDate">
-                            </div>
-                            <div class="form-group" style="flex: 1;">
-                                <label class="form-label">End Date</label>
-                                <input type="date" class="form-input" id="reportEndDate">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-header">
-                                <span class="stat-label">Total Revenue (YTD)</span>
-                                <div class="stat-icon" style="background-color: rgba(16, 185, 129, 0.2); color: #10b981;">💰</div>
-                            </div>
-                            <div class="stat-value">$2,847,320</div>
-                            <div class="stat-change">+18.2% from last year</div>
-                        </div>
-
-                        <div class="stat-card">
-                            <div class="stat-header">
-                                <span class="stat-label">Collection Rate</span>
-                                <div class="stat-icon" style="background-color: rgba(59, 130, 246, 0.2); color: #3b82f6;">📊</div>
-                            </div>
-                            <div class="stat-value">94.3%</div>
-                            <div class="stat-change">+2.1% from last month</div>
-                        </div>
-
-                        <div class="stat-card">
-                            <div class="stat-header">
-                                <span class="stat-label">Average Days to Pay</span>
-                                <div class="stat-icon" style="background-color: rgba(245, 158, 11, 0.2); color: #f59e0b;">⏱️</div>
-                            </div>
-                            <div class="stat-value">12.5</div>
-                            <div class="stat-change">-1.2 days improvement</div>
-                        </div>
-
-                        <div class="stat-card">
-                            <div class="stat-header">
-                                <span class="stat-label">Bad Debt Rate</span>
-                                <div class="stat-icon" style="background-color: rgba(239, 68, 68, 0.2); color: #ef4444;">⚠️</div>
-                            </div>
-                            <div class="stat-value">2.1%</div>
-                            <div class="stat-change">Within acceptable range</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Revenue Management Page -->
-                <div id="revenue" class="page-section">
-                    <h2 class="page-title">Revenue Management</h2>
-                    
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-header">
-                                <span class="stat-label">Emergency Dept Revenue</span>
-                                <div class="stat-icon" style="background-color: rgba(239, 68, 68, 0.2); color: #ef4444;">🚑</div>
-                            </div>
-                            <div class="stat-value">$125,400</div>
-                            <div class="stat-change">This month</div>
-                        </div>
-
-                        <div class="stat-card">
-                            <div class="stat-header">
-                                <span class="stat-label">Surgery Revenue</span>
-                                <div class="stat-icon" style="background-color: rgba(59, 130, 246, 0.2); color: #3b82f6;">🏥</div>
-                            </div>
-                            <div class="stat-value">$185,920</div>
-                            <div class="stat-change">This month</div>
-                        </div>
-
-                        <div class="stat-card">
-                            <div class="stat-header">
-                                <span class="stat-label">Laboratory Revenue</span>
-                                <div class="stat-icon" style="background-color: rgba(16, 185, 129, 0.2); color: #10b981;">🔬</div>
-                            </div>
-                            <div class="stat-value">$45,830</div>
-                            <div class="stat-change">This month</div>
-                        </div>
-
-                        <div class="stat-card">
-                            <div class="stat-header">
-                                <span class="stat-label">Pharmacy Revenue</span>
-                                <div class="stat-icon" style="background-color: rgba(168, 85, 247, 0.2); color: #a855f7;">💊</div>
-                            </div>
-                            <div class="stat-value">$67,240</div>
-                            <div class="stat-change">This month</div>
-                        </div>
-                    </div>
-
-                    <div class="content-card">
-                        <div class="card-header">
-                            <h3 class="card-title">Revenue by Department</h3>
-                        </div>
-                        <div class="table-container">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Department</th>
-                                        <th>Current Month</th>
-                                        <th>Last Month</th>
-                                        <th>Change</th>
-                                        <th>YTD</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Emergency</td>
-                                        <td>$125,400</td>
-                                        <td>$118,200</td>
-                                        <td><span class="badge badge-success">+6.1%</span></td>
-                                        <td>$1,425,800</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Surgery</td>
-                                        <td>$185,920</td>
-                                        <td>$172,500</td>
-                                        <td><span class="badge badge-success">+7.8%</span></td>
-                                        <td>$2,145,600</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Laboratory</td>
-                                        <td>$45,830</td>
-                                        <td>$48,200</td>
-                                        <td><span class="badge badge-danger">-4.9%</span></td>
-                                        <td>$548,900</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Pharmacy</td>
-                                        <td>$67,240</td>
-                                        <td>$64,100</td>
-                                        <td><span class="badge badge-success">+4.9%</span></td>
-                                        <td>$789,450</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Service Inventory System -->
-                <div id="service" class="page-section">
-                    <h2 class="page-title">Service Inventory System</h2>
-                    
-                    <!-- Service Statistics -->
-                    <div class="stats-grid" style="margin-top: 32px;">
-                        <div class="stat-card">
-                            <div class="stat-header">
-                                <span class="stat-label">Total Services</span>
-                                <div class="stat-icon" style="background-color: rgba(20, 184, 166, 0.2); color: #14b8a6;">📋</div>
-                            </div>
-                            <div class="stat-value" id="totalServices">0</div>
-                            <div class="stat-change">Active services</div>
-                        </div>
-
-                        <div class="stat-card">
-                            <div class="stat-header">
-                                <span class="stat-label">Room Services</span>
-                                <div class="stat-icon" style="background-color: rgba(59, 130, 246, 0.2); color: #3b82f6;">🏥</div>
-                            </div>
-                            <div class="stat-value" id="roomServices">0</div>
-                            <div class="stat-change">Available room types</div>
-                        </div>
-
-                        <div class="stat-card">
-                            <div class="stat-header">
-                                <span class="stat-label">Diagnostic Services</span>
-                                <div class="stat-icon" style="background-color: rgba(168, 85, 247, 0.2); color: #a855f7;">🔬</div>
-                            </div>
-                            <div class="stat-value" id="diagnosticServices">0</div>
-                            <div class="stat-change">Lab & imaging</div>
-                        </div>
-
-                    </div>
-                    <div class="content-card">
-                        <div class="card-header">
-                            <h3 class="card-title">Hospital Services & Pricing</h3>
-                            <button class="btn btn-primary" onclick="openServiceModal()">Add Service</button>
-                        </div>
-
-                        <div class="filter-bar">
-                            <input type="text" class="search-input" placeholder="Search services..." id="serviceSearch" onkeyup="filterServiceTable()">
-                            <select class="form-select" style="width: auto;" id="serviceCategoryFilter" onchange="filterServiceTable()">
-                                <option>All Categories</option>
-                                <option>Room</option>
-                                <option>Diagnostic</option>
-                                <option>Procedure</option>
-                                <option>Professional Fee</option>
-                                <option>Other</option>
-                            </select>
-                        </div>
-
-                        <div class="table-container">
-                            <table id="serviceTable">
-                                <thead>
-                                    <tr>
-                                        <th>Service Name</th>
-                                        <th>Category</th>
-                                        <th>Price (₱)</th>
-                                        <th>Status</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="serviceTableBody">
-                                    <!-- Will be populated by JavaScript -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    
-                </div>
-
-                <!-- Inventory Management Page -->
-                <div id="inventory" class="page-section">
-                    <h2 class="page-title">Inventory Management</h2>
-                    
-                    <div class="content-card">
-                        <div class="card-header">
-                            <h3 class="card-title">Product Inventory</h3>
-                            <button class="btn btn-primary" onclick="openModal('inventoryModal')">Add Product</button>
-                        </div>
-
-                        <div class="filter-bar">
-                            <input type="text" class="search-input" placeholder="Search products..." id="inventorySearch" onkeyup="filterTable('inventoryTable', 'inventorySearch')">
-                            <select class="form-select" style="width: auto;">
-                                <option>All Categories</option>
-                                <option>Medicines</option>
-                                <option>Medical Supplies</option>
-                                <option>Personal Care</option>
-                                <option>Supplements</option>
-                                <option>Vitamins</option>
-                            </select>
-                        </div>
-
-                        <div class="table-container">
-                            <table id="inventoryTable">
-                                <thead>
-                                    <tr>
-                                        <th>Product Name</th>
-                                        <th>Category</th>
-                                        <th>Current Stock</th>
-                                        <th>Cost Price</th>
-                                        <th>Selling Price</th>
-                                        <th>Margin %</th>
-                                        <th>Status</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="inventoryTableBody">
-                                    <!-- Will be populated by JavaScript -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Pharmacy Sales Report Page -->
-                <div id="pharmacy-sales" class="page-section">
-                    <!-- Updated header to show this is received data from pharmacy -->
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-                        <div>
-                            <h2 class="page-title">Pharmacy Sales Report</h2>
-                            <p style="color: #6b7280; font-size: 14px; margin-top: 4px;">
-                                <span style="display: inline-flex; align-items: center; gap: 8px;">
-                                    <span style="width: 8px; height: 8px; background-color: #10b981; border-radius: 50%; display: inline-block;"></span>
-                                    Live data received from Pharmacy Department
-                                </span>
-                            </p>
-                        </div>
-                        <span style="background-color: rgba(16, 185, 129, 0.1); color: #10b981; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 500;">
-                            Read-Only Report
-                        </span>
-                    </div>
-                    
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-header">
-                                <span class="stat-label">Today's Sales</span>
-                                <div class="stat-icon" style="background-color: rgba(16, 185, 129, 0.2); color: #10b981;">💊</div>
-                            </div>
-                            <div class="stat-value">$3,240</div>
-                            <div class="stat-change">42 transactions</div>
-                        </div>
-
-                        <div class="stat-card">
-                            <div class="stat-header">
-                                <span class="stat-label">This Week</span>
-                                <div class="stat-icon" style="background-color: rgba(59, 130, 246, 0.2); color: #3b82f6;">📊</div>
-                            </div>
-                            <div class="stat-value">$18,650</div>
-                            <div class="stat-change">+8.4% from last week</div>
-                        </div>
-
-                        <div class="stat-card">
-                            <div class="stat-header">
-                                <span class="stat-label">This Month</span>
-                                <div class="stat-icon" style="background-color: rgba(168, 85, 247, 0.2); color: #a855f7;">📈</div>
-                            </div>
-                            <div class="stat-value">$67,240</div>
-                            <div class="stat-change">+4.9% from last month</div>
-                        </div>
-
-                        <div class="stat-card">
-                            <div class="stat-header">
-                                <span class="stat-label">Gross Margin</span>
-                                <div class="stat-icon" style="background-color: rgba(245, 158, 11, 0.2); color: #f59e0b;">💰</div>
-                            </div>
-                            <div class="stat-value">32.5%</div>
-                            <div class="stat-change">Above target</div>
-                        </div>
-                    </div>
-
-                    <div class="content-card">
-                        <div class="card-header">
-                            <!-- Updated title to clarify this is pharmacy-generated data -->
-                            <h3 class="card-title">Pharmacy Sales Transactions</h3>
-                            <div style="display: flex; gap: 8px;">
-                                <button class="btn btn-secondary" onclick="exportSalesReport()">Export CSV</button>
-                                <button class="btn btn-primary" onclick="printSalesReport()">Print Report</button>
-                            </div>
-                        </div>
-
-                        <!-- Added info note about data source -->
-                        <div style="background-color: rgba(59, 130, 246, 0.1); border-left: 3px solid #3b82f6; padding: 12px 16px; margin-bottom: 20px; border-radius: 4px;">
-                            <p style="color: #93c5fd; font-size: 13px; margin: 0;">
-                                <strong>Note:</strong> This report displays sales transactions recorded by the Pharmacy Department. All data is synced in real-time from the pharmacy system.
-                            </p>
-                        </div>
-
-                        <div style="display: flex; gap: 16px; margin-bottom: 20px;">
-                            <div class="form-group" style="flex: 1;">
-                                <label class="form-label">From Date</label>
-                                <input type="date" class="form-input" id="salesStartDate">
-                            </div>
-                            <div class="form-group" style="flex: 1;">
-                                <label class="form-label">To Date</label>
-                                <input type="date" class="form-input" id="salesEndDate">
-                            </div>
-                            <div style="display: flex; align-items: flex-end;">
-                                <button class="btn btn-primary" onclick="filterSalesReport()">Filter</button>
-                            </div>
-                        </div>
-
-                        <div class="table-container">
-                            <table id="salesTable">
-                                <thead>
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Transaction ID</th>
-                                        <th>Product</th>
-                                        <th>Quantity</th>
-                                        <th>Unit Price</th>
-                                        <th>Total</th>
-                                        <th>Payment Method</th>
-                                        <!-- Changed from Cashier to Pharmacist -->
-                                        <th>Pharmacist</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="salesTableBody">
-                                    <!-- Will be populated by JavaScript -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="content-card">
-                        <div class="card-header">
-                            <h3 class="card-title">Top Selling Products</h3>
-                        </div>
-                        <div class="table-container">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Rank</th>
-                                        <th>Product Name</th>
-                                        <th>Units Sold</th>
-                                        <th>Revenue</th>
-                                        <th>Trend</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Paracetamol 500mg</td>
-                                        <td>450</td>
-                                        <td>$2,250</td>
-                                        <td><span class="badge badge-success">↑ 12%</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>Amoxicillin 250mg</td>
-                                        <td>320</td>
-                                        <td>$4,800</td>
-                                        <td><span class="badge badge-success">↑ 8%</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        <td>Ibuprofen 400mg</td>
-                                        <td>280</td>
-                                        <td>$1,680</td>
-                                        <td><span class="badge badge-danger">↓ 3%</span></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </main>
         </div>
+    </header>
+
+    <div class="main-layout">
+        <!-- Sidebar -->
+        <aside>
+            <nav>
+                <div class="nav-item active" onclick="showSection('dashboard')">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                    </svg>
+                    Dashboard
+                </div>
+                <div class="nav-item" onclick="showSection('patient-list')">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                    </svg>
+                    Patient List
+                </div>
+                <div class="nav-item" onclick="showSection('announcements')">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/>
+                    </svg>
+                    Announcements
+                </div>
+                <div class="nav-item" onclick="showSection('messages')">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                    Messages
+                    <span class="badge badge-danger ml-auto" id="unreadCount">3</span>
+                </div>
+                <div class="nav-item" onclick="showSection('service-inventory')">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                    </svg>
+                    Service Inventory
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main>
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="content-section active">
+                <h2 class="text-2xl font-semibold mb-6">Business Office Dashboard</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-label">Total Revenue (Month)</span>
+                            <div class="stat-icon" style="background-color: rgba(16, 185, 129, 0.2); color: #10b981;">$</div>
+                        </div>
+                        <div class="stat-value">$247,850</div>
+                        <div class="stat-change">+12.5% from last month</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-label">Pending Invoices</span>
+                            <div class="stat-icon" style="background-color: rgba(245, 158, 11, 0.2); color: #f59e0b;">📄</div>
+                        </div>
+                        <div class="stat-value">43</div>
+                        <div class="stat-change">-5 from yesterday</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-label">Outstanding Payments</span>
+                            <div class="stat-icon" style="background-color: rgba(239, 68, 68, 0.2); color: #ef4444;">💳</div>
+                        </div>
+                        <div class="stat-value">$32,420</div>
+                        <div class="stat-change">18 accounts</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-label">Collection Rate</span>
+                            <div class="stat-icon" style="background-color: rgba(59, 130, 246, 0.2); color: #3b82f6;">📊</div>
+                        </div>
+                        <div class="stat-value">94.3%</div>
+                        <div class="stat-change">+2.1% from last month</div>
+                    </div>
+                </div>
+
+                <div class="card p-6">
+                    <h3 class="text-lg font-semibold mb-4">Recent Transactions</h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Patient</th>
+                                <th>Description</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2024-01-04</td>
+                                <td>Michael Chen</td>
+                                <td>Surgery - Appendectomy</td>
+                                <td>$8,500.00</td>
+                                <td><span class="badge badge-success">Paid</span></td>
+                            </tr>
+                            <tr>
+                                <td>2024-01-04</td>
+                                <td>Sarah Johnson</td>
+                                <td>Laboratory Tests</td>
+                                <td>$350.00</td>
+                                <td><span class="badge badge-success">Paid</span></td>
+                            </tr>
+                            <tr>
+                                <td>2024-01-03</td>
+                                <td>Robert Williams</td>
+                                <td>Emergency Room Visit</td>
+                                <td>$1,200.00</td>
+                                <td><span class="badge badge-warning">Pending</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Patient List Section -->
+            <section id="patient-list" class="content-section hidden">
+                <h2 class="text-2xl font-semibold mb-6">Patient List</h2>
+
+                <div class="card p-6 mb-6">
+                    <div class="search-box">
+                        <svg class="search-icon w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                        <input type="text" id="patientSearch" placeholder="Search by name, ID..." onkeyup="searchPatients()">
+                    </div>
+                </div>
+
+                <div class="card">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Patient ID</th>
+                                <th>Patient Name</th>
+                                <th>Contact Number</th>
+                                <th>Outstanding Balance</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="patientTableBody">
+                            <tr>
+                                <td>P-2024-001</td>
+                                <td>Michael Chen</td>
+                                <td>+63 912 345 6789</td>
+                                <td>$0.00</td>
+                                <td>
+                                    <div class="action-btns">
+                                        <button class="btn btn-primary btn-sm" onclick="viewPatientBilling(1)">View Billing</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>P-2024-002</td>
+                                <td>Sarah Johnson</td>
+                                <td>+63 923 456 7890</td>
+                                <td>$1,200.00</td>
+                                <td>
+                                    <div class="action-btns">
+                                        <button class="btn btn-primary btn-sm" onclick="viewPatientBilling(2)">View Billing</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>P-2024-003</td>
+                                <td>Robert Williams</td>
+                                <td>+63 934 567 8901</td>
+                                <td>$350.00</td>
+                                <td>
+                                    <div class="action-btns">
+                                        <button class="btn btn-primary btn-sm" onclick="viewPatientBilling(3)">View Billing</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Announcements Section -->
+            <section id="announcements" class="content-section hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-semibold">Announcements</h2>
+                    <button class="btn btn-primary" onclick="openModal('newAnnouncementModal')">+ New Announcement</button>
+                </div>
+
+                <div id="announcementsList">
+                    <div class="announcement-card">
+                        <div class="announcement-header">
+                            <div>
+                                <div class="announcement-title">New Billing Policy Update</div>
+                                <div class="announcement-date">January 4, 2025 • 10:30 AM</div>
+                            </div>
+                            <span class="badge badge-info">Important</span>
+                        </div>
+                        <div class="announcement-content">
+                            Effective immediately, all insurance claims must be submitted within 48 hours of patient discharge. Please ensure all documentation is complete before submission.
+                        </div>
+                    </div>
+
+                    <div class="announcement-card">
+                        <div class="announcement-header">
+                            <div>
+                                <div class="announcement-title">System Maintenance Schedule</div>
+                                <div class="announcement-date">January 3, 2025 • 2:15 PM</div>
+                            </div>
+                            <span class="badge badge-warning">Alert</span>
+                        </div>
+                        <div class="announcement-content">
+                            The billing system will undergo maintenance on January 6, 2025, from 12:00 AM to 4:00 AM. Please complete all urgent transactions before this time.
+                        </div>
+                    </div>
+
+                    <div class="announcement-card">
+                        <div class="announcement-header">
+                            <div>
+                                <div class="announcement-title">Year-End Financial Report Due</div>
+                                <div class="announcement-date">January 2, 2025 • 9:00 AM</div>
+                            </div>
+                            <span class="badge badge-danger">Urgent</span>
+                        </div>
+                        <div class="announcement-content">
+                            All departments must submit their year-end financial reports by January 15, 2025. Late submissions will require approval from the Finance Director.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Messages Section -->
+            <section id="messages" class="content-section hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-semibold">Messages</h2>
+                    <button class="btn btn-primary" onclick="openCompose()">+ New Message</button>
+                </div>
+
+                <div class="grid grid-cols-3 gap-6" style="height: calc(100vh - 200px);">
+                    <!-- Conversation List -->
+                    <div class="card col-span-1 flex flex-col" style="height: 100%;">
+                        <div class="p-4 border-b" style="border-color: var(--border);">
+                            <div class="search-box">
+                                <svg class="search-icon w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                                </svg>
+                                <input type="text" placeholder="Search conversations...">
+                            </div>
+                            <div id="conversationList" class="flex-1 pt-2" style="overflow-y: auto;">
+                                <!-- Conversations will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chat Window -->
+                    <div class="card col-span-2" style="height: 100%; display: flex; flex-direction: column;">
+                        <!-- Chat Header -->
+                        <div id="chatHeader" class="p-4 border-b" style="border-color: var(--border); display: none;">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background-color: var(--primary);">
+                                    <span id="chatContactInitial" class="font-semibold"></span>
+                                </div>
+                                <div class="flex-1">
+                                    <div id="chatContactName" class="font-semibold"></div>
+                                    <div id="chatContactRole" class="text-sm" style="color: var(--muted-foreground);"></div>
+                                </div>
+                                <button class="btn btn-secondary text-sm" onclick="closeConversation()">Close</button>
+                            </div>
+                        </div>
+
+                        <!-- Messages Container -->
+                        <div id="messagesContainer" class="p-4" style="flex: 1; overflow-y: auto; background-color: var(--background); display: none;"></div>
+
+                        <!-- Empty State -->
+                        <div id="noConversationText" style="flex: 1; display: flex; align-items: center; justify-content: center; color: var(--muted-foreground);">
+                            <div class="text-center">
+                                <svg class="w-16 h-16 mx-auto mb-4" style="color: var(--muted-foreground);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                                </svg>
+                                <p>Select a conversation to start messaging</p>
+                            </div>
+                        </div>
+
+                        <!-- Message Input -->
+                        <div id="messageInputContainer" class="p-4 border-t" style="border-color: var(--border); display: none;">
+                            <div class="flex gap-2">
+                                <input type="text" id="messageInput" placeholder="Type a message..." class="flex-1" onkeypress="handleMessageKeyPress(event)">
+                                <button class="btn btn-primary" onclick="sendChatMessage()">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Compose Modal -->
+                <div class="modal" id="composeModal">
+                    <div class="modal-content p-6">
+                        <h3 class="text-lg font-semibold mb-4">New Message</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label>To</label>
+                                <select id="composeTo">
+                                    <option value="">Select recipient</option>
+                                    <option value="Finance Director">Finance Director</option>
+                                    <option value="Billing Department">Billing Department</option>
+                                    <option value="Front Desk">Front Desk</option>
+                                    <option value="Medical Records">Medical Records</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>Subject</label>
+                                <input type="text" id="composeSubject" placeholder="Message subject">
+                            </div>
+                            <div>
+                                <label>Message</label>
+                                <textarea id="composeBody" rows="5" placeholder="Type your message here..."></textarea>
+                            </div>
+                            <div class="flex gap-2">
+                                <button class="btn btn-primary flex-1" onclick="sendNewMessage()">Send</button>
+                                <button class="btn btn-secondary flex-1" onclick="closeCompose()">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Service Inventory Section -->
+            <section id="service-inventory" class="content-section hidden">
+                <h2 class="text-2xl font-semibold mb-6">Service Inventory System</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-label">Total Services</span>
+                            <div class="stat-icon" style="background-color: rgba(20, 184, 166, 0.2); color: #14b8a6;">📋</div>
+                        </div>
+                        <div class="stat-value" id="totalServices">0</div>
+                        <div class="stat-change">Active services</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-label">Room Services</span>
+                            <div class="stat-icon" style="background-color: rgba(59, 130, 246, 0.2); color: #3b82f6;">🏥</div>
+                        </div>
+                        <div class="stat-value" id="roomServices">0</div>
+                        <div class="stat-change">Available room types</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-label">Diagnostic Services</span>
+                            <div class="stat-icon" style="background-color: rgba(168, 85, 247, 0.2); color: #a855f7;">🔬</div>
+                        </div>
+                        <div class="stat-value" id="diagnosticServices">0</div>
+                        <div class="stat-change">Lab & imaging</div>
+                    </div>
+                </div>
+
+                <div class="card p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold">Hospital Services & Pricing</h3>
+                        <button class="btn btn-primary" onclick="openServiceModal()">Add Service</button>
+                    </div>
+
+                    <div class="filter-bar">
+                        <input type="text" class="search-input" placeholder="Search services..." id="serviceSearch" onkeyup="filterServiceTable()">
+                        <select class="form-select" style="width: auto;" id="serviceCategoryFilter" onchange="filterServiceTable()">
+                            <option>All Categories</option>
+                            <option>Room</option>
+                            <option>Diagnostic</option>
+                            <option>Procedure</option>
+                            <option>Professional Fee</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+
+                    <table class="table" id="serviceTable">
+                        <thead>
+                            <tr>
+                                <th>Service Name</th>
+                                <th>Category</th>
+                                <th>Price (₱)</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="serviceTableBody">
+                            <!-- Will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
     </div>
 
     <!-- Service Modal -->
@@ -1194,242 +1048,115 @@
         </div>
     </div>
 
-    <!-- Inventory Modal -->
-    <div id="inventoryModal" class="modal">
+    <!-- New Announcement Modal -->
+    <div id="newAnnouncementModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">Add/Edit Product</h3>
-                <button class="close-btn" onclick="closeModal('inventoryModal')">&times;</button>
+                <h3 class="modal-title">New Announcement</h3>
+                <button class="close-btn" onclick="closeModal('newAnnouncementModal')">&times;</button>
             </div>
-            <form id="inventoryForm" onsubmit="submitInventory(event)">
+            <form onsubmit="submitAnnouncement(event)">
                 <div class="form-group">
-                    <label class="form-label">Product Name *</label>
-                    <input type="text" name="product_name" class="form-input" placeholder="Enter product name..." required>
+                    <label class="form-label">Title *</label>
+                    <input type="text" class="form-input" placeholder="Announcement title" required>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Category *</label>
-                    <select name="category" class="form-select" placeholder="Select category" required>
-                        <option value="">Select category</option>
-                        <option>All Categories</option>
-                        <option>Medication</option>
-                        <option>Medical Supplies</option>
-                        <option>Personal Care</option>
-                        <option>Supplements</option>
-                        <option>Vitamins</option>
+                    <label class="form-label">Priority *</label>
+                    <select class="form-select" required>
+                        <option value="">Select priority</option>
+                        <option value="info">Information</option>
+                        <option value="important">Important</option>
+                        <option value="urgent">Urgent</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Current Stock *</label>
-                    <input type="number" name="current_stock" class="form-input" min="0" value="0" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Reorder Level *</label>
-                    <input type="number" name="reorder_level" class="form-input" min="1" value="50" required>
-                </div>
-                <div style="display: flex; gap: 16px;">
-                    <div class="form-group" style="flex: 1;">
-                        <label class="form-label">Cost Price (₱) *</label>
-                        <input type="number" name="cost_price" class="form-input" step="0.01" min="0.01" required>
-                    </div>
-                    <div class="form-group" style="flex: 1;">
-                        <label class="form-label">Selling Price (₱) *</label>
-                        <input type="number" name="selling_price" class="form-input" step="0.01" min="0.01" required>
-                    </div>
+                    <label class="form-label">Content *</label>
+                    <textarea class="form-textarea" rows="5" placeholder="Type your announcement here..." required></textarea>
                 </div>
                 <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px;">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('inventoryModal')">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save Product</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('newAnnouncementModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Publish</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Discharge Billing Modal -->
-    <div id="dischargeModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Patient Discharge Billing</h3>
-                <button class="close-btn" onclick="closeModal('dischargeModal')">&times;</button>
-            </div>
-            <form id="dischargeForm" onsubmit="submitDischargeBill(event)">
-                <div class="form-group">
-                    <label class="form-label">Patient ID</label>
-                    <input type="text" class="form-input" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Patient Name</label>
-                    <input type="text" class="form-input" required>
-                </div>
-                <div style="display: flex; gap: 16px;">
-                    <div class="form-group" style="flex: 1;">
-                        <label class="form-label">Admission Date</label>
-                        <input type="date" class="form-input" required>
-                    </div>
-                    <div class="form-group" style="flex: 1;">
-                        <label class="form-label">Discharge Date</label>
-                        <input type="date" class="form-input" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Room Charges</label>
-                    <input type="number" class="form-input" step="0.01" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Medical Services</label>
-                    <input type="number" class="form-input" step="0.01" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Laboratory Tests</label>
-                    <input type="number" class="form-input" step="0.01" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Pharmacy</label>
-                    <input type="number" class="form-input" step="0.01" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Other Charges</label>
-                    <input type="number" class="form-input" step="0.01" required>
-                </div>
-                <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('dischargeModal')">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Calculate & Generate Invoice</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Payment Modal -->
-    <div id="paymentModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Process Payment</h3>
-                <button class="close-btn" onclick="closeModal('paymentModal')">&times;</button>
-            </div>
-            <form id="paymentForm" onsubmit="submitPayment(event)">
-                <div class="form-group">
-                    <label class="form-label">Invoice Number</label>
-                    <input type="text" class="form-input" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Patient Name</label>
-                    <input type="text" class="form-input" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Payment Amount</label>
-                    <input type="number" class="form-input" step="0.01" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Payment Method</label>
-                    <select class="form-select" required>
-                        <option value="">Select method</option>
-                        <option value="cash">Cash</option>
-                        <option value="credit">Credit Card</option>
-                        <option value="debit">Debit Card</option>
-                        <option value="bank">Bank Transfer</option>
-                        <option value="insurance">Insurance</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Reference Number</label>
-                    <input type="text" class="form-input">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Notes</label>
-                    <textarea class="form-textarea"></textarea>
-                </div>
-                <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('paymentModal')">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Process Payment</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Insurance Claim Modal -->
-    <div id="claimModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Submit Insurance Claim</h3>
-                <button class="close-btn" onclick="closeModal('claimModal')">&times;</button>
-            </div>
-            <form id="claimForm" onsubmit="submitClaim(event)">
-                <div class="form-group">
-                    <label class="form-label">Patient Name</label>
-                    <input type="text" class="form-input" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Insurance Provider</label>
-                    <select class="form-select" required>
-                        <option value="">Select provider</option>
-                        <option value="bluecross">Blue Cross</option>
-                        <option value="aetna">Aetna</option>
-                        <option value="cigna">Cigna</option>
-                        <option value="united">United Healthcare</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Policy Number</label>
-                    <input type="text" class="form-input" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Service Date</label>
-                    <input type="date" class="form-input" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Service Description</label>
-                    <textarea class="form-textarea" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Claim Amount</label>
-                    <input type="number" class="form-input" step="0.01" required>
-                </div>
-                <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('claimModal')">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Submit Claim</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    
-    
-    
     <script>
+        // Global variables
         let servicesData = [];
         let currentEditingService = null;
-        let inventoryData = [];
-        let currentEditingProduct = null;
+        let conversations = [
+            {
+                id: 1,
+                contact: "Finance Director",
+                role: "Management",
+                lastMessage: "Please prepare the monthly financial report.",
+                timestamp: "10 min ago",
+                unread: 2,
+                messages: [
+                    { id: 1, sender: "Finance Director", text: "Hello, I need the monthly financial report.", timestamp: "10:30 AM", isOwn: false },
+                    { id: 2, sender: "Finance Director", text: "Please prepare the monthly financial report.", timestamp: "10:31 AM", isOwn: false }
+                ]
+            },
+            {
+                id: 2,
+                contact: "Billing Department",
+                role: "Department",
+                lastMessage: "Outstanding balance update completed.",
+                timestamp: "1 hour ago",
+                unread: 1,
+                messages: [
+                    { id: 1, sender: "Billing Department", text: "Outstanding balance update completed.", timestamp: "9:15 AM", isOwn: false }
+                ]
+            },
+            {
+                id: 3,
+                contact: "Medical Records",
+                role: "Department",
+                lastMessage: "Thank you for the information",
+                timestamp: "Yesterday",
+                unread: 0,
+                messages: [
+                    { id: 1, sender: "Business Office", text: "Patient billing records sent", timestamp: "Yesterday 3:20 PM", isOwn: true },
+                    { id: 2, sender: "Medical Records", text: "Thank you for the information", timestamp: "Yesterday 3:25 PM", isOwn: false }
+                ]
+            }
+        ];
+        let currentConversation = null;
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            populateBillingTable();
-            populatePaymentTable();
-            populateClaimTable();
-            populateSalesTable();
-            loadInventoryData();
-            
-            // Load services when Service Inventory page is shown on load
-            const serviceSection = document.getElementById('service');
-            if (serviceSection && serviceSection.classList.contains('active')) {
-                loadServicesFromDB();
-            }
-            
-            // Add event listener for inventory search
-            const searchInput = document.getElementById('inventorySearch');
-            if (searchInput) {
-                searchInput.addEventListener('keyup', filterInventoryTable);
-            }
-            
-            // Add event listener for category filter
-            const categorySelect = document.querySelector('#inventory .form-select');
-            if (categorySelect) {
-                categorySelect.addEventListener('change', filterInventoryTable);
-            }
+            loadServicesFromDB();
+            renderConversationList();
+            updateUnreadCount();
         });
 
+        // Navigation
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.add('hidden');
+                section.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.classList.remove('hidden');
+                section.classList.add('active');
+            }
+            
+            event.target.closest('.nav-item').classList.add('active');
+            
+            // Load data when switching to service inventory
+            if (sectionId === 'service-inventory') {
+                loadServicesFromDB();
+            }
+        }
 
-
-        // Load services from database
+        // Service Inventory Functions
         async function loadServicesFromDB() {
             try {
                 const response = await fetch('/api/services/list');
@@ -1448,7 +1175,6 @@
             }
         }
 
-        // Populate service table
         function populateServiceTable() {
             const tbody = document.getElementById('serviceTableBody');
             if (!tbody) return;
@@ -1458,7 +1184,7 @@
             if (servicesData.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="5" style="text-align: center; padding: 40px; color: #888;">
+                        <td colspan="5" style="text-align: center; padding: 40px; color: var(--muted-foreground);">
                             No services found. Click "Add Service" to create your first service.
                         </td>
                     </tr>
@@ -1487,29 +1213,20 @@
             });
         }
 
-        // Update service statistics
         function updateServiceStats() {
             const totalServices = servicesData.filter(s => s.status === 'Active').length;
             const roomServices = servicesData.filter(s => s.category === 'Room' && s.status === 'Active').length;
             const diagnosticServices = servicesData.filter(s => s.category === 'Diagnostic' && s.status === 'Active').length;
             
-            const activeServices = servicesData.filter(s => s.status === 'Active');
-            const avgPrice = activeServices.length > 0 
-                ? activeServices.reduce((sum, s) => sum + parseFloat(s.price), 0) / activeServices.length 
-                : 0;
-
             const totalServicesEl = document.getElementById('totalServices');
             const roomServicesEl = document.getElementById('roomServices');
             const diagnosticServicesEl = document.getElementById('diagnosticServices');
-            const avgServicePriceEl = document.getElementById('avgServicePrice');
             
             if (totalServicesEl) totalServicesEl.textContent = totalServices;
             if (roomServicesEl) roomServicesEl.textContent = roomServices;
             if (diagnosticServicesEl) diagnosticServicesEl.textContent = diagnosticServices;
-            if (avgServicePriceEl) avgServicePriceEl.textContent = '₱' + avgPrice.toLocaleString('en-PH', {minimumFractionDigits: 2});
         }
 
-        // Open service modal
         function openServiceModal() {
             currentEditingService = null;
             const modal = document.getElementById('serviceModal');
@@ -1522,7 +1239,6 @@
             openModal('serviceModal');
         }
 
-        // Edit service
         function editService(serviceId) {
             const service = servicesData.find(s => s.id === serviceId);
             if (!service) {
@@ -1538,7 +1254,6 @@
             
             modalTitle.textContent = 'Edit Service';
             
-            // Populate form fields
             form.querySelector('input[name="service_name"]').value = service.service_name;
             form.querySelector('select[name="category"]').value = service.category;
             form.querySelector('input[name="price"]').value = parseFloat(service.price);
@@ -1551,7 +1266,6 @@
             openModal('serviceModal');
         }
 
-        // Submit service form
         async function submitService(event) {
             event.preventDefault();
             
@@ -1569,11 +1283,9 @@
                 let url, method;
                 
                 if (currentEditingService) {
-                    // Update existing service
                     url = `/api/services/update/${currentEditingService.id}`;
                     method = 'PUT';
                 } else {
-                    // Create new service
                     url = '/api/services/create';
                     method = 'POST';
                 }
@@ -1593,7 +1305,7 @@
                     closeModal('serviceModal');
                     form.reset();
                     currentEditingService = null;
-                    await loadServicesFromDB(); // Reload from database
+                    await loadServicesFromDB();
                 } else {
                     showNotification(result.message || 'Failed to save service', 'error');
                 }
@@ -1604,7 +1316,6 @@
             }
         }
 
-        // Delete service
         async function deleteService(serviceId) {
             const service = servicesData.find(s => s.id === serviceId);
             if (!service) return;
@@ -1622,7 +1333,7 @@
                 
                 if (result.status === 'success') {
                     showNotification('Service deleted successfully', 'success');
-                    await loadServicesFromDB(); // Reload from database
+                    await loadServicesFromDB();
                 } else {
                     showNotification(result.message || 'Failed to delete service', 'error');
                 }
@@ -1633,7 +1344,6 @@
             }
         }
 
-        // Filter service table
         function filterServiceTable() {
             const searchInput = document.getElementById('serviceSearch');
             const categorySelect = document.getElementById('serviceCategoryFilter');
@@ -1662,297 +1372,232 @@
             }
         }
 
+        // Messages Functions
+        function renderConversationList() {
+            const list = document.getElementById("conversationList");
+            if (!list) return;
+            
+            list.innerHTML = "";
 
-        // INVENTORY MANAGEMENT
-        // Load inventory data from API
-        async function loadInventoryData() {
-            try {
-                const response = await fetch('/api/inventory/list');
-                const result = await response.json();
-                
-                if (result.status === 'success') {
-                    inventoryData = result.data;
-                    populateInventoryTable();
-                } else {
-                    showNotification('Failed to load inventory data', 'error');
-                }
-            } catch (error) {
-                console.error('Error loading inventory:', error);
-                // Use sample data for demo
-                inventoryData = [];
-                populateInventoryTable();
-            }
-        }
-
-        // Populate inventory table
-        function populateInventoryTable() {
-            const tbody = document.getElementById('inventoryTableBody');
-            if (!tbody) return;
-            
-            tbody.innerHTML = '';
-            
-            if (inventoryData.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="8" style="text-align: center; padding: 40px; color: #888;">
-                            No products found. Click "Add Product" to create your first inventory item.
-                        </td>
-                    </tr>
+            conversations.forEach(conv => {
+                const item = document.createElement("div");
+                item.className = "conversation-item";
+                item.style.cssText = `
+                    padding: 16px;
+                    border-bottom: 1px solid var(--border);
+                    cursor: pointer;
+                    transition: background-color 0.2s;
+                    background-color: ${conv.unread > 0 ? 'var(--secondary)' : 'transparent'};
                 `;
-                return;
-            }
-            
-            inventoryData.forEach(product => {
-                const stockClass = getStockClass(product.stock_status);
-                const stockStatus = getStockStatusText(product.stock_status);
                 
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${escapeHtml(product.product_name)}</td>
-                        <td>${escapeHtml(product.category)}</td>
-                        <td>${product.current_stock}</td>
-                        <td>₱${product.cost_price.toFixed(2)}</td>
-                        <td>₱${product.selling_price.toFixed(2)}</td>
-                        <td>${product.margin_percentage.toFixed(1)}%</td>
-                        <td>
-                            <div class="inventory-status">
-                                <div class="stock-indicator ${stockClass}"></div>
-                                ${stockStatus}
+                item.onclick = () => openConversation(conv.id);
+                
+                item.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background-color: var(--primary);">
+                            <span class="font-semibold">${conv.contact.split(' ').map(n => n[0]).join('')}</span>
+                        </div>
+                        <div class="flex-1" style="min-width: 0;">
+                            <div class="flex items-center justify-between mb-1">
+                                <div class="font-semibold">${conv.contact}</div>
+                                ${conv.unread > 0 ? `<span class="badge badge-danger">${conv.unread}</span>` : ''}
                             </div>
-                        </td>
-                        <td>
-                            <div class="action-btns">
-                                <button class="btn btn-sm btn-secondary" onclick="editInventory(${product.id})">Edit</button>
-                                <button class="btn btn-sm btn-primary" onclick="restockProduct(${product.id})">Restock</button>
-                                <button class="btn btn-sm btn-danger" onclick="deleteInventory(${product.id})">Delete</button>
+                            <div class="text-sm" style="color: var(--muted-foreground); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                ${conv.lastMessage}
                             </div>
-                        </td>
-                    </tr>
+                            <div class="text-xs mt-1" style="color: var(--muted-foreground);">${conv.timestamp}</div>
+                        </div>
+                    </div>
                 `;
+                
+                item.onmouseenter = function() {
+                    if (conv.unread === 0) this.style.backgroundColor = 'var(--secondary)';
+                };
+                item.onmouseleave = function() {
+                    if (conv.unread === 0) this.style.backgroundColor = 'transparent';
+                };
+                
+                list.appendChild(item);
             });
         }
 
-        // Get stock status class
-        function getStockClass(status) {
-            switch(status) {
-                case 'high': return 'high';
-                case 'medium': return 'medium';
-                case 'low': return 'low';
-                case 'out_of_stock': return 'low';
-                default: return 'medium';
+        function openConversation(convId) {
+            const conv = conversations.find(c => c.id === convId);
+            if (!conv) return;
+
+            currentConversation = conv;
+            conv.unread = 0;
+            updateUnreadCount();
+
+            document.getElementById("noConversationText").style.display = "none";
+            document.getElementById("chatHeader").style.display = "block";
+            document.getElementById("messagesContainer").style.display = "block";
+            document.getElementById("messageInputContainer").style.display = "block";
+
+            document.getElementById("chatContactInitial").textContent = conv.contact.split(' ').map(n => n[0]).join('');
+            document.getElementById("chatContactName").textContent = conv.contact;
+            document.getElementById("chatContactRole").textContent = conv.role;
+
+            renderMessages();
+            renderConversationList();
+        }
+
+        function renderMessages() {
+            if (!currentConversation) return;
+
+            const container = document.getElementById("messagesContainer");
+            container.innerHTML = "";
+
+            currentConversation.messages.forEach(msg => {
+                const messageDiv = document.createElement("div");
+                messageDiv.className = `mb-4 flex ${msg.isOwn ? 'justify-end' : 'justify-start'}`;
+                
+                messageDiv.innerHTML = `
+                    <div style="max-width: 70%;">
+                        ${!msg.isOwn ? `<div class="text-xs mb-1" style="color: var(--muted-foreground);">${msg.sender}</div>` : ''}
+                        <div class="p-3 rounded-lg" style="background-color: ${msg.isOwn ? 'var(--primary)' : 'var(--secondary)'}; color: ${msg.isOwn ? 'white' : 'var(--foreground)'};">
+                            ${msg.text}
+                        </div>
+                        <div class="text-xs mt-1 ${msg.isOwn ? 'text-right' : ''}" style="color: var(--muted-foreground);">
+                            ${msg.timestamp}
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(messageDiv);
+            });
+
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function closeConversation() {
+            currentConversation = null;
+            document.getElementById("chatHeader").style.display = "none";
+            document.getElementById("messagesContainer").style.display = "none";
+            document.getElementById("messageInputContainer").style.display = "none";
+            document.getElementById("noConversationText").style.display = "flex";
+        }
+
+        function handleMessageKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendChatMessage();
             }
         }
 
-        // Get stock status text
-        function getStockStatusText(status) {
-            switch(status) {
-                case 'high': return 'In Stock';
-                case 'medium': return 'Normal';
-                case 'low': return 'Low Stock';
-                case 'out_of_stock': return 'Out of Stock';
-                default: return 'Unknown';
-            }
-        }
+        function sendChatMessage() {
+            if (!currentConversation) return;
 
-        // Open inventory modal for adding
-        function openInventoryModal() {
-            currentEditingProduct = null;
-            const modal = document.getElementById('inventoryModal');
-            const form = document.getElementById('inventoryForm');
-            const modalTitle = modal.querySelector('.modal-title');
+            const input = document.getElementById("messageInput");
+            const text = input.value.trim();
             
-            modalTitle.textContent = 'Add Product';
-            form.reset();
-            
-            openModal('inventoryModal');
-        }
+            if (!text) return;
 
-        // Edit inventory product
-        async function editInventory(productId) {
-            try {
-                const product = inventoryData.find(p => p.id === productId);
-                if (!product) {
-                    showNotification('Product not found', 'error');
-                    return;
-                }
-                
-                currentEditingProduct = product;
-                
-                const modal = document.getElementById('inventoryModal');
-                const modalTitle = modal.querySelector('.modal-title');
-                const form = document.getElementById('inventoryForm');
-                
-                modalTitle.textContent = 'Edit Product';
-                
-                // Populate form fields
-                form.querySelector('input[name="product_name"]').value = product.product_name;
-                form.querySelector('select[name="category"]').value = product.category;
-                form.querySelector('input[name="current_stock"]').value = product.current_stock;
-                form.querySelector('input[name="reorder_level"]').value = product.reorder_level;
-                form.querySelector('input[name="cost_price"]').value = product.cost_price;
-                form.querySelector('input[name="selling_price"]').value = product.selling_price;
-                
-                openModal('inventoryModal');
-                
-            } catch (error) {
-                console.error('Error editing inventory:', error);
-                showNotification('Error loading product data', 'error');
-            }
-        }
+            const now = new Date();
+            const timestamp = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
 
-        // Submit inventory form
-        async function submitInventory(event) {
-            event.preventDefault();
-            
-            const form = event.target;
-            const formData = new FormData(form);
-            
-            const data = {
-                product_name: formData.get('product_name'),
-                category: formData.get('category'),
-                current_stock: parseInt(formData.get('current_stock')),
-                reorder_level: parseInt(formData.get('reorder_level')),
-                cost_price: parseFloat(formData.get('cost_price')),
-                selling_price: parseFloat(formData.get('selling_price'))
+            const newMessage = {
+                id: Date.now(),
+                sender: "Business Office",
+                text: text,
+                timestamp: timestamp,
+                isOwn: true
             };
-            
-            try {
-                let url = '/api/inventory/create';
-                let method = 'POST';
-                
-                if (currentEditingProduct) {
-                    url = `/api/inventory/update/${currentEditingProduct.id}`;
-                    method = 'PUT';
-                }
-                
-                const response = await fetch(url, {
-                    method: method,
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                });
-                
-                const result = await response.json();
-                
-                if (result.status === 'success') {
-                    showNotification(result.message, 'success');
-                    closeModal('inventoryModal');
-                    form.reset();
-                    currentEditingProduct = null;
-                    await loadInventoryData();
-                } else {
-                    showNotification(result.message, 'error');
-                }
-                
-            } catch (error) {
-                console.error('Error submitting inventory:', error);
-                showNotification('Error saving product', 'error');
-            }
+
+            currentConversation.messages.push(newMessage);
+            currentConversation.lastMessage = text;
+            currentConversation.timestamp = "Just now";
+
+            input.value = "";
+            renderMessages();
+            renderConversationList();
         }
 
-        // Restock product
-        async function restockProduct(productId) {
-            const product = inventoryData.find(p => p.id === productId);
-            if (!product) return;
-            
-            const quantity = prompt(`Restock ${product.product_name}\n\nCurrent Stock: ${product.current_stock}\nReorder Level: ${product.reorder_level}\n\nEnter quantity to add:`);
-            
-            if (quantity === null) return;
-            
-            const qty = parseInt(quantity);
-            if (isNaN(qty) || qty <= 0) {
-                showNotification('Please enter a valid quantity', 'error');
+        function openCompose() {
+            document.getElementById("composeModal").classList.add("active");
+            document.getElementById("composeTo").value = "";
+            document.getElementById("composeSubject").value = "";
+            document.getElementById("composeBody").value = "";
+        }
+
+        function closeCompose() {
+            document.getElementById("composeModal").classList.remove("active");
+        }
+
+        function sendNewMessage() {
+            const to = document.getElementById("composeTo").value;
+            const subject = document.getElementById("composeSubject").value;
+            const body = document.getElementById("composeBody").value;
+
+            if (!to || !body) {
+                showAlert('error', 'Error', 'Please fill in recipient and message');
                 return;
             }
+
+            let conv = conversations.find(c => c.contact === to);
             
-            try {
-                const response = await fetch(`/api/inventory/restock/${productId}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        quantity: qty,
-                        notes: `Restocked ${qty} units`
-                    })
-                });
-                
-                const result = await response.json();
-                
-                if (result.status === 'success') {
-                    showNotification(result.message, 'success');
-                    await loadInventoryData();
-                } else {
-                    showNotification(result.message, 'error');
-                }
-                
-            } catch (error) {
-                console.error('Error restocking product:', error);
-                showNotification('Error restocking product', 'error');
+            if (!conv) {
+                conv = {
+                    id: Date.now(),
+                    contact: to,
+                    role: 'Department',
+                    lastMessage: body,
+                    timestamp: "Just now",
+                    unread: 0,
+                    messages: []
+                };
+                conversations.unshift(conv);
+            }
+
+            const now = new Date();
+            const timestamp = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+
+            conv.messages.push({
+                id: Date.now(),
+                sender: "Business Office",
+                text: subject ? `${subject}: ${body}` : body,
+                timestamp: timestamp,
+                isOwn: true
+            });
+
+            conv.lastMessage = body;
+            conv.timestamp = "Just now";
+
+            closeCompose();
+            renderConversationList();
+            openConversation(conv.id);
+            showAlert('success', 'Sent', 'Message sent successfully');
+        }
+
+        function updateUnreadCount() {
+            const unread = conversations.reduce((sum, conv) => sum + conv.unread, 0);
+            const badge = document.getElementById("unreadCount");
+            if (badge) {
+                badge.innerText = unread;
             }
         }
 
-        // Delete inventory product
-        async function deleteInventory(productId) {
-            const product = inventoryData.find(p => p.id === productId);
-            if (!product) return;
-            
-            if (!confirm(`Are you sure you want to delete "${product.product_name}"?\n\nThis action cannot be undone.`)) {
-                return;
-            }
-            
-            try {
-                const response = await fetch(`/api/inventory/delete/${productId}`, {
-                    method: 'DELETE'
-                });
-                
-                const result = await response.json();
-                
-                if (result.status === 'success') {
-                    showNotification(result.message, 'success');
-                    await loadInventoryData();
-                } else {
-                    showNotification(result.message, 'error');
-                }
-                
-            } catch (error) {
-                console.error('Error deleting product:', error);
-                showNotification('Error deleting product', 'error');
+        // Utility Functions
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('active');
             }
         }
 
-        // Filter inventory table
-        function filterInventoryTable() {
-            const searchInput = document.getElementById('inventorySearch');
-            const categorySelect = document.querySelector('#inventory .form-select');
-            
-            if (!searchInput || !categorySelect) return;
-            
-            const searchTerm = searchInput.value.toLowerCase();
-            const selectedCategory = categorySelect.value;
-            
-            const tbody = document.getElementById('inventoryTableBody');
-            const rows = tbody.getElementsByTagName('tr');
-            
-            for (let i = 0; i < rows.length; i++) {
-                const row = rows[i];
-                const text = row.textContent.toLowerCase();
-                const categoryCell = row.cells[1]?.textContent || '';
-                
-                const matchesSearch = text.includes(searchTerm);
-                const matchesCategory = selectedCategory === 'All Categories' || categoryCell === selectedCategory;
-                
-                if (matchesSearch && matchesCategory) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('active');
             }
         }
 
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
 
-        // Show notification
         function showNotification(message, type = 'info') {
             if (type === 'success') {
                 alert('✓ ' + message);
@@ -1963,14 +1608,66 @@
             }
         }
 
-        // Escape HTML to prevent XSS
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
+        function showAlert(type, title, message) {
+            const alert = document.createElement('div');
+            alert.className = `custom-alert ${type}`;
+            alert.innerHTML = `
+                <div class="alert-content">
+                    <div class="alert-icon">
+                        ${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'}
+                    </div>
+                    <div class="alert-text">
+                        <strong>${title}</strong>
+                        <p>${message}</p>
+                    </div>
+                </div>
+            `;
+            
+            alert.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
+                color: white;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+                z-index: 10000;
+                min-width: 300px;
+                animation: slideIn 0.3s ease;
+            `;
+            
+            document.body.appendChild(alert);
+            
+            setTimeout(() => {
+                alert.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => alert.remove(), 300);
+            }, 3000);
         }
 
-        // Logout function
+        // Patient and Announcement Functions
+        function searchPatients() {
+            const searchTerm = document.getElementById('patientSearch').value.toLowerCase();
+            const rows = document.querySelectorAll('#patientTableBody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        }
+
+        function viewPatientBilling(patientId) {
+            showAlert('info', 'Patient Billing', `Viewing billing information for patient ID: ${patientId}`);
+        }
+
+        function submitAnnouncement(event) {
+            event.preventDefault();
+            showAlert('success', 'Success', 'Announcement published successfully!');
+            closeModal('newAnnouncementModal');
+            event.target.reset();
+        }
+
+        // Logout
         async function logout() {
             if (!confirm('Are you sure you want to logout?')) {
                 return;
@@ -1993,253 +1690,33 @@
             }
         }
 
+        // Animation styles
+        const style = document.createElement('style');
+        style.textContent = `
+            .alert-content {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+            
+            .alert-icon {
+                font-size: 24px;
+            }
+            
+            .alert-text strong {
+                display: block;
+                margin-bottom: 4px;
+            }
+            
+            .alert-text p {
+                margin: 0;
+                font-size: 14px;
+            }
+        `;
+        document.head.appendChild(style);
+
+
         
-        // Export functions for use in HTML
-        window.editInventory = editInventory;
-        window.restockProduct = restockProduct;
-        window.deleteInventory = deleteInventory;
-        window.submitInventory = submitInventory;
-        window.editService = editService;
-        window.deleteService = deleteService;
-        window.submitService = submitService;
-        window.openServiceModal = openServiceModal;
-        window.filterServiceTable = filterServiceTable;
-        window.showPage = showPage;
-
-
-        // ================================
-        // EXISTING CODE - PAYMENT, CLAIMS, SALES DATA
-        // ================================
-        let paymentData = [
-            { id: 'PAY-001', date: '2024-01-04', patient: 'Michael Chen', invoice: 'INV-2024-001', amount: 8500.00, method: 'Credit Card', status: 'completed' },
-            { id: 'PAY-002', date: '2024-01-04', patient: 'Sarah Johnson', invoice: 'INV-2024-002', amount: 350.00, method: 'Cash', status: 'completed' },
-            { id: 'PAY-003', date: '2024-01-03', patient: 'James Wilson', invoice: 'INV-2024-005', amount: 2500.00, method: 'Insurance', status: 'processing' }
-        ];
-
-        let claimData = [
-            { id: 'CLM-001', patient: 'Michael Chen', provider: 'Blue Cross', serviceDate: '2024-01-02', claimAmount: 8500.00, approvedAmount: 7650.00, status: 'approved' },
-            { id: 'CLM-002', patient: 'James Wilson', provider: 'Aetna', serviceDate: '2024-01-01', claimAmount: 2500.00, approvedAmount: 0, status: 'pending' },
-            { id: 'CLM-003', patient: 'Maria Garcia', provider: 'Cigna', serviceDate: '2023-12-28', claimAmount: 3200.00, approvedAmount: 0, status: 'rejected' }
-        ];
-
-        let salesData = [
-            { date: '2024-01-04', transactionId: 'TXN-001', product: 'Paracetamol 500mg', quantity: 2, unitPrice: 5.00, total: 10.00, method: 'Cash', cashier: 'John Doe' },
-            { date: '2024-01-04', transactionId: 'TXN-002', product: 'Amoxicillin 250mg', quantity: 1, unitPrice: 15.00, total: 15.00, method: 'Card', cashier: 'Jane Smith' },
-            { date: '2024-01-04', transactionId: 'TXN-003', product: 'Ibuprofen 400mg', quantity: 3, unitPrice: 6.00, total: 18.00, method: 'Cash', cashier: 'John Doe' }
-        ];
-
-        // Navigation
-        function showPage(pageId) {
-            // Hide all pages
-            document.querySelectorAll('.page-section').forEach(page => {
-                page.classList.remove('active');
-            });
-            
-            // Remove active class from all nav items
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            
-            // Show selected page
-            document.getElementById(pageId).classList.add('active');
-            
-            // Add active class to clicked nav item
-            event.target.closest('.nav-item').classList.add('active');
-            
-            // Load data when switching to service page
-            if (pageId === 'service') {
-                loadServicesFromDB();
-            }
-            
-            // Load inventory data when switching to inventory page
-            if (pageId === 'inventory') {
-                loadInventoryData();
-            }
-        }
-
-        // Modal functions
-        function openModal(modalId) {
-            document.getElementById(modalId).classList.add('show');
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('show');
-        }
-
-        // Table filter function
-        function filterTable(tableId, searchId) {
-            const input = document.getElementById(searchId);
-            const filter = input.value.toUpperCase();
-            const table = document.getElementById(tableId);
-            const tr = table.getElementsByTagName('tr');
-
-            for (let i = 1; i < tr.length; i++) {
-                let txtValue = tr[i].textContent || tr[i].innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = '';
-                } else {
-                    tr[i].style.display = 'none';
-                }
-            }
-        }
-
-        // Populate tables
-        function populateBillingTable() {
-            const tbody = document.getElementById('billingTableBody');
-            tbody.innerHTML = '';
-            
-            // Add sample data or empty state
-            tbody.innerHTML = `
-                <tr>
-                    <td colspan="6" style="text-align: center; padding: 40px; color: #888;">
-                        No admitted patients
-                    </td>
-                </tr>
-            `;
-        }
-
-        function populatePaymentTable() {
-            const tbody = document.getElementById('paymentTableBody');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-            
-            paymentData.forEach(payment => {
-                const statusClass = payment.status === 'completed' ? 'badge-success' : 'badge-warning';
-                const statusText = payment.status.charAt(0).toUpperCase() + payment.status.slice(1);
-                
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${payment.id}</td>
-                        <td>${payment.date}</td>
-                        <td>${payment.patient}</td>
-                        <td>${payment.invoice}</td>
-                        <td>$${payment.amount.toFixed(2)}</td>
-                        <td>${payment.method}</td>
-                        <td><span class="badge ${statusClass}">${statusText}</span></td>
-                        <td>
-                            <div class="action-btns">
-                                <button class="btn btn-sm btn-secondary" onclick="viewPayment('${payment.id}')">View</button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-
-        function populateClaimTable() {
-            const tbody = document.getElementById('claimTableBody');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-            
-            claimData.forEach(claim => {
-                let statusClass = 'badge-warning';
-                if (claim.status === 'approved') statusClass = 'badge-success';
-                if (claim.status === 'rejected') statusClass = 'badge-danger';
-                const statusText = claim.status.charAt(0).toUpperCase() + claim.status.slice(1);
-                
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${claim.id}</td>
-                        <td>${claim.patient}</td>
-                        <td>${claim.provider}</td>
-                        <td>${claim.serviceDate}</td>
-                        <td>$${claim.claimAmount.toFixed(2)}</td>
-                        <td>$${claim.approvedAmount.toFixed(2)}</td>
-                        <td><span class="badge ${statusClass}">${statusText}</span></td>
-                        <td>
-                            <div class="action-btns">
-                                <button class="btn btn-sm btn-secondary" onclick="viewClaim('${claim.id}')">View</button>
-                                <button class="btn btn-sm btn-primary" onclick="editClaim('${claim.id}')">Edit</button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-        
-        function populateSalesTable() {
-            const tbody = document.getElementById('salesTableBody');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-            
-            salesData.forEach(sale => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${sale.date}</td>
-                        <td>${sale.transactionId}</td>
-                        <td>${sale.product}</td>
-                        <td>${sale.quantity}</td>
-                        <td>$${sale.unitPrice.toFixed(2)}</td>
-                        <td>$${sale.total.toFixed(2)}</td>
-                        <td>${sale.method}</td>
-                        <td>${sale.cashier}</td>
-                    </tr>
-                `;
-            });
-        }
-
-        // Form submissions
-        function submitDischargeBill(event) {
-            event.preventDefault();
-            alert('Discharge bill generated successfully! Receipt can be printed.');
-            closeModal('dischargeModal');
-            event.target.reset();
-        }
-
-        function submitPayment(event) {
-            event.preventDefault();
-            alert('Payment processed successfully!');
-            closeModal('paymentModal');
-            event.target.reset();
-        }
-
-        function submitClaim(event) {
-            event.preventDefault();
-            alert('Insurance claim submitted successfully!');
-            closeModal('claimModal');
-            event.target.reset();
-        }
-
-        // Action functions
-        function viewReceipt(id) {
-            alert('Viewing receipt: ' + id);
-        }
-
-        function printReceipt(id) {
-            alert('Printing receipt: ' + id);
-        }
-
-        function viewPayment(id) {
-            alert('Viewing payment: ' + id);
-        }
-
-        function viewClaim(id) {
-            alert('Viewing claim: ' + id);
-        }
-
-        function editClaim(id) {
-            alert('Editing claim: ' + id);
-        }
-
-        function generateReport() {
-            alert('Generating financial report...');
-        }
-
-        function exportSalesReport() {
-            alert('Exporting sales report to CSV...');
-        }
-
-        function printSalesReport() {
-            alert('Printing sales report...');
-        }
-
-        function filterSalesReport() {
-            const startDate = document.getElementById('salesStartDate').value;
-            const endDate = document.getElementById('salesEndDate').value;
-            alert(`Filtering sales from ${startDate} to ${endDate}`);
-        }
-
-
     </script>
 </body>
 </html>
